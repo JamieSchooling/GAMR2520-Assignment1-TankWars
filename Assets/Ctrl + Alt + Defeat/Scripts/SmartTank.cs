@@ -61,26 +61,7 @@ namespace CAD
 
         public override void AITankStart()
         {
-            m_SearchState.GetTransitions().Add(new Transition(m_RetreatState, tankAI => tankAI.Health <= 30.0f || tankAI.Ammo <= 4.0f || tankAI.Fuel <= 50.0f));
-            m_SearchState.GetTransitions().Add(new Transition(m_ChaseState, tankAI => tankAI.EnemyTank));
-
-            m_RetreatState.GetTransitions().Add(new Transition(m_ChaseState, tankAI => tankAI.EnemyTank));
-            m_RetreatState.GetTransitions().Add(new Transition(m_SearchState, tankAI => !tankAI.EnemyTank && tankAI.Health > 30.0f && tankAI.Ammo > 4.0f && tankAI.Fuel > 50.0f));
-
-            m_ChaseState.GetTransitions().Add(new Transition(m_RetreatState, tankAI => tankAI.Health <= 30.0f || tankAI.Ammo <= 4.0f || tankAI.Fuel <= 50.0f));
-            m_ChaseState.GetTransitions().Add(new Transition(m_SearchState, tankAI => !tankAI.EnemyTank && tankAI.Health > 30.0f && tankAI.Ammo > 4.0f && tankAI.Fuel > 50.0f));
-            m_ChaseState.GetTransitions().Add(new Transition(m_AttackState, tankAI => Vector3.Distance(transform.position, a_TanksFound.First().Key.transform.position) < 25.0f));
-
-            m_AttackState.GetTransitions().Add(new Transition(m_RetreatState, tankAI => tankAI.Health <= 30.0f || tankAI.Ammo <= 4.0f || tankAI.Fuel <= 50.0f));
-            m_AttackState.GetTransitions().Add(new Transition(m_SearchState, tankAI => !tankAI.EnemyTank && tankAI.Health > 30.0f && tankAI.Ammo > 4.0f && tankAI.Fuel > 50.0f));
-
-            m_StateMachine = new(this);
-            m_StateMachine.AddState(m_SearchState);
-            m_StateMachine.AddState(m_ChaseState);
-            m_StateMachine.AddState(m_AttackState);
-            m_StateMachine.AddState(m_RetreatState);
-
-            m_StateMachine.Start();
+            InitialiseStateMachine();
         }
 
         public override void AITankUpdate()
@@ -91,6 +72,31 @@ namespace CAD
         public override void AIOnCollisionEnter(Collision collision)
         {
             // TODO: Implement Collision Response
+        }
+
+        private void InitialiseStateMachine()
+        {
+            m_StateMachine = new(this);
+
+            m_StateMachine.AddState(m_SearchState);
+            m_StateMachine.AddState(m_ChaseState);
+            m_StateMachine.AddState(m_AttackState);
+            m_StateMachine.AddState(m_RetreatState);
+
+            m_StateMachine.AddTransition(m_SearchState, m_RetreatState, tankAI => tankAI.Health <= 30.0f || tankAI.Ammo <= 4.0f || tankAI.Fuel <= 50.0f);
+            m_StateMachine.AddTransition(m_SearchState, m_ChaseState, tankAI => tankAI.EnemyTank);
+
+            m_StateMachine.AddTransition(m_RetreatState, m_ChaseState, tankAI => tankAI.EnemyTank);
+            m_StateMachine.AddTransition(m_RetreatState, m_SearchState, tankAI => !tankAI.EnemyTank && tankAI.Health > 30.0f && tankAI.Ammo > 4.0f && tankAI.Fuel > 50.0f);
+
+            m_StateMachine.AddTransition(m_ChaseState, m_RetreatState, tankAI => tankAI.Health <= 30.0f || tankAI.Ammo <= 4.0f || tankAI.Fuel <= 50.0f);
+            m_StateMachine.AddTransition(m_ChaseState, m_SearchState, tankAI => !tankAI.EnemyTank && tankAI.Health > 30.0f && tankAI.Ammo > 4.0f && tankAI.Fuel > 50.0f);
+            m_StateMachine.AddTransition(m_ChaseState, m_AttackState, tankAI => Vector3.Distance(transform.position, a_TanksFound.First().Key.transform.position) < 25.0f);
+
+            m_StateMachine.AddTransition(m_AttackState, m_RetreatState, tankAI => tankAI.Health <= 30.0f || tankAI.Ammo <= 4.0f || tankAI.Fuel <= 50.0f);
+            m_StateMachine.AddTransition(m_AttackState, m_SearchState, tankAI => !tankAI.EnemyTank && tankAI.Health > 30.0f && tankAI.Ammo > 4.0f && tankAI.Fuel > 50.0f);
+
+            m_StateMachine.Start();
         }
     }
 }

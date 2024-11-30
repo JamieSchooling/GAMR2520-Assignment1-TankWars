@@ -4,11 +4,13 @@ namespace CAD
 {
     public class Transition
     {
-        public Func<SmartTank, bool> Condition { get; private set; }
+        public IState OriginState { get; private set; }
         public IState TargetState { get; private set; }
+        public Func<SmartTank, bool> Condition { get; private set; }
 
-        public Transition(IState targetState, Func<SmartTank, bool> condition)
+        public Transition(IState originState, IState targetState, Func<SmartTank, bool> condition)
         {
+            OriginState = originState;
             TargetState = targetState;
             Condition = condition;
         }

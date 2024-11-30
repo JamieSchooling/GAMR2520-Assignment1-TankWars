@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace CAD
@@ -6,6 +8,7 @@ namespace CAD
     public class StateMachine
     {
         private List<IState> m_States = new();
+        private List<Transition> m_Transitions = new();
         private IState m_CurrentState;
         private SmartTank m_TankAI;
 
@@ -24,7 +27,7 @@ namespace CAD
         {
             m_CurrentState.OnStateUpdate(m_TankAI);
 
-            foreach (Transition transition in m_CurrentState.GetTransitions())
+            foreach (Transition transition in m_Transitions.Where(t => t.OriginState == m_CurrentState))
             {
                 if (transition.Condition(m_TankAI))
                 {
@@ -37,6 +40,16 @@ namespace CAD
         public void AddState(IState state)
         {
             m_States.Add(state);
+        }
+        
+        public void AddTransition(IState originState, IState targetState, Func<SmartTank, bool> condition)
+        {
+            AddTransition(new Transition(originState, targetState, condition));
+        }
+
+        public void AddTransition(Transition transition) 
+        {
+            m_Transitions.Add(transition);
         }
 
         private void SwitchState(IState state)
