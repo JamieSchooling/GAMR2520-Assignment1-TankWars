@@ -32,7 +32,7 @@ namespace CAD
 
         public override void AITankStart()
         {
-            m_CurrentState = m_RetreatState;
+            m_CurrentState = m_SearchState;
         }
 
         public override void AITankUpdate()
