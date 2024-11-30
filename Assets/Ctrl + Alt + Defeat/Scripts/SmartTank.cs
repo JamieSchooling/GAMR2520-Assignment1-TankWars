@@ -57,22 +57,22 @@ namespace CAD
         {
             m_CurrentState.OnStateUpdate(this);
 
-            //if (a_TanksFound.Count == 0 || !a_TanksFound.First().Key)
-            //{
-            //    SwitchState(m_SearchState);
-            //}
-            //if (a_TanksFound.Count > 0 && a_TanksFound.First().Key)
-            //{
-            //    SwitchState(m_ChaseState);
-            //}
-            //if (m_CurrentState == m_ChaseState && Vector3.Distance(transform.position, a_TanksFound.First().Key.transform.position) < 25.0f)
-            //{
-            //    SwitchState(m_AttackState);
-            //}
-            //if (a_GetHealthLevel <= 30.0f || a_GetAmmoLevel <= 4.0f || a_GetFuelLevel <= 50.0f)
-            //{
-            //    SwitchState(m_RetreatState);
-            //}
+            if ((a_TanksFound.Count == 0 || !a_TanksFound.First().Key) && a_GetHealthLevel > 30.0f && a_GetAmmoLevel > 4.0f && a_GetFuelLevel > 50.0f)
+            {
+                SwitchState(m_SearchState);
+            }
+            if (a_TanksFound.Count > 0 && a_TanksFound.First().Key)
+            {
+                SwitchState(m_ChaseState);
+            }
+            if (m_CurrentState == m_ChaseState && Vector3.Distance(transform.position, a_TanksFound.First().Key.transform.position) < 25.0f)
+            {
+                SwitchState(m_AttackState);
+            }
+            if (a_GetHealthLevel <= 30.0f || a_GetAmmoLevel <= 4.0f || a_GetFuelLevel <= 50.0f)
+            {
+                SwitchState(m_RetreatState);
+            }
         }
 
         public override void AIOnCollisionEnter(Collision collision)
