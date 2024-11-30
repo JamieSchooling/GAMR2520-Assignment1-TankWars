@@ -6,7 +6,7 @@ namespace CAD
 {
     public class SmartTank : AITank
     {
-        private IState m_CurrentState;
+        private StateMachine m_StateMachine;
 
         private SearchState m_SearchState = new();
         private ChaseState m_ChaseState = new();
@@ -73,37 +73,24 @@ namespace CAD
 
             m_AttackState.GetTransitions().Add(new Transition(m_RetreatState, tankAI => tankAI.Health <= 30.0f || tankAI.Ammo <= 4.0f || tankAI.Fuel <= 50.0f));
             m_AttackState.GetTransitions().Add(new Transition(m_SearchState, tankAI => !tankAI.EnemyTank && tankAI.Health > 30.0f && tankAI.Ammo > 4.0f && tankAI.Fuel > 50.0f));
-                      
-            m_CurrentState = m_SearchState;
-            m_CurrentState.OnStateEnter(this);
+
+            m_StateMachine = new(this);
+            m_StateMachine.AddState(m_SearchState);
+            m_StateMachine.AddState(m_ChaseState);
+            m_StateMachine.AddState(m_AttackState);
+            m_StateMachine.AddState(m_RetreatState);
+
+            m_StateMachine.Start();
         }
 
         public override void AITankUpdate()
         {
-            m_CurrentState.OnStateUpdate(this);
-
-            foreach (Transition transition in m_CurrentState.GetTransitions())
-            {
-                if (transition.Condition(this))
-                {
-                    SwitchState(transition.TargetState);
-                    return;
-                }
-            }
+            m_StateMachine.Update();
         }
 
         public override void AIOnCollisionEnter(Collision collision)
         {
             // TODO: Implement Collision Response
-        }
-
-        private void SwitchState(IState state)
-        {
-            if (m_CurrentState == state) return;
-
-            m_CurrentState.OnStateExit(this);
-            m_CurrentState = state;
-            m_CurrentState.OnStateEnter(this);
         }
     }
 }
