@@ -1,22 +1,56 @@
+using System.Linq;
 using UnityEngine;
 
 namespace CAD
 {
     public class SmartTank : AITank
     {
+        private IState m_CurrentState;
+
+        private SearchState m_SearchState = new();
+        private ChaseState m_ChaseState = new();
+        private AttackState m_AttackState = new();
+        private RetreatState m_RetreatState = new();
+
         public override void AITankStart()
         {
-            // TODO: Implement Start Logic
+            m_CurrentState = m_SearchState;
         }
 
         public override void AITankUpdate()
         {
-            // TODO: Implement Update Logic
+            m_CurrentState.OnStateUpdate(this);
+
+            if (a_TanksFound.Count == 0 || !a_TanksFound.First().Key)
+            {
+                SwitchState(m_SearchState);
+            }
+            if (a_TanksFound.Count > 0 && a_TanksFound.First().Key)
+            {
+                SwitchState(m_ChaseState);
+            }
+            if (m_CurrentState == m_ChaseState && Vector3.Distance(transform.position, a_TanksFound.First().Key.transform.position) < 25.0f)
+            {
+                SwitchState(m_AttackState);
+            }
+            if (a_GetHealthLevel < 30.0f || a_GetAmmoLevel < 4.0f || a_GetFuelLevel < 50.0f)
+            {
+                SwitchState(m_RetreatState);
+            }
         }
 
         public override void AIOnCollisionEnter(Collision collision)
         {
             // TODO: Implement Collision Response
+        }
+
+        private void SwitchState(IState state)
+        {
+            if (m_CurrentState == state) return;
+
+            m_CurrentState.OnStateExit(this);
+            m_CurrentState = state;
+            m_CurrentState.OnStateEnter(this);
         }
     }
 }
