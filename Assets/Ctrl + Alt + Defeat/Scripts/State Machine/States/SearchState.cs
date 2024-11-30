@@ -9,7 +9,6 @@ namespace CAD
 
         public void OnStateEnter(SmartTank tankAI)
         {
-            Debug.Log("Enter Search State");
             m_CurrentTime = 0;
         }
 

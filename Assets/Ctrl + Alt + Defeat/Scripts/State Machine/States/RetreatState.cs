@@ -10,7 +10,6 @@ namespace CAD
 
         public void OnStateEnter(SmartTank tankAI)
         {
-            Debug.Log("Enter Retreat State");
         }
 
         public void OnStateUpdate(SmartTank tankAI)

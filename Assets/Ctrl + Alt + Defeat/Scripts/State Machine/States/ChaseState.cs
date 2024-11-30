@@ -8,7 +8,6 @@ namespace CAD
 
         public void OnStateEnter(SmartTank tankAI)
         {
-            Debug.Log("Enter Chase State");
             // TODO: Implement OnStateEnter
         }
 
@@ -23,7 +22,6 @@ namespace CAD
 
         public void OnStateExit(SmartTank tankAI)
         {
-            Debug.LogWarning("Exit Chase");
             GameObject lastEnemyPos = new GameObject("LastEnemyPos");
             lastEnemyPos.transform.position = m_EnemyPos;
             tankAI.LastKnownEnemyPos = lastEnemyPos;

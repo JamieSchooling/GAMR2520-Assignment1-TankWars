@@ -6,7 +6,6 @@ namespace CAD
     {
         public void OnStateEnter(SmartTank tankAI)
         {
-            Debug.Log("Enter Attack State");
             // TODO: Implement OnStateEnter
         }
 
