@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace CAD
 {
@@ -14,18 +15,22 @@ namespace CAD
 
         public void OnStateUpdate(SmartTank tankAI)
         {
+            List<string> consumablesToFind = new();
+
             if (tankAI.Health <= 30.0f)
             {
-                FindConsumable(tankAI, "Health");
+                consumablesToFind.Add("Health");
             }
             if (tankAI.Ammo <= 4.0f)
             {
-                FindConsumable(tankAI, "Ammo");
+                consumablesToFind.Add("Ammo");
             }
             if (tankAI.Fuel <= 50.0f)
             {
-                FindConsumable(tankAI, "Fuel");
+                consumablesToFind.Add("Fuel");
             }
+
+            FindConsumables(tankAI, consumablesToFind);
         }
 
         public void OnStateExit(SmartTank tankAI)
@@ -33,17 +38,18 @@ namespace CAD
             // TODO: Implement OnStateExit
         }
 
-        private void FindConsumable(SmartTank tankAI, string consumableType)
+        private void FindConsumables(SmartTank tankAI, List<string> consumableTypes)
         {
             if (tankAI.VisibleConsumables.Count > 0)
             {
-                var potentialConsumables = tankAI.VisibleConsumables.Where(c => c.Key.CompareTag(consumableType)).ToDictionary(i => i.Key, i => i.Value);
+                var potentialConsumables = tankAI.VisibleConsumables
+                    .Where(c => consumableTypes.Any(type => c.Key.CompareTag(type)))
+                    .ToDictionary(i => i.Key, i => i.Value);
 
                 if (potentialConsumables.Count > 0)
                 {
                     GameObject consumable = potentialConsumables.First().Key;
                     tankAI.FollowPathToWorldPoint(consumable, 1f);
-                    m_CurrentTime += Time.deltaTime;
                 }
                 else
                 {
