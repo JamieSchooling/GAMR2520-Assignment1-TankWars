@@ -1,20 +1,23 @@
+using UnityEngine;
+
 namespace CAD
 {
     public class AttackState : IState
     {
         public void OnStateEnter(SmartTank tankAI)
         {
-            throw new System.NotImplementedException();
+            Debug.Log("Enter Attack State");
+            // TODO: Implement OnStateEnter
         }
 
         public void OnStateUpdate(SmartTank tankAI)
         {
-            throw new System.NotImplementedException();
+            if (tankAI.EnemyTank) tankAI.TurretFireAtPoint(tankAI.EnemyTank);
         }
 
         public void OnStateExit(SmartTank tankAI)
         {
-            throw new System.NotImplementedException();
+            // TODO: Implement OnStateExit
         }
     }
 }

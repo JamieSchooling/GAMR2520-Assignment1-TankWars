@@ -14,6 +14,18 @@ namespace CAD
         private RetreatState m_RetreatState = new();
 
         public Dictionary<GameObject, float> VisibleConsumables => a_ConsumablesFound;
+        public GameObject EnemyTank
+        {
+            get 
+            {
+                if (a_TanksFound.Count > 0) return a_TanksFound.First().Key;
+                return null;
+            }
+        }
+
+        public float Health => a_GetHealthLevel;
+        public float Ammo => a_GetAmmoLevel;
+        public float Fuel => a_GetFuelLevel;
 
         public void GenerateNewRandomWorldPoint()
         {
@@ -30,9 +42,15 @@ namespace CAD
             a_FollowPathToRandomPoint(normalizedSpeed);
         }
 
+        public void TurretFireAtPoint(GameObject pointInWorld)
+        {
+            a_FireAtPoint(pointInWorld);
+        }
+
         public override void AITankStart()
         {
-            m_CurrentState = m_SearchState;
+            m_CurrentState = m_RetreatState;
+            m_CurrentState.OnStateEnter(this);
         }
 
         public override void AITankUpdate()
@@ -51,7 +69,7 @@ namespace CAD
             //{
             //    SwitchState(m_AttackState);
             //}
-            //if (a_GetHealthLevel < 30.0f || a_GetAmmoLevel < 4.0f || a_GetFuelLevel < 50.0f)
+            //if (a_GetHealthLevel <= 30.0f || a_GetAmmoLevel <= 4.0f || a_GetFuelLevel <= 50.0f)
             //{
             //    SwitchState(m_RetreatState);
             //}

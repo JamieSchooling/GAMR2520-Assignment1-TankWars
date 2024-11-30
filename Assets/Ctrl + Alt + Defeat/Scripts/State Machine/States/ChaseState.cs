@@ -1,20 +1,23 @@
+using UnityEngine;
+
 namespace CAD
 {
     public class ChaseState : IState
     {
         public void OnStateEnter(SmartTank tankAI)
         {
-            throw new System.NotImplementedException();
+            Debug.Log("Enter Chase State");
+            // TODO: Implement OnStateEnter
         }
 
         public void OnStateUpdate(SmartTank tankAI)
         {
-            throw new System.NotImplementedException();
+            if (tankAI.EnemyTank) tankAI.FollowPathToWorldPoint(tankAI.EnemyTank, 1f);
         }
 
         public void OnStateExit(SmartTank tankAI)
         {
-            throw new System.NotImplementedException();
+            // TODO: Implement OnStateExit
         }
     }
 }
