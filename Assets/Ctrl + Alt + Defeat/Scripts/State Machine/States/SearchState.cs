@@ -15,6 +15,16 @@ namespace CAD
 
         public void OnStateUpdate(SmartTank tankAI)
         {
+            if (tankAI.LastKnownEnemyPos)
+            {
+                if (Vector3.Distance(tankAI.transform.position, tankAI.LastKnownEnemyPos.transform.position) < 5.0f)
+                {
+                    Object.Destroy(tankAI.LastKnownEnemyPos);
+                    tankAI.LastKnownEnemyPos = null;
+                }
+                tankAI.FollowPathToWorldPoint(tankAI.LastKnownEnemyPos, 1f);
+            }
+
             if (tankAI.VisibleConsumables.Count > 0)
             {
                 GameObject consumable = tankAI.VisibleConsumables.First().Key;

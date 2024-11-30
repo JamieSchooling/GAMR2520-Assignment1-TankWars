@@ -23,9 +23,21 @@ namespace CAD
             }
         }
 
+        public GameObject LastKnownEnemyPos
+        {
+            get => m_LastKnownEnemyPos;
+            set
+            {
+                Destroy(m_LastKnownEnemyPos);
+                m_LastKnownEnemyPos = value;
+            }
+        }
+
         public float Health => a_GetHealthLevel;
         public float Ammo => a_GetAmmoLevel;
         public float Fuel => a_GetFuelLevel;
+
+        private GameObject m_LastKnownEnemyPos = null;
 
         public void GenerateNewRandomWorldPoint()
         {
@@ -49,7 +61,7 @@ namespace CAD
 
         public override void AITankStart()
         {
-            m_CurrentState = m_RetreatState;
+            m_CurrentState = m_SearchState;
             m_CurrentState.OnStateEnter(this);
         }
 
@@ -61,7 +73,7 @@ namespace CAD
             {
                 SwitchState(m_SearchState);
             }
-            if (a_TanksFound.Count > 0 && a_TanksFound.First().Key)
+            if (m_CurrentState != m_AttackState && a_TanksFound.Count > 0 && a_TanksFound.First().Key)
             {
                 SwitchState(m_ChaseState);
             }
