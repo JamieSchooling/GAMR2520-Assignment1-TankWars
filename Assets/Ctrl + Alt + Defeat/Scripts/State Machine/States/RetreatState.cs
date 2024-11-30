@@ -8,9 +8,16 @@ namespace CAD
     {
         private float m_CurrentTime = 0;
 
+        private List<Transition> m_Transitions = new();
+
+        public List<Transition> GetTransitions()
+        {
+            return m_Transitions;
+        }
+
         public void OnStateEnter(SmartTank tankAI)
         {
-        }
+        }   
 
         public void OnStateUpdate(SmartTank tankAI)
         {

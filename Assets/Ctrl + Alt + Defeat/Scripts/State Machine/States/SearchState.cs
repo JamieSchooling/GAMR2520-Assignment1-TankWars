@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -6,6 +7,13 @@ namespace CAD
     public class SearchState : IState
     {
         private float m_CurrentTime;
+
+        private List<Transition> m_Transitions = new();
+
+        public List<Transition> GetTransitions()
+        {
+            return m_Transitions;
+        }
 
         public void OnStateEnter(SmartTank tankAI)
         {

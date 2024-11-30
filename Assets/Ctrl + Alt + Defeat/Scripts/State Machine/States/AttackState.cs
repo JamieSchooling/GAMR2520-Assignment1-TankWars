@@ -1,9 +1,16 @@
-using UnityEngine;
+using System.Collections.Generic;
 
 namespace CAD
 {
     public class AttackState : IState
     {
+        private List<Transition> m_Transitions = new();
+
+        public List<Transition> GetTransitions()
+        {
+            return m_Transitions;
+        }
+
         public void OnStateEnter(SmartTank tankAI)
         {
             // TODO: Implement OnStateEnter

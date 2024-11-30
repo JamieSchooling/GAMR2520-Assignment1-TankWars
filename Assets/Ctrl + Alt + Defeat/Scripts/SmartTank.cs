@@ -61,6 +61,19 @@ namespace CAD
 
         public override void AITankStart()
         {
+            m_SearchState.GetTransitions().Add(new Transition(m_RetreatState, tankAI => tankAI.Health <= 30.0f || tankAI.Ammo <= 4.0f || tankAI.Fuel <= 50.0f));
+            m_SearchState.GetTransitions().Add(new Transition(m_ChaseState, tankAI => tankAI.EnemyTank));
+
+            m_RetreatState.GetTransitions().Add(new Transition(m_ChaseState, tankAI => tankAI.EnemyTank));
+            m_RetreatState.GetTransitions().Add(new Transition(m_SearchState, tankAI => !tankAI.EnemyTank && tankAI.Health > 30.0f && tankAI.Ammo > 4.0f && tankAI.Fuel > 50.0f));
+
+            m_ChaseState.GetTransitions().Add(new Transition(m_RetreatState, tankAI => tankAI.Health <= 30.0f || tankAI.Ammo <= 4.0f || tankAI.Fuel <= 50.0f));
+            m_ChaseState.GetTransitions().Add(new Transition(m_SearchState, tankAI => !tankAI.EnemyTank && tankAI.Health > 30.0f && tankAI.Ammo > 4.0f && tankAI.Fuel > 50.0f));
+            m_ChaseState.GetTransitions().Add(new Transition(m_AttackState, tankAI => Vector3.Distance(transform.position, a_TanksFound.First().Key.transform.position) < 25.0f));
+
+            m_AttackState.GetTransitions().Add(new Transition(m_RetreatState, tankAI => tankAI.Health <= 30.0f || tankAI.Ammo <= 4.0f || tankAI.Fuel <= 50.0f));
+            m_AttackState.GetTransitions().Add(new Transition(m_SearchState, tankAI => !tankAI.EnemyTank && tankAI.Health > 30.0f && tankAI.Ammo > 4.0f && tankAI.Fuel > 50.0f));
+                      
             m_CurrentState = m_SearchState;
             m_CurrentState.OnStateEnter(this);
         }
@@ -69,21 +82,13 @@ namespace CAD
         {
             m_CurrentState.OnStateUpdate(this);
 
-            if ((a_TanksFound.Count == 0 || !a_TanksFound.First().Key) && a_GetHealthLevel > 30.0f && a_GetAmmoLevel > 4.0f && a_GetFuelLevel > 50.0f)
+            foreach (Transition transition in m_CurrentState.GetTransitions())
             {
-                SwitchState(m_SearchState);
-            }
-            if (m_CurrentState != m_AttackState && a_TanksFound.Count > 0 && a_TanksFound.First().Key)
-            {
-                SwitchState(m_ChaseState);
-            }
-            if (m_CurrentState == m_ChaseState && Vector3.Distance(transform.position, a_TanksFound.First().Key.transform.position) < 25.0f)
-            {
-                SwitchState(m_AttackState);
-            }
-            if (a_GetHealthLevel <= 30.0f || a_GetAmmoLevel <= 4.0f || a_GetFuelLevel <= 50.0f)
-            {
-                SwitchState(m_RetreatState);
+                if (transition.Condition(this))
+                {
+                    SwitchState(transition.TargetState);
+                    return;
+                }
             }
         }
 

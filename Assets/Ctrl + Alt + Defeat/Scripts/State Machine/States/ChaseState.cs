@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace CAD
@@ -5,6 +6,13 @@ namespace CAD
     public class ChaseState : IState
     {
         private Vector3 m_EnemyPos;
+
+        private List<Transition> m_Transitions = new();
+
+        public List<Transition> GetTransitions()
+        {
+            return m_Transitions;
+        }
 
         public void OnStateEnter(SmartTank tankAI)
         {
