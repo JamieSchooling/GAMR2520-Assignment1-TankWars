@@ -1,3 +1,4 @@
+using System.Linq;
 using UnityEngine;
 
 namespace CAD
@@ -8,12 +9,23 @@ namespace CAD
 
         public void OnStateEnter(SmartTank tankAI)
         {
+            Debug.Log("Enter Search State");
             m_CurrentTime = 0;
         }
 
         public void OnStateUpdate(SmartTank tankAI)
         {
-            tankAI.FollowPathToRandomWorldPoint(1f);
+            if (tankAI.VisibleConsumables.Count > 0)
+            {
+                GameObject consumable = tankAI.VisibleConsumables.First().Key;
+                tankAI.FollowPathToWorldPoint(consumable, 1f);
+                m_CurrentTime += Time.deltaTime;
+            }
+            else
+            {
+                tankAI.FollowPathToRandomWorldPoint(1f);
+            }
+
             m_CurrentTime += Time.deltaTime;
             if (m_CurrentTime > 10)
             {
@@ -24,7 +36,7 @@ namespace CAD
 
         public void OnStateExit(SmartTank tankAI)
         {
-            throw new System.NotImplementedException();
+            // TODO: Implement OnStateExit
         }
     }
 }
