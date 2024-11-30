@@ -2,8 +2,8 @@ namespace CAD
 {
     public interface IState
     {
-        void OnStateEnter();
-        void OnStateUpdate();
-        void OnStateExit();
+        void OnStateEnter(SmartTank tankAI);
+        void OnStateUpdate(SmartTank tankAI);
+        void OnStateExit(SmartTank tankAI);
     }
 }

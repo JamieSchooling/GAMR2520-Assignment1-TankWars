@@ -2,17 +2,17 @@ namespace CAD
 {
     public class RetreatState : IState
     {
-        public void OnStateEnter()
+        public void OnStateEnter(SmartTank tankAI)
         {
             throw new System.NotImplementedException();
         }
 
-        public void OnStateExit()
+        public void OnStateUpdate(SmartTank tankAI)
         {
             throw new System.NotImplementedException();
         }
 
-        public void OnStateUpdate()
+        public void OnStateExit(SmartTank tankAI)
         {
             throw new System.NotImplementedException();
         }
