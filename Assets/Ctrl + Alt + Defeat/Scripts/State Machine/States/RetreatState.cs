@@ -42,12 +42,15 @@ namespace CAD
         {
             if (tankAI.VisibleConsumables.Count > 0)
             {
+                // Filter consumables matching the required types
                 var potentialConsumables = tankAI.VisibleConsumables
                     .Where(c => consumableTypes.Any(type => c.Key.CompareTag(type)))
-                    .ToDictionary(i => i.Key, i => i.Value);
+                    .OrderBy(c => c.Value) // Order by distance
+                    .ToList();
 
                 if (potentialConsumables.Count > 0)
                 {
+                    // Get the closest consumable
                     GameObject consumable = potentialConsumables.First().Key;
                     tankAI.FollowPathToWorldPoint(consumable, 1f);
                 }
