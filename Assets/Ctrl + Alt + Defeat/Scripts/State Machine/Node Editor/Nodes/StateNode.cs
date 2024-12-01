@@ -10,14 +10,22 @@ namespace CAD
 
         [SerializeField] private State m_State = null;
 
+        private State m_PreviousState = null;
+
         public void OnValidate()
         {
+            if (m_State == m_PreviousState) return;
+
+            m_PreviousState = m_State;
+
             foreach (var port in Ports.ToList())
             {
                 if (!port.IsStatic) RemoveDynamicPort(port.fieldName);
             }
 
             if (m_State == null || m_State.Transitions == null) return;
+
+            name = m_State.name;
 
             foreach (var transition in m_State.Transitions)
             {
@@ -27,9 +35,7 @@ namespace CAD
 
         public override object GetValue(NodePort port)
         {
-            if (!port.IsOutput) return null;
-
-            return m_State.Transitions.FirstOrDefault(t => t.Name == port.fieldName).Condition;
+            return m_State;
         }
     }
 }
