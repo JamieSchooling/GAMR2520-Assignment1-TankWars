@@ -40,8 +40,8 @@ MonoBehaviour:
       - fieldName: m_InputNode
         node: {fileID: -5750083703257732420}
         reroutePoints:
-        - {x: 16.5, y: 124}
-        - {x: 60.5, y: 127}
+        - {x: 16, y: 128}
+        - {x: 48, y: 128}
         - {x: 49.5, y: -159}
         - {x: -541.5, y: -156}
         - {x: -540.5, y: -112}
@@ -95,13 +95,13 @@ MonoBehaviour:
         node: {fileID: 1578745791153334103}
         reroutePoints: []
       - fieldName: Tank Lost
-        node: {fileID: 7516501704302463045}
-        reroutePoints: []
-      - fieldName: Tank Lost
         node: {fileID: -1352826466940553513}
         reroutePoints: []
       - fieldName: Tank Lost
         node: {fileID: -8994685101611574945}
+        reroutePoints: []
+      - fieldName: Enough Resources
+        node: {fileID: 7516501704302463045}
         reroutePoints: []
       _direction: 0
       _connectionType: 0
@@ -167,9 +167,6 @@ MonoBehaviour:
       connections:
       - fieldName: Tank Found
         node: {fileID: -5750083703257732420}
-        reroutePoints: []
-      - fieldName: Tank Found
-        node: {fileID: 7516501704302463045}
         reroutePoints: []
       _direction: 0
       _connectionType: 0
@@ -292,8 +289,7 @@ MonoBehaviour:
   ports:
     keys:
     - m_InputNode
-    - Tank Lost
-    - Tank Found
+    - Enough Resources
     values:
     - _fieldName: m_InputNode
       _node: {fileID: 7516501704302463045}
@@ -313,7 +309,7 @@ MonoBehaviour:
       _connectionType: 0
       _typeConstraint: 0
       _dynamic: 0
-    - _fieldName: Tank Lost
+    - _fieldName: Enough Resources
       _node: {fileID: 7516501704302463045}
       _typeQualifiedName: CAD.Transition, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
@@ -321,26 +317,11 @@ MonoBehaviour:
       - fieldName: m_InputNode
         node: {fileID: -5750083703257732420}
         reroutePoints:
-        - {x: -304, y: 144}
-        - {x: -304, y: 224}
-        - {x: -560, y: 224}
-        - {x: -560, y: -80}
-        - {x: -528, y: -80}
-      _direction: 1
-      _connectionType: 1
-      _typeConstraint: 0
-      _dynamic: 1
-    - _fieldName: Tank Found
-      _node: {fileID: 7516501704302463045}
-      _typeQualifiedName: CAD.Transition, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-        PublicKeyToken=null
-      connections:
-      - fieldName: m_InputNode
-        node: {fileID: -1352826466940553513}
-        reroutePoints:
-        - {x: -256, y: 160}
-        - {x: -256, y: -80}
-        - {x: -208, y: -80}
+        - {x: -301.5, y: 144}
+        - {x: -304.5, y: 223}
+        - {x: -560.5, y: 225}
+        - {x: -558.5, y: -81}
+        - {x: -524.5, y: -81}
       _direction: 1
       _connectionType: 1
       _typeConstraint: 0

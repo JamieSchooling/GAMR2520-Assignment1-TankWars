@@ -69,12 +69,12 @@ namespace CAD
             }
         }
 
+
         private void OnEnable()
         {
             Transitions = new()
             {
-                new Transition("Tank Found", tankAI => tankAI.EnemyTank),
-                new Transition("Tank Lost", tankAI => !tankAI.EnemyTank)
+                new Transition("Enough Resources", tankAI => tankAI.Health > 30 && tankAI.Ammo > 4 && tankAI.Fuel > 50)
             };
         }
     }
