@@ -231,8 +231,8 @@ namespace XNodeEditor {
             }
         }
 
-        /// <summary> Draws all connections </summary>
-        public void DrawConnections() {
+        public void DrawConnections()
+        {
             Vector2 mousePos = Event.current.mousePosition;
             List<RerouteReference> selection = preBoxSelectionReroute != null ? new List<RerouteReference>(preBoxSelectionReroute) : new List<RerouteReference>();
             hoveredReroute = new RerouteReference();
@@ -240,18 +240,19 @@ namespace XNodeEditor {
             List<Vector2> gridPoints = new List<Vector2>(2);
 
             Color col = GUI.color;
-            foreach (XNode.Node node in graph.nodes) {
-                //If a null node is found, return. This can happen if the nodes associated script is deleted. It is currently not possible in Unity to delete a null asset.
+            foreach (XNode.Node node in graph.nodes)
+            {
                 if (node == null) continue;
 
                 // Draw full connections and output > reroute
-                foreach (XNode.NodePort output in node.Outputs) {
-                    //Needs cleanup. Null checks are ugly
+                foreach (XNode.NodePort output in node.Outputs)
+                {
                     Rect fromRect;
                     if (!_portConnectionPoints.TryGetValue(output, out fromRect)) continue;
 
                     Color portColor = graphEditor.GetPortColor(output);
-                    for (int k = 0; k < output.ConnectionCount; k++) {
+                    for (int k = 0; k < output.ConnectionCount; k++)
+                    {
                         XNode.NodePort input = output.GetConnection(k);
 
                         Gradient noodleGradient = graphEditor.GetNoodleGradient(output, input);
@@ -259,39 +260,72 @@ namespace XNodeEditor {
                         NoodlePath noodlePath = graphEditor.GetNoodlePath(output, input);
                         NoodleStroke noodleStroke = graphEditor.GetNoodleStroke(output, input);
 
-                        // Error handling
-                        if (input == null) continue; //If a script has been updated and the port doesn't exist, it is removed and null is returned. If this happens, return.
+                        if (input == null) continue;
                         if (!input.IsConnectedTo(output)) input.Connect(output);
+
                         Rect toRect;
                         if (!_portConnectionPoints.TryGetValue(input, out toRect)) continue;
 
                         List<Vector2> reroutePoints = output.GetReroutePoints(k);
 
+                        // Collect all grid points (start, reroutes, end)
                         gridPoints.Clear();
                         gridPoints.Add(fromRect.center);
                         gridPoints.AddRange(reroutePoints);
                         gridPoints.Add(toRect.center);
+
+                        // Draw the noodle
                         DrawNoodle(noodleGradient, noodlePath, noodleStroke, noodleThickness, gridPoints);
 
-                        // Loop through reroute points again and draw the points
-                        for (int i = 0; i < reroutePoints.Count; i++) {
+                        // Calculate total noodle length
+                        float totalLength = 0f;
+                        List<float> segmentLengths = new List<float>();
+                        for (int i = 0; i < gridPoints.Count - 1; i++)
+                        {
+                            float segmentLength = Vector2.Distance(gridPoints[i], gridPoints[i + 1]);
+                            segmentLengths.Add(segmentLength);
+                            totalLength += segmentLength;
+                        }
+
+                        // Draw reroute points
+                        float accumulatedLength = 0f;
+                        for (int i = 0; i < reroutePoints.Count; i++)
+                        {
                             RerouteReference rerouteRef = new RerouteReference(output, k, i);
+
+                            // Calculate relative position of reroute point along the noodle
+                            float reroutePosition = 0f;
+                            for (int j = 0; j < gridPoints.Count - 1; j++)
+                            {
+                                if (Vector2.Distance(gridPoints[j], reroutePoints[i]) < 0.01f)
+                                {
+                                    reroutePosition = (accumulatedLength + Vector2.Distance(gridPoints[j], reroutePoints[i])) / totalLength;
+                                    break;
+                                }
+                                accumulatedLength += segmentLengths[j];
+                            }
+
+                            // Sample gradient color for the reroute point
+                            Color rerouteColor = noodleGradient.Evaluate(reroutePosition);
+
                             // Draw reroute point at position
                             Rect rect = new Rect(reroutePoints[i], new Vector2(12, 12));
-                            rect.position = new Vector2(rect.position.x - 6, rect.position.y - 6);
+                            rect.position -= new Vector2(6, 6);
                             rect = GridToWindowRect(rect);
 
                             // Draw selected reroute points with an outline
-                            if (selectedReroutes.Contains(rerouteRef)) {
+                            if (selectedReroutes.Contains(rerouteRef))
+                            {
                                 GUI.color = NodeEditorPreferences.GetSettings().highlightColor;
                                 GUI.DrawTexture(rect, NodeEditorResources.dotOuter);
                             }
 
-                            GUI.color = portColor;
+                            // Set color based on gradient and draw reroute point
+                            GUI.color = rerouteColor;
                             GUI.DrawTexture(rect, NodeEditorResources.dot);
+
                             if (rect.Overlaps(selectionBox)) selection.Add(rerouteRef);
                             if (rect.Contains(mousePos)) hoveredReroute = rerouteRef;
-
                         }
                     }
                 }
@@ -299,6 +333,7 @@ namespace XNodeEditor {
             GUI.color = col;
             if (Event.current.type != EventType.Layout && currentActivity == NodeActivity.DragGrid) selectedReroutes = selection;
         }
+
 
         private void DrawNodes() {
             Event e = Event.current;
