@@ -9,6 +9,7 @@ namespace CAD
         [SerializeField] private StateMachineGraph m_StateMachineGraph;
 
         public Dictionary<GameObject, float> VisibleConsumables => a_ConsumablesFound;
+
         public GameObject EnemyTank
         {
             get 
@@ -29,7 +30,9 @@ namespace CAD
         }
 
         public float Health => a_GetHealthLevel;
+
         public float Ammo => a_GetAmmoLevel;
+
         public float Fuel => a_GetFuelLevel;
 
         private GameObject m_LastKnownEnemyPos = null;
@@ -76,6 +79,11 @@ namespace CAD
             m_StateMachine = new(this);
 
             m_StateMachine.Start(m_StateMachineGraph);
+        }
+
+        private void OnDisable()
+        {
+            m_StateMachine?.End();
         }
     }
 }

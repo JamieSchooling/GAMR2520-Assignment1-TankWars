@@ -10,6 +10,8 @@ namespace CAD
 
         [SerializeField] private State m_State = null;
 
+        public bool IsActive { get; set; } = false;
+
         private State m_PreviousState = null;
 
         public void OnValidate()
