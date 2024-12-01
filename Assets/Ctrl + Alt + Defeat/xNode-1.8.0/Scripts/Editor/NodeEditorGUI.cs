@@ -136,177 +136,99 @@ namespace XNodeEditor {
             Handles.DrawAAPolyLine(thickness, polyLineTempArray);
         }
 
-        /// <summary> Draw a bezier from output to input in grid coordinates </summary>
-        public void DrawNoodle(Gradient gradient, NoodlePath path, NoodleStroke stroke, float thickness, List<Vector2> gridPoints) {
-            // convert grid points to window points
-            for (int i = 0; i < gridPoints.Count; ++i)
-                gridPoints[i] = GridToWindowPosition(gridPoints[i]);
+        public void DrawNoodle(Gradient gradient, NoodlePath path, NoodleStroke stroke, float thickness, List<Vector2> gridPoints)
+        {
+            // Convert grid points to window positions
+            gridPoints = gridPoints.Select(GridToWindowPosition).ToList();
 
+            // Backup original handle color
             Color originalHandlesColor = Handles.color;
-            Handles.color = gradient.Evaluate(0f);
-            int length = gridPoints.Count;
-            switch (path) {
-                case NoodlePath.Curvy:
-                    Vector2 outputTangent = Vector2.right;
-                    for (int i = 0; i < length - 1; i++) {
-                        Vector2 inputTangent;
-                        // Cached most variables that repeat themselves here to avoid so many indexer calls :p
-                        Vector2 point_a = gridPoints[i];
-                        Vector2 point_b = gridPoints[i + 1];
-                        float dist_ab = Vector2.Distance(point_a, point_b);
-                        if (i == 0) outputTangent = zoom * dist_ab * 0.01f * Vector2.right;
-                        if (i < length - 2) {
-                            Vector2 point_c = gridPoints[i + 2];
-                            Vector2 ab = (point_b - point_a).normalized;
-                            Vector2 cb = (point_b - point_c).normalized;
-                            Vector2 ac = (point_c - point_a).normalized;
-                            Vector2 p = (ab + cb) * 0.5f;
-                            float tangentLength = (dist_ab + Vector2.Distance(point_b, point_c)) * 0.005f * zoom;
-                            float side = ((ac.x * (point_b.y - point_a.y)) - (ac.y * (point_b.x - point_a.x)));
 
-                            p = tangentLength * Mathf.Sign(side) * new Vector2(-p.y, p.x);
-                            inputTangent = p;
-                        } else {
-                            inputTangent = zoom * dist_ab * 0.01f * Vector2.left;
-                        }
+            // Calculate total noodle length and segment lengths
+            float totalLength = gridPoints.Zip(gridPoints.Skip(1), Vector2.Distance).Sum();
+            List<float> segmentLengths = gridPoints.Zip(gridPoints.Skip(1), Vector2.Distance).ToList();
 
-                        // Calculates the tangents for the bezier's curves.
-                        float zoomCoef = 50 / zoom;
-                        Vector2 tangent_a = point_a + outputTangent * zoomCoef;
-                        Vector2 tangent_b = point_b + inputTangent * zoomCoef;
-                        // Hover effect.
-                        int division = Mathf.RoundToInt(.2f * dist_ab) + 3;
-                        // Coloring and bezier drawing.
-                        int draw = 0;
-                        Vector2 bezierPrevious = point_a;
-                        for (int j = 1; j <= division; ++j) {
-                            if (stroke == NoodleStroke.Dashed) {
-                                draw++;
-                                if (draw >= 2) draw = -2;
-                                if (draw < 0) continue;
-                                if (draw == 0) bezierPrevious = CalculateBezierPoint(point_a, tangent_a, tangent_b, point_b, (j - 1f) / (float) division);
-                            }
-                            if (i == length - 2)
-                                Handles.color = gradient.Evaluate((j + 1f) / division);
-                            Vector2 bezierNext = CalculateBezierPoint(point_a, tangent_a, tangent_b, point_b, j / (float) division);
-                            DrawAAPolyLineNonAlloc(thickness, bezierPrevious, bezierNext);
-                            bezierPrevious = bezierNext;
-                        }
-                        outputTangent = -inputTangent;
-                    }
-                    break;
-                case NoodlePath.Straight:
-                    for (int i = 0; i < length - 1; i++) {
-                        Vector2 point_a = gridPoints[i];
-                        Vector2 point_b = gridPoints[i + 1];
-                        // Draws the line with the coloring.
-                        Vector2 prev_point = point_a;
-                        // Approximately one segment per 5 pixels
-                        int segments = (int) Vector2.Distance(point_a, point_b) / 5;
-                        segments = Math.Max(segments, 1);
+            for (int i = 0; i < gridPoints.Count - 1; i++)
+            {
+                Vector2 pointA = gridPoints[i];
+                Vector2 pointB = gridPoints[i + 1];
+                float tStart = segmentLengths.Take(i).Sum() / totalLength;
+                float tEnd = (segmentLengths.Take(i).Sum() + segmentLengths[i]) / totalLength;
 
-                        int draw = 0;
-                        for (int j = 0; j <= segments; j++) {
-                            draw++;
-                            float t = j / (float) segments;
-                            Vector2 lerp = Vector2.Lerp(point_a, point_b, t);
-                            if (draw > 0) {
-                                if (i == length - 2) Handles.color = gradient.Evaluate(t);
-                                DrawAAPolyLineNonAlloc(thickness, prev_point, lerp);
-                            }
-                            prev_point = lerp;
-                            if (stroke == NoodleStroke.Dashed && draw >= 2) draw = -2;
-                        }
-                    }
-                    break;
-                case NoodlePath.Angled:
-                    for (int i = 0; i < length - 1; i++) {
-                        if (i == length - 1) continue; // Skip last index
-                        if (gridPoints[i].x <= gridPoints[i + 1].x - (50 / zoom)) {
-                            float midpoint = (gridPoints[i].x + gridPoints[i + 1].x) * 0.5f;
-                            Vector2 start_1 = gridPoints[i];
-                            Vector2 end_1 = gridPoints[i + 1];
-                            start_1.x = midpoint;
-                            end_1.x = midpoint;
-                            if (i == length - 2) {
-                                DrawAAPolyLineNonAlloc(thickness, gridPoints[i], start_1);
-                                Handles.color = gradient.Evaluate(0.5f);
-                                DrawAAPolyLineNonAlloc(thickness, start_1, end_1);
-                                Handles.color = gradient.Evaluate(1f);
-                                DrawAAPolyLineNonAlloc(thickness, end_1, gridPoints[i + 1]);
-                            } else {
-                                DrawAAPolyLineNonAlloc(thickness, gridPoints[i], start_1);
-                                DrawAAPolyLineNonAlloc(thickness, start_1, end_1);
-                                DrawAAPolyLineNonAlloc(thickness, end_1, gridPoints[i + 1]);
-                            }
-                        } else {
-                            float midpoint = (gridPoints[i].y + gridPoints[i + 1].y) * 0.5f;
-                            Vector2 start_1 = gridPoints[i];
-                            Vector2 end_1 = gridPoints[i + 1];
-                            start_1.x += 25 / zoom;
-                            end_1.x -= 25 / zoom;
-                            Vector2 start_2 = start_1;
-                            Vector2 end_2 = end_1;
-                            start_2.y = midpoint;
-                            end_2.y = midpoint;
-                            if (i == length - 2) {
-                                DrawAAPolyLineNonAlloc(thickness, gridPoints[i], start_1);
-                                Handles.color = gradient.Evaluate(0.25f);
-                                DrawAAPolyLineNonAlloc(thickness, start_1, start_2);
-                                Handles.color = gradient.Evaluate(0.5f);
-                                DrawAAPolyLineNonAlloc(thickness, start_2, end_2);
-                                Handles.color = gradient.Evaluate(0.75f);
-                                DrawAAPolyLineNonAlloc(thickness, end_2, end_1);
-                                Handles.color = gradient.Evaluate(1f);
-                                DrawAAPolyLineNonAlloc(thickness, end_1, gridPoints[i + 1]);
-                            } else {
-                                DrawAAPolyLineNonAlloc(thickness, gridPoints[i], start_1);
-                                DrawAAPolyLineNonAlloc(thickness, start_1, start_2);
-                                DrawAAPolyLineNonAlloc(thickness, start_2, end_2);
-                                DrawAAPolyLineNonAlloc(thickness, end_2, end_1);
-                                DrawAAPolyLineNonAlloc(thickness, end_1, gridPoints[i + 1]);
-                            }
-                        }
-                    }
-                    break;
-                case NoodlePath.ShaderLab:
-                    Vector2 start = gridPoints[0];
-                    Vector2 end = gridPoints[length - 1];
-                    //Modify first and last point in array so we can loop trough them nicely.
-                    gridPoints[0] = gridPoints[0] + Vector2.right * (20 / zoom);
-                    gridPoints[length - 1] = gridPoints[length - 1] + Vector2.left * (20 / zoom);
-                    //Draw first vertical lines going out from nodes
-                    Handles.color = gradient.Evaluate(0f);
-                    DrawAAPolyLineNonAlloc(thickness, start, gridPoints[0]);
-                    Handles.color = gradient.Evaluate(1f);
-                    DrawAAPolyLineNonAlloc(thickness, end, gridPoints[length - 1]);
-                    for (int i = 0; i < length - 1; i++) {
-                        Vector2 point_a = gridPoints[i];
-                        Vector2 point_b = gridPoints[i + 1];
-                        // Draws the line with the coloring.
-                        Vector2 prev_point = point_a;
-                        // Approximately one segment per 5 pixels
-                        int segments = (int) Vector2.Distance(point_a, point_b) / 5;
-                        segments = Math.Max(segments, 1);
+                switch (path)
+                {
+                    case NoodlePath.Curvy:
+                        DrawBezierSegment(pointA, pointB, segmentLengths[i], gradient, tStart, tEnd, thickness, stroke);
+                        break;
 
-                        int draw = 0;
-                        for (int j = 0; j <= segments; j++) {
-                            draw++;
-                            float t = j / (float) segments;
-                            Vector2 lerp = Vector2.Lerp(point_a, point_b, t);
-                            if (draw > 0) {
-                                if (i == length - 2) Handles.color = gradient.Evaluate(t);
-                                DrawAAPolyLineNonAlloc(thickness, prev_point, lerp);
-                            }
-                            prev_point = lerp;
-                            if (stroke == NoodleStroke.Dashed && draw >= 2) draw = -2;
-                        }
-                    }
-                    gridPoints[0] = start;
-                    gridPoints[length - 1] = end;
-                    break;
+                    case NoodlePath.Straight:
+                        DrawStraightSegment(pointA, pointB, gradient, tStart, tEnd, thickness, stroke);
+                        break;
+
+                    case NoodlePath.Angled:
+                        DrawAngledSegment(pointA, pointB, gradient, tStart, tEnd, thickness, stroke);
+                        break;
+
+                    case NoodlePath.ShaderLab:
+                        DrawBezierSegment(
+                            pointA,
+                            pointB,
+                            20 / zoom, // Fixed tangent for ShaderLab
+                            gradient,
+                            tStart,
+                            tEnd,
+                            thickness,
+                            stroke
+                        );
+                        break;
+                }
             }
+
+            // Restore original handle color
             Handles.color = originalHandlesColor;
+        }
+
+        private void DrawBezierSegment(Vector2 start, Vector2 end, float tangentFactor, Gradient gradient, float tStart, float tEnd, float thickness, NoodleStroke stroke)
+        {
+            Vector2 startTangent = start + Vector2.right * tangentFactor * 0.5f;
+            Vector2 endTangent = end - Vector2.right * tangentFactor * 0.5f;
+            DrawSegment(start, end, gradient, tStart, tEnd, thickness, stroke, (t) => CalculateBezierPoint(start, startTangent, endTangent, end, t));
+        }
+
+        private void DrawStraightSegment(Vector2 start, Vector2 end, Gradient gradient, float tStart, float tEnd, float thickness, NoodleStroke stroke)
+        {
+            DrawSegment(start, end, gradient, tStart, tEnd, thickness, stroke, (t) => Vector2.Lerp(start, end, t));
+        }
+
+        private void DrawAngledSegment(Vector2 start, Vector2 end, Gradient gradient, float tStart, float tEnd, float thickness, NoodleStroke stroke)
+        {
+            float midpointX = (start.x + end.x) * 0.5f;
+            Vector2 midA = new Vector2(midpointX, start.y);
+            Vector2 midB = new Vector2(midpointX, end.y);
+
+            DrawStraightSegment(start, midA, gradient, tStart, Mathf.Lerp(tStart, tEnd, 0.33f), thickness, stroke);
+            DrawStraightSegment(midA, midB, gradient, Mathf.Lerp(tStart, tEnd, 0.33f), Mathf.Lerp(tStart, tEnd, 0.66f), thickness, stroke);
+            DrawStraightSegment(midB, end, gradient, Mathf.Lerp(tStart, tEnd, 0.66f), tEnd, thickness, stroke);
+        }
+
+        private void DrawSegment(Vector2 start, Vector2 end, Gradient gradient, float tStart, float tEnd, float thickness, NoodleStroke stroke, Func<float, Vector2> positionFunc)
+        {
+            int segments = Mathf.CeilToInt(Vector2.Distance(start, end) * 0.2f);
+            Vector2 previous = positionFunc(0f);
+
+            for (int i = 1; i <= segments; i++)
+            {
+                float t = i / (float)segments;
+                float gradientT = Mathf.Lerp(tStart, tEnd, t);
+                Handles.color = gradient.Evaluate(gradientT);
+
+                Vector2 current = positionFunc(t);
+                if (stroke != NoodleStroke.Dashed || i % 2 == 1)
+                {
+                    DrawAAPolyLineNonAlloc(thickness, previous, current);
+                }
+                previous = current;
+            }
         }
 
         /// <summary> Draws all connections </summary>
