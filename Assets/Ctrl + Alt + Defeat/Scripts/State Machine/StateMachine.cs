@@ -7,9 +7,9 @@ namespace CAD
 {
     public class StateMachine
     {
-        private List<IState> m_States = new();
+        private List<State> m_States = new();
         private List<Transition> m_Transitions = new();
-        private IState m_CurrentState;
+        private State m_CurrentState;
         private SmartTank m_TankAI;
 
         public StateMachine(SmartTank tankAI)
@@ -27,24 +27,24 @@ namespace CAD
         {
             m_CurrentState.OnStateUpdate(m_TankAI);
 
-            foreach (Transition transition in m_Transitions.Where(t => t.OriginState == m_CurrentState))
-            {
-                if (transition.Condition(m_TankAI))
-                {
-                    SwitchState(transition.TargetState);
-                    return;
-                }
-            }
+            //foreach (Transition transition in m_Transitions.Where(t => t.OriginState == m_CurrentState))
+            //{
+            //    if (transition.Condition(m_TankAI))
+            //    {
+            //        SwitchState(transition.TargetState);
+            //        return;
+            //    }
+            //}
         }
 
-        public void AddState(IState state)
+        public void AddState(State state)
         {
             m_States.Add(state);
         }
         
-        public void AddTransition(IState originState, IState targetState, Func<SmartTank, bool> condition)
+        public void AddTransition(string name, Func<SmartTank, bool> condition)
         {
-            AddTransition(new Transition(originState, targetState, condition));
+            AddTransition(new Transition(name, condition));
         }
 
         public void AddTransition(Transition transition) 
@@ -52,7 +52,7 @@ namespace CAD
             m_Transitions.Add(transition);
         }
 
-        private void SwitchState(IState state)
+        private void SwitchState(State state)
         {
             if (m_CurrentState == state) return;
 

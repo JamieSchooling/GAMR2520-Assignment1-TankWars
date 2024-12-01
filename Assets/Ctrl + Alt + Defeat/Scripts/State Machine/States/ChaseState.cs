@@ -3,23 +3,17 @@ using UnityEngine;
 
 namespace CAD
 {
-    public class ChaseState : IState
+    [CreateAssetMenu(menuName = "AI/States/Chase State")]
+    public class ChaseState : State
     {
         private Vector3 m_EnemyPos;
 
-        private List<Transition> m_Transitions = new();
-
-        public List<Transition> GetTransitions()
-        {
-            return m_Transitions;
-        }
-
-        public void OnStateEnter(SmartTank tankAI)
+        public override void OnStateEnter(SmartTank tankAI)
         {
             // TODO: Implement OnStateEnter
         }
 
-        public void OnStateUpdate(SmartTank tankAI)
+        public override void OnStateUpdate(SmartTank tankAI)
         {
             if (tankAI.EnemyTank)
             {
@@ -28,11 +22,21 @@ namespace CAD
             }
         }
 
-        public void OnStateExit(SmartTank tankAI)
+        public override void OnStateExit(SmartTank tankAI)
         {
             GameObject lastEnemyPos = new GameObject("LastEnemyPos");
             lastEnemyPos.transform.position = m_EnemyPos;
             tankAI.LastKnownEnemyPos = lastEnemyPos;
+        }
+
+        private void OnEnable()
+        {
+            Transitions = new()
+            {
+                new Transition("Low Resources", tankAI => tankAI.Health <= 30.0f || tankAI.Ammo <= 4.0f || tankAI.Fuel <= 50.0f),
+                new Transition("Tank Lost", tankAI => !tankAI.EnemyTank),
+                new Transition("Tank In Range", tankAI => Vector3.Distance(tankAI.transform.position, tankAI.EnemyTank.transform.position) < 25.0f)
+            };
         }
     }
 }

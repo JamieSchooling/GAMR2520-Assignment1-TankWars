@@ -4,22 +4,16 @@ using System.Collections.Generic;
 
 namespace CAD
 {
-    public class RetreatState : IState
+    [CreateAssetMenu(menuName = "AI/States/Retreat State")]
+    public class RetreatState : State
     {
         private float m_CurrentTime = 0;
 
-        private List<Transition> m_Transitions = new();
-
-        public List<Transition> GetTransitions()
-        {
-            return m_Transitions;
-        }
-
-        public void OnStateEnter(SmartTank tankAI)
+        public override void OnStateEnter(SmartTank tankAI)
         {
         }   
 
-        public void OnStateUpdate(SmartTank tankAI)
+        public override void OnStateUpdate(SmartTank tankAI)
         {
             List<string> consumablesToFind = new();
 
@@ -39,7 +33,7 @@ namespace CAD
             FindConsumables(tankAI, consumablesToFind);
         }
 
-        public void OnStateExit(SmartTank tankAI)
+        public override void OnStateExit(SmartTank tankAI)
         {
             // TODO: Implement OnStateExit
         }
@@ -73,6 +67,15 @@ namespace CAD
                 tankAI.GenerateNewRandomWorldPoint();
                 m_CurrentTime = 0;
             }
+        }
+
+        private void OnEnable()
+        {
+            Transitions = new()
+            {
+                new Transition("Tank Found", tankAI => tankAI.EnemyTank),
+                new Transition("Tank Lost", tankAI => !tankAI.EnemyTank)
+            };
         }
     }
 }

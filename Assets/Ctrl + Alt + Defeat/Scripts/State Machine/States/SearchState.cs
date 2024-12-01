@@ -4,23 +4,17 @@ using UnityEngine;
 
 namespace CAD
 {
-    public class SearchState : IState
+    [CreateAssetMenu(menuName = "AI/States/Search State")]
+    public class SearchState : State
     {
         private float m_CurrentTime;
 
-        private List<Transition> m_Transitions = new();
-
-        public List<Transition> GetTransitions()
-        {
-            return m_Transitions;
-        }
-
-        public void OnStateEnter(SmartTank tankAI)
+        public override void OnStateEnter(SmartTank tankAI)
         {
             m_CurrentTime = 0;
         }
 
-        public void OnStateUpdate(SmartTank tankAI)
+        public override void OnStateUpdate(SmartTank tankAI)
         {
             if (tankAI.LastKnownEnemyPos)
             {
@@ -51,9 +45,18 @@ namespace CAD
             }
         }
 
-        public void OnStateExit(SmartTank tankAI)
+        public override void OnStateExit(SmartTank tankAI)
         {
             // TODO: Implement OnStateExit
+        }
+
+        private void OnEnable()
+        {
+            Transitions = new()
+            {
+                new Transition("Low Resources", tankAI => tankAI.Health <= 30.0f || tankAI.Ammo <= 4.0f || tankAI.Fuel <= 50.0f),
+                new Transition("Tank Found", tankAI => tankAI.EnemyTank)
+            };
         }
     }
 }
