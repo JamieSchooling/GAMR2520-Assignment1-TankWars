@@ -1,4 +1,5 @@
 using System.Linq;
+using UnityEditor;
 using UnityEngine;
 using XNode;
 
@@ -10,7 +11,22 @@ namespace CAD
 
         [SerializeField] private State m_State = null;
 
-        public bool IsActive { get; set; } = false;
+        public bool IsActive
+        {
+            get => m_IsActive;
+            set
+            {
+                bool oldValue = m_IsActive;
+                m_IsActive = value;
+                if (oldValue != m_IsActive)
+                {
+                    var windows = Resources.FindObjectsOfTypeAll<XNodeEditor.NodeEditorWindow>();
+                    if (windows.Length > 0) windows.First(window => window.graph == graph).Repaint();
+                }
+            } 
+        }
+
+        private bool m_IsActive = false;
 
         private State m_PreviousState = null;
 
