@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace CAD
 {
-    [DisallowMultipleNodes]
+    [DisallowMultipleNodes, NodeTint("#00ff00")]
     public class EntryNode : XNode.Node
     {
         [Output] private int m_OutputNode;
