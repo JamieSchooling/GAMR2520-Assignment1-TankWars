@@ -232,7 +232,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4f1894a3164c290409d04a422b5c7636, type: 3}
-  m_Name: State Machine Graph
+  m_Name: SmartTank FSM
   m_EditorClassIdentifier: 
   nodes:
   - {fileID: 1578745791153334103}
