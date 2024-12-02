@@ -44,5 +44,10 @@ namespace CAD
             return port.IsOutput ? noodleGradient.Evaluate(0f) : noodleGradient.Evaluate(1f);
         }
 
+
+        public override NoodlePath GetNoodlePath(NodePort output, NodePort input)
+        {
+            return NoodlePath.Straight;
+        }
     }
 }
