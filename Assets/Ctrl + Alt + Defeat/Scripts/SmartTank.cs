@@ -12,7 +12,7 @@ namespace CAD
         /// <summary>
         /// State machine graph that contains the intended behaviour of the AI.
         /// </summary>
-        [SerializeField] private StateMachineGraph m_StateMachineGraph;
+        [SerializeField] private StateMachine m_StateMachine;
 
         /// <returns>
         /// Dictionary(GameObject consumable, float distance) of visible consumables (consumables in Consumable LayerMask).
@@ -68,7 +68,7 @@ namespace CAD
         /// <summary>
         /// Instance of StateMachine that reads a StateMachineGraph.
         /// </summary>
-        private StateMachine m_StateMachine;
+        private StateMachineProcessor m_StateMachineProcessor;
 
         /// <summary>
         /// Wrapper method for generating a random world point for pathfinding.
@@ -115,7 +115,7 @@ namespace CAD
         /// </summary>
         public override void AITankUpdate()
         {
-            m_StateMachine.Update();
+            m_StateMachineProcessor.Update();
         }
 
         /// <summary>
@@ -132,14 +132,14 @@ namespace CAD
         /// </summary>
         private void InitialiseStateMachine()
         {
-            m_StateMachine = new(this);
+            m_StateMachineProcessor = new(this);
 
-            m_StateMachine.Start(m_StateMachineGraph);
+            m_StateMachineProcessor.Start(m_StateMachine);
         }
 
         private void OnDisable()
         {
-            m_StateMachine?.End();
+            m_StateMachineProcessor?.End();
         }
     }
 }

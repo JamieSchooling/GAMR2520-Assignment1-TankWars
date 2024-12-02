@@ -4,7 +4,7 @@ using XNodeEditor;
 
 namespace CAD
 {
-    [CustomNodeGraphEditor(typeof(StateMachineGraph))]
+    [CustomNodeGraphEditor(typeof(StateMachine))]
     public class StateMachineGraphEditor : NodeGraphEditor
     {
         public override Gradient GetNoodleGradient(NodePort output, NodePort input)
