@@ -4,15 +4,25 @@ using System.Collections.Generic;
 
 namespace CAD
 {
+    /// <summary>
+    /// Represents a state where the AI-controlled tank retreats, seeking consumables based on current resource levels.
+    /// </summary>
     [CreateAssetMenu(menuName = "AI/States/Retreat State")]
     public class RetreatState : State
     {
+        /// <summary>
+        /// Holds the time in seconds since the last random path finding target was generated.
+        /// </summary>
         private float m_CurrentTime = 0;
 
         public override void OnStateEnter(SmartTank tankAI)
         {
-        }   
+        }
 
+        /// <summary>
+        /// Determines what consumables to find based on current resource levels.
+        /// </summary>
+        /// <param name="tankAI">The SmartTank instance running the StateMachine.</param>
         public override void OnStateUpdate(SmartTank tankAI)
         {
             List<string> consumablesToFind = new();
@@ -38,6 +48,11 @@ namespace CAD
             // TODO: Implement OnStateExit
         }
 
+        /// <summary>
+        /// Finds the closest consumable out of the required types, and if none are found, follows a path to a random world point.
+        /// </summary>
+        /// <param name="tankAI">The SmartTank instance running the StateMachine.</param>
+        /// <param name="consumableTypes">List of tags corresponding to the types of consumables needing found.</param>
         private void FindConsumables(SmartTank tankAI, List<string> consumableTypes)
         {
             if (tankAI.VisibleConsumables.Count > 0)
@@ -72,7 +87,9 @@ namespace CAD
             }
         }
 
-
+        /// <summary>
+        /// Creates list of transitions for this state. Called when the ScriptableObject becomes enabled and active.
+        /// </summary>
         private void OnEnable()
         {
             Transitions = new()

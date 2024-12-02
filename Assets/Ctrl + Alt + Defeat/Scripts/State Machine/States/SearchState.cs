@@ -4,16 +4,32 @@ using UnityEngine;
 
 namespace CAD
 {
+    /// <summary>
+    /// Represents a state where the AI-controlled tank searches for the last known enemy position or consumables. 
+    /// If neither is found, the tank moves to a random world point.
+    /// </summary>
     [CreateAssetMenu(menuName = "AI/States/Search State")]
     public class SearchState : State
     {
+        /// <summary>
+        /// Holds the time in seconds since the last random path finding target was generated.
+        /// </summary>
         private float m_CurrentTime;
 
+        /// <summary>
+        /// Called when the state is entered. Initializes time tracking for the state.
+        /// </summary>
+        /// <param name="tankAI">The SmartTank instance entering the state.</param>
         public override void OnStateEnter(SmartTank tankAI)
         {
             m_CurrentTime = 0;
         }
 
+        /// <summary>
+        /// The tank will search for the last known enemy position,
+        /// approach consumables, or move to a random world point if neither are found.
+        /// </summary>
+        /// <param name="tankAI">The SmartTank instance running the StateMachine.</param>
         public override void OnStateUpdate(SmartTank tankAI)
         {
             if (tankAI.LastKnownEnemyPos)
@@ -49,6 +65,9 @@ namespace CAD
             // TODO: Implement OnStateExit
         }
 
+        /// <summary>
+        /// Creates a list of transitions for this state. Called when the ScriptableObject becomes enabled and active.
+        /// </summary>
         private void OnEnable()
         {
             Transitions = new()
