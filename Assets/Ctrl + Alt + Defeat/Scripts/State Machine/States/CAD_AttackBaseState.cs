@@ -14,7 +14,7 @@ public class CAD_AttackBaseState : CAD_State
 {
     public override void OnStateEnter(CAD_SmartTank tankAI)
     {
-        tankAI.StartCoroutine(PathFindToBase(tankAI));
+        
     }
 
     public override void OnStateExit(CAD_SmartTank tankAI)
@@ -26,25 +26,14 @@ public class CAD_AttackBaseState : CAD_State
     {
         if (tankAI.VisibleEnemyBases.Count > 0)
         {
-            if (Vector3.Distance(tankAI.transform.position, tankAI.VisibleEnemyBases.First().Key.transform.position) > 25.0f) return;
-            tankAI.TurretFireAtPoint(tankAI.VisibleEnemyBases.First().Key);
-        }
-    }
-
-    IEnumerator PathFindToBase(CAD_SmartTank tankAI)
-    {
-        yield return new WaitForSeconds(1f);
-
-        if (tankAI.VisibleEnemyBases.Count == 0)
-        {
-            GameObject go = new GameObject("Base Target Pos");
-            go.transform.position = tankAI.VisibleEnemyBases.First().Key.transform.position;
-
-            tankAI.FollowPathToWorldPoint(go, 1f);
-        }
-        else
-        {
-            Debug.Log("No bases visible");
+            if (Vector3.Distance(tankAI.transform.position, tankAI.VisibleEnemyBases.First().Key.transform.position) > 25.0f)
+            {
+                tankAI.FollowPathToWorldPoint(tankAI.VisibleEnemyBases.First().Key, 1f);
+            }
+            else
+            {
+                tankAI.TurretFireAtPoint(tankAI.VisibleEnemyBases.First().Key);
+            }
         }
     }
 

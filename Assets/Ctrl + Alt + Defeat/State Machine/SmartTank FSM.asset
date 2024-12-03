@@ -108,6 +108,9 @@ MonoBehaviour:
       - fieldName: m_OutputNode
         node: {fileID: 1578745791153334103}
         reroutePoints: []
+      - fieldName: Enough Resources
+        node: {fileID: 7516501704302463045}
+        reroutePoints: []
       _direction: 0
       _connectionType: 0
       _typeConstraint: 0
@@ -428,7 +431,16 @@ MonoBehaviour:
       _node: {fileID: 7516501704302463045}
       _typeQualifiedName: CAD_Transition, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
-      connections: []
+      connections:
+      - fieldName: m_InputNode
+        node: {fileID: -5750083703257732420}
+        reroutePoints:
+        - {x: -304, y: 336}
+        - {x: -304, y: 368}
+        - {x: -544, y: 368}
+        - {x: -544, y: 177.50003}
+        - {x: -544.8, y: -96.100006}
+        - {x: -528.8, y: -94.5}
       _direction: 1
       _connectionType: 1
       _typeConstraint: 0
