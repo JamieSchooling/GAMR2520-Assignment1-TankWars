@@ -41,7 +41,8 @@ public class CAD_AttackBaseState : CAD_State
     {
         Transitions = new()
         {
-            new CAD_Transition("Low Resources", tankAI => tankAI.Health <= 30.0f || tankAI.Ammo <= 4.0f || tankAI.Fuel <= 50.0f),
+            new CAD_Transition("Low Health or Fuel", tankAI => tankAI.Health <= 30.0f || tankAI.Fuel <= 50.0f),
+            new CAD_Transition("Low Ammo", tankAI.Ammo == 0.0f),
             new CAD_Transition("Tank Found", tankAI => tankAI.EnemyTank),
             new CAD_Transition("Base Lost", tankAI => tankAI.VisibleEnemyBases.Count == 0)
         };
