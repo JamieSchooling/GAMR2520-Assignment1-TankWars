@@ -12,6 +12,8 @@ public class CAD_RetreatState : CAD_State
     /// Stores the last known position of the enemy tank.
     /// </summary>
     private Vector3 m_EnemyPos;
+    private GameObject m_NewPos;
+    Vector3 Offset = new Vector3(10, 0, 10);
 
     public override void OnStateEnter(CAD_SmartTank tankAI)
     {
@@ -24,14 +26,19 @@ public class CAD_RetreatState : CAD_State
     /// <param name="tankAI">The SmartTank instance running the StateMachine.</param>
     public override void OnStateUpdate(CAD_SmartTank tankAI)
     {
+        GameObject SafestPos = new GameObject("SafestPos");
+        SafestPos.transform.position = m_EnemyPos * -1;
+        tankAI.LastKnownSafestPos = SafestPos;
         if (tankAI.EnemyTank)
         {
-            GameObject SafestPos = new GameObject("SafestPos");
-            SafestPos.transform.position = m_EnemyPos * -1;
-            tankAI.LastKnownSafestPos = SafestPos;
-            tankAI.FollowPathToWorldPoint(tankAI.LastKnownSafestPos, 1f);
-            m_EnemyPos = tankAI.EnemyTank.transform.position;
+            Vector3 TankOffset = tankAI.EnemyTank.transform.position + Offset;
+            m_NewPos = new GameObject("MoveAround");
+            m_NewPos.transform.position = TankOffset;
+            tankAI.FollowPathToWorldPoint(m_NewPos, 1f);
+            Destroy(m_NewPos);
         }
+        tankAI.FollowPathToWorldPoint(tankAI.LastKnownSafestPos, 1f);
+        m_EnemyPos = tankAI.EnemyTank.transform.position;
     }
 
     public override void OnStateExit(CAD_SmartTank tankAI)
@@ -49,7 +56,9 @@ public class CAD_RetreatState : CAD_State
         Transitions = new()
         {
 
-            new CAD_Transition("Safe Distance", tankAI => tankAI.transform.position == tankAI.LastKnownSafestPos.transform.position)
+            new CAD_Transition("Safe Distance", tankAI => tankAI.transform.position.x <= tankAI.LastKnownSafestPos.transform.position.x - 10.0f && tankAI.transform.position.x >= tankAI.LastKnownSafestPos.transform.position.x + 10.0f
+            && tankAI.transform.position.z <= tankAI.LastKnownSafestPos.transform.position.z - 10.0f && tankAI.transform.position.z >= tankAI.LastKnownSafestPos.transform.position.z + 10.0f),
+            new CAD_Transition("Fuel too Low", tankAI => tankAI.Fuel <= 30.0f)
         };
     }
 }
