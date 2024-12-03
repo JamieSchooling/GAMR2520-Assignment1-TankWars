@@ -9,9 +9,9 @@ using System.Collections.Generic;
 public class CAD_RetreatState : CAD_State
 {
     /// <summary>
-    /// Holds the time in seconds since the last random path finding target was generated.
+    /// Stores the last known position of the enemy tank.
     /// </summary>
-    private float m_CurrentTime = 0;
+    private Vector3 m_EnemyPos;
 
     public override void OnStateEnter(CAD_SmartTank tankAI)
     {
@@ -26,7 +26,10 @@ public class CAD_RetreatState : CAD_State
     {
         if (tankAI.EnemyTank)
         {
-            tankAI.FollowPathToWorldPoint((tankAI.EnemyTank*-1), 1f);
+            GameObject SafestPos = new GameObject("SafestPos");
+            SafestPos.transform.position = m_EnemyPos * -1;
+            tankAI.LastKnownSafestPos = SafestPos;
+            tankAI.FollowPathToWorldPoint(tankAI.LastKnownSafestPos, 1f);
             m_EnemyPos = tankAI.EnemyTank.transform.position;
         }
     }
@@ -46,7 +49,7 @@ public class CAD_RetreatState : CAD_State
         Transitions = new()
         {
 
-            new CAD_Transition("Safe Distance", tankAI => tankAI.Health > 30 && tankAI.Ammo > 4 && tankAI.Fuel > 50)
+            new CAD_Transition("Safe Distance", tankAI => tankAI.transform.position == tankAI.LastKnownSafestPos.transform.position)
         };
     }
 }

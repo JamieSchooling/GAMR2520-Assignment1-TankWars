@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,7 +9,7 @@ using UnityEngine;
 /// </summary>
 [CreateAssetMenu(menuName = "AI/States/Resource Gathering State")]
 
-public class CAD_Resource_Gathering_State : MonoBehaviour
+public class CAD_Resource_Gathering_State : CAD_State
 {
     /// <summary>
     /// Holds the time in seconds since the last random path finding target was generated.
@@ -17,6 +18,7 @@ public class CAD_Resource_Gathering_State : MonoBehaviour
 
     public override void OnStateEnter(CAD_SmartTank tankAI)
     {
+
     }
 
     /// <summary>
@@ -36,11 +38,11 @@ public class CAD_Resource_Gathering_State : MonoBehaviour
         {
             consumablesToFind.Add("Fuel");
         }
-        if (consumablesToFind.First().Key != "Health")
+        if (consumablesToFind[0] != "Health")
         {
             consumablesToFind.Add("Health");
         }
-        if (tankAI.Fuel <= 50.0f && consumablesToFind.First().Key != "Fuel")
+        if (tankAI.Fuel <= 50.0f && consumablesToFind[0] != "Fuel")
         {
             consumablesToFind.Add("Fuel");
         }
@@ -105,7 +107,8 @@ public class CAD_Resource_Gathering_State : MonoBehaviour
     {
         Transitions = new()
         {
-            new CAD_Transition("Enough Resources", tankAI => tankAI.Health > 60 && tankAI.Ammo > 5 && tankAI.Fuel > 70)
+            new CAD_Transition("Enough Resources", tankAI => tankAI.Health >= 60 && tankAI.Ammo >= 5 && tankAI.Fuel >= 70),
+            new CAD_Transition("Retreat for Safety", tankAI => tankAI.EnemyTank && tankAI => tankAI.Fuel >= 70)
         };
     }
 

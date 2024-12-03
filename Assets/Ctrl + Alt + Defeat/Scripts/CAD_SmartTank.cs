@@ -55,6 +55,20 @@ public class CAD_SmartTank : AITank
         }
     }
 
+    /// <summary>
+    /// Property for retrieving tank's last known safest position. Replaces the current GameObject when set.
+    /// </summary>
+    /// <returns> GameObject at last known safest position.</returns>
+    public GameObject LastKnownSafestPos
+    {
+        get => m_LastKnownSafestPos;
+        set
+        {
+            Destroy(m_LastKnownSafestPos);
+            m_LastKnownSafestPos = value;
+        }
+    }
+
     /// <returns>
     /// Current tank health.
     /// </returns>
@@ -74,6 +88,11 @@ public class CAD_SmartTank : AITank
     /// GameObject at last known enemy tank position.
     /// </summary>
     private GameObject m_LastKnownEnemyPos = null;
+
+    /// <summary>
+    /// GameObject at last known safest position.
+    /// </summary>
+    private GameObject m_LastKnownSafestPos = null;
 
     /// <summary>
     /// Instance of StateMachine that reads a StateMachineGraph.
