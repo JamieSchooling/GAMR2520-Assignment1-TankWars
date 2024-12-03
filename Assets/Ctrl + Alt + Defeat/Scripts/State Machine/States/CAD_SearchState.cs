@@ -13,6 +13,12 @@ public class CAD_SearchState : CAD_State
     /// Holds the time in seconds since the last random path finding target was generated.
     /// </summary>
     private float m_CurrentTime;
+    [HideInInspector]
+    public List<Vector3> barrelPositiions;
+    [HideInInspector]
+    public List<Vector3> ammoPositiions;
+    [HideInInspector]
+    public List<Vector3> healthPositiions;
 
     /// <summary>
     /// Called when the state is entered. Initializes time tracking for the state.
@@ -42,7 +48,39 @@ public class CAD_SearchState : CAD_State
         else if (tankAI.VisibleConsumables.Count > 0)
         {
             GameObject consumable = tankAI.VisibleConsumables.First().Key;
-            tankAI.FollowPathToWorldPoint(consumable, 1f);
+            switch (consumable.name)
+            {
+                case "Fuel":
+                    if (tankAI.Fuel <= 75.0f)
+                    {
+                        tankAI.FollowPathToWorldPoint(consumable, 1f);
+                    }
+                    else
+                    {
+                        barrelPositiions.Add(consumable.GetComponent<Transform>().position);
+                    }
+                    break;
+                case "Ammo":
+                    if (tankAI.Ammo <= 8.0f)
+                    {
+                        tankAI.FollowPathToWorldPoint(consumable, 1f);
+                    }
+                    else
+                    {
+                        ammoPositiions.Add(consumable.GetComponent<Transform>().position);
+                    }
+                    break;
+                case "Health":
+                    if (tankAI.Health <= 80.0f)
+                    {
+                        tankAI.FollowPathToWorldPoint(consumable, 1f);
+                    }
+                    else
+                    {
+                        healthPositiions.Add(consumable.GetComponent<Transform>().position);
+                    }
+                    break;
+            }
             m_CurrentTime += Time.deltaTime;
         }
         else
