@@ -26,7 +26,7 @@ public class CAD_StateNode : XNode.Node
 
     private bool m_IsActive = false;
 
-    private CAD_State m_PreviousState = null;
+    [SerializeField, HideInInspector] private CAD_State m_PreviousState = null;
 
     public void OnValidate()
     {
