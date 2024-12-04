@@ -1,6 +1,8 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 /// <summary>
 /// Represents a state where the AI-controlled tank searches for the last known enemy position or consumables. 
@@ -9,16 +11,13 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "AI/States/Search State")]
 public class CAD_SearchState : CAD_State
 {
+    [SerializeField] private Vector3[] m_PatrolPoints;
     /// <summary>
     /// Holds the time in seconds since the last random path finding target was generated.
     /// </summary>
     private float m_CurrentTime;
-    [HideInInspector]
-    public List<Vector3> barrelPositiions;
-    [HideInInspector]
-    public List<Vector3> ammoPositiions;
-    [HideInInspector]
-    public List<Vector3> healthPositiions;
+    private GameObject m_CurrentPoint;
+    private int m_CurrentIndex = 0;
 
     /// <summary>
     /// Called when the state is entered. Initializes time tracking for the state.
@@ -27,6 +26,19 @@ public class CAD_SearchState : CAD_State
     public override void OnStateEnter(CAD_SmartTank tankAI)
     {
         m_CurrentTime = 0;
+        //Makes sure it starts at the closest resource waypoint
+        float beststart = float.PositiveInfinity;
+        for (int i = 0; i < m_PatrolPoints.Length; i++)
+        {
+            float currentstart = Vector3.Distance(tankAI.transform.position, m_PatrolPoints[i]);
+            if (currentstart < beststart)
+            {
+                m_CurrentIndex = i;
+                beststart = currentstart;
+            }
+        }
+        m_CurrentPoint = tankAI.CreateWaypoint(m_PatrolPoints[m_CurrentIndex]);
+        tankAI.StartCoroutine(UpdatePatrolPoint(tankAI));
     }
 
     /// <summary>
@@ -45,47 +57,9 @@ public class CAD_SearchState : CAD_State
             }
             tankAI.FollowPathToWorldPoint(tankAI.LastKnownEnemyPos, 1f);
         }
-        else if (tankAI.VisibleConsumables.Count > 0)
-        {
-            GameObject consumable = tankAI.VisibleConsumables.First().Key;
-            switch (consumable.name)
-            {
-                case "Fuel":
-                    if (tankAI.Fuel <= 75.0f)
-                    {
-                        tankAI.FollowPathToWorldPoint(consumable, 1f);
-                    }
-                    else
-                    {
-                        barrelPositiions.Add(consumable.GetComponent<Transform>().position);
-                    }
-                    break;
-                case "Ammo":
-                    if (tankAI.Ammo <= 8.0f)
-                    {
-                        tankAI.FollowPathToWorldPoint(consumable, 1f);
-                    }
-                    else
-                    {
-                        ammoPositiions.Add(consumable.GetComponent<Transform>().position);
-                    }
-                    break;
-                case "Health":
-                    if (tankAI.Health <= 80.0f)
-                    {
-                        tankAI.FollowPathToWorldPoint(consumable, 1f);
-                    }
-                    else
-                    {
-                        healthPositiions.Add(consumable.GetComponent<Transform>().position);
-                    }
-                    break;
-            }
-            m_CurrentTime += Time.deltaTime;
-        }
         else
         {
-            tankAI.FollowPathToRandomWorldPoint(1f);
+            tankAI.FollowPathToWorldPoint(m_CurrentPoint, 1f);
         }
 
         m_CurrentTime += Time.deltaTime;
@@ -99,6 +73,27 @@ public class CAD_SearchState : CAD_State
     public override void OnStateExit(CAD_SmartTank tankAI)
     {
         // TODO: Implement OnStateExit
+    }
+
+    private IEnumerator UpdatePatrolPoint(CAD_SmartTank tankAI)
+    {
+        while (true)
+        {
+            Debug.Log(Vector3.Distance(tankAI.transform.position, m_CurrentPoint.transform.position));
+            if (Vector3.Distance(tankAI.transform.position, m_CurrentPoint.transform.position) < 25.0f)
+            {
+
+                m_CurrentIndex++;
+                if (m_CurrentIndex >= m_PatrolPoints.Count())
+                {
+                    m_CurrentIndex = 0;
+                }
+
+                Destroy(m_CurrentPoint);
+                m_CurrentPoint = tankAI.CreateWaypoint(m_PatrolPoints[m_CurrentIndex]);
+            }
+            yield return new WaitForEndOfFrame();
+        }
     }
 
     /// <summary>

@@ -12,3 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb54d183205f6814cb8fe06211b84d8e, type: 3}
   m_Name: Search State
   m_EditorClassIdentifier: 
+  m_PatrolPoints:
+  - {x: 55.4, y: 0, z: 34.2}
+  - {x: 74.7, y: 0, z: -80.9}
+  - {x: -66.2, y: 0, z: -71.2}
+  - {x: -48.8, y: 0, z: 45.6}
