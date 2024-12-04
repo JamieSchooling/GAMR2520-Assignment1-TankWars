@@ -21,29 +21,31 @@ public class CAD_Resource_Gathering_State : CAD_State
     /// Holds all the positions for the resource spawn points.
     /// </summary>
     [SerializeField] private Vector3[] m_ResourceWaypoints;
+
     /// <summary>
     /// Holds the current waypint game object
     /// </summary>
     private GameObject m_CurrentWaypoint;
+
     /// <summary>
     /// Holds the waypoint index (where in the list of waypoints)
     /// </summary>
-    private int WaypointIndex = 0;
+    private int m_WaypointIndex = 0;
 
     public override void OnStateEnter(CAD_SmartTank tankAI)
     {
         //Makes sure it starts at the closest resource waypoint
-        float beststart = float.PositiveInfinity;
+        float closestDistance = float.PositiveInfinity;
         for (int i = 0; i < m_ResourceWaypoints.Length; i++)
         {
-            float currentstart = Vector3.Distance(tankAI.transform.position, m_ResourceWaypoints[i]);
-            if (currentstart < beststart)
+            float currentDistance = Vector3.Distance(tankAI.transform.position, m_ResourceWaypoints[i]);
+            if (currentDistance < closestDistance)
             {
-                WaypointIndex = i;
-                beststart = currentstart;
+                m_WaypointIndex = i;
+                closestDistance = currentDistance;
             }
         }
-        m_CurrentWaypoint = tankAI.CreateWaypoint(m_ResourceWaypoints[WaypointIndex]);
+        m_CurrentWaypoint = tankAI.CreateWaypoint(m_ResourceWaypoints[m_WaypointIndex]);
         tankAI.StartCoroutine(UpdateWaypoint(tankAI));
     }
 
@@ -85,7 +87,6 @@ public class CAD_Resource_Gathering_State : CAD_State
         {
             consumablesToFind.Add("Ammo");
         }
-        
 
         FindConsumables(tankAI, consumablesToFind);
     }
@@ -127,6 +128,7 @@ public class CAD_Resource_Gathering_State : CAD_State
     {
         // TODO: Implement OnStateExit
     }
+
     /// <summary>
     /// Updates the waypoint index asynchronously
     /// </summary>
@@ -138,20 +140,18 @@ public class CAD_Resource_Gathering_State : CAD_State
         {
             if (Vector3.Distance(tankAI.transform.position, m_CurrentWaypoint.transform.position) < 25.0f)
             {
-
-                WaypointIndex++;
-                if (WaypointIndex >= m_ResourceWaypoints.Count())
+                m_WaypointIndex++;
+                if (m_WaypointIndex >= m_ResourceWaypoints.Count())
                 {
-                    WaypointIndex = 0;
+                    m_WaypointIndex = 0;
                 }
 
                 Destroy(m_CurrentWaypoint);
-                m_CurrentWaypoint = tankAI.CreateWaypoint(m_ResourceWaypoints[WaypointIndex]);
+                m_CurrentWaypoint = tankAI.CreateWaypoint(m_ResourceWaypoints[m_WaypointIndex]);
             }
             yield return new WaitForEndOfFrame();
         }
     }
-
 
     /// <summary>
     /// Creates list of transitions for this state. Called when the ScriptableObject becomes enabled and active.
@@ -168,7 +168,4 @@ public class CAD_Resource_Gathering_State : CAD_State
             new CAD_Transition("Retreat for Safety", tankAI => tankAI.EnemyTank && tankAI.Fuel >= 70.0f)
         };
     }
-
 }
-
-
