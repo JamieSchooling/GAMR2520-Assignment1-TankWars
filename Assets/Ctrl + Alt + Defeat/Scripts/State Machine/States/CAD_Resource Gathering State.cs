@@ -21,16 +21,18 @@ public class CAD_Resource_Gathering_State : CAD_State
     /// Holds all the positions for the resource spawn points.
     /// </summary>
     [SerializeField] private Vector3[] m_ResourceWaypoints;
-
     /// <summary>
-    /// Holds the time in seconds since the last random path finding target was generated.
+    /// Holds the current waypint game object
     /// </summary>
-    private float m_CurrentTime = 0;
     private GameObject m_CurrentWaypoint;
+    /// <summary>
+    /// Holds the waypoint index (where in the list of waypoints)
+    /// </summary>
     private int WaypointIndex = 0;
 
     public override void OnStateEnter(CAD_SmartTank tankAI)
     {
+        //Makes sure it starts at the closest resource waypoint
         float beststart = float.PositiveInfinity;
         for (int i = 0; i < m_ResourceWaypoints.Length; i++)
         {
@@ -48,6 +50,8 @@ public class CAD_Resource_Gathering_State : CAD_State
     /// <summary>
     /// Determines what consumables to find based on current resource levels.
     /// Prioritises Health as long as Fuel can last, the Fuel, then Ammo.
+    /// Ignores Health if it is max
+    /// Ignores Ammo when above 5 shots
     /// </summary>
     /// <param name="tankAI">The SmartTank instance running the StateMachine.</param>
     public override void OnStateUpdate(CAD_SmartTank tankAI)
@@ -123,7 +127,11 @@ public class CAD_Resource_Gathering_State : CAD_State
     {
         // TODO: Implement OnStateExit
     }
-
+    /// <summary>
+    /// Updates the waypoint index asynchronously
+    /// </summary>
+    /// <param name="tankAI"></param>
+    /// <returns></returns>
     private IEnumerator UpdateWaypoint(CAD_SmartTank tankAI)
     {
         while (true)
