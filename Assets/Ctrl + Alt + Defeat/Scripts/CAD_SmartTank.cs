@@ -125,6 +125,13 @@ public class CAD_SmartTank : AITank
         a_GenerateRandomPoint();
     }
 
+    public GameObject CreateWaypoint(Vector3 position)
+    {
+        GameObject Waypoint = new GameObject("Waypoint");
+        Waypoint.transform.position = position;
+        return Waypoint;
+    }
+
     /// <summary>
     /// Wrapper method for following a path to a world point.
     /// </summary>

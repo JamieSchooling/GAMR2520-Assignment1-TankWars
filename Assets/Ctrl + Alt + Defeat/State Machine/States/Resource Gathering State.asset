@@ -12,3 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f01d9dca06f9cd9499982313c413ee5f, type: 3}
   m_Name: Resource Gathering State
   m_EditorClassIdentifier: 
+  m_ResourceWaypoints:
+  - {x: -74.2, y: 14.33931, z: 64.7}
+  - {x: 68.5, y: 14.33931, z: 74.5}
+  - {x: 63.3, y: 14.33931, z: -32.6}
+  - {x: 32.1, y: 14.33931, z: -67.9}
+  - {x: -59.1, y: 14.33931, z: -87.2}
+  - {x: -67.5, y: 14.33931, z: -39.7}
