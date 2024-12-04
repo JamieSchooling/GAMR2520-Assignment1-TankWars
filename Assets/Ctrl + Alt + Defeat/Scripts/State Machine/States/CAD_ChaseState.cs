@@ -49,7 +49,8 @@ public class CAD_ChaseState : CAD_State
     {
         Transitions = new()
         {
-            new CAD_Transition("Low Resources", tankAI => tankAI.Health <= 30.0f || tankAI.Ammo <= 4.0f || tankAI.Fuel <= 50.0f),
+            new CAD_Transition("Low Health or Fuel", tankAI => tankAI.Health <= 30.0f || tankAI.Fuel <= 50.0f),
+            new CAD_Transition("Low Ammo", tankAI => tankAI.Ammo == 0.0f),
             new CAD_Transition("Tank Lost", tankAI => !tankAI.EnemyTank),
             new CAD_Transition("Tank In Range", tankAI => Vector3.Distance(tankAI.transform.position, tankAI.EnemyTank.transform.position) < 25.0f)
         };
