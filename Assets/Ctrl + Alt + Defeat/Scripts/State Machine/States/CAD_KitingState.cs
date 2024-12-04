@@ -9,7 +9,14 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "AI/States/Kiting State")]
 
 public class CAD_KitingState : CAD_State
+<<<<<<< Updated upstream
 {
+=======
+
+{
+    private GameObject m_ReposPoint;
+
+>>>>>>> Stashed changes
     public override void OnStateEnter(CAD_SmartTank tankAI)
     {
         // TODO: Implement OnStateEnter
@@ -17,6 +24,12 @@ public class CAD_KitingState : CAD_State
 
     public override void OnStateUpdate(CAD_SmartTank tankAI)
     {
+<<<<<<< Updated upstream
+=======
+        if (!tankAI.EnemyTank) return;
+
+        Transform enemyTurret = tankAI.EnemyTank.transform.Find("Model/Turret");
+>>>>>>> Stashed changes
 
     }
 
