@@ -156,6 +156,11 @@ public class CAD_SmartTank : AITank
         a_FireAtPoint(pointInWorld);
     }
 
+    public void FaceTurretAtPoint(GameObject pointInWorld)
+    {
+        a_FaceTurretToPoint(pointInWorld);
+    }
+
     /// <summary>
     /// Called when AI Initialises. Used to Init StateMachine.
     /// </summary>

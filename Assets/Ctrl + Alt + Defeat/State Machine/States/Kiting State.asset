@@ -12,3 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bcd9eb68aca7be244a663e87a71ab46e, type: 3}
   m_Name: Kiting State
   m_EditorClassIdentifier: 
+  m_kitingWaypoints:
+  - {x: 25, y: 0, z: -25}
+  - {x: -25, y: 0, z: -25}
+  - {x: -25, y: 0, z: 25}
+  - {x: 25, y: 0, z: 25}
