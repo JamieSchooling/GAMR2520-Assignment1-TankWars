@@ -30,7 +30,7 @@ public class CAD_Resource_Gathering_State : CAD_State
     {
         List<string> consumablesToFind = new();
 
-        if (tankAI.Health <= 30.0f && tankAI.Fuel >= 30.0f)
+        if (tankAI.Fuel >= 40.0f)
         {
             consumablesToFind.Add("Health");
         }
@@ -42,11 +42,11 @@ public class CAD_Resource_Gathering_State : CAD_State
         {
             consumablesToFind.Add("Health");
         }
-        if (tankAI.Fuel <= 50.0f && consumablesToFind[0] != "Fuel")
+        if (consumablesToFind[0] != "Fuel")
         {
             consumablesToFind.Add("Fuel");
         }
-        if (tankAI.Ammo <= 4.0f)
+        if (tankAI.Ammo <= 5.0f)
         {
             consumablesToFind.Add("Ammo");
         }

@@ -13,7 +13,7 @@ public class CAD_RetreatState : CAD_State
     /// </summary>
     private Vector3 m_EnemyPos;
     private GameObject m_NewPos;
-    Vector3 Offset = new Vector3(10, 0, 10);
+    Vector3 Offset = new Vector3(25, 0, 25);
 
     public override void OnStateEnter(CAD_SmartTank tankAI)
     {
@@ -37,8 +37,31 @@ public class CAD_RetreatState : CAD_State
             tankAI.FollowPathToWorldPoint(m_NewPos, 1f);
             Destroy(m_NewPos);
         }
+        if (tankAI.VisibleEnemyBases.Count > 0)
+        {
+            if (Vector3.Distance(tankAI.transform.position, tankAI.VisibleEnemyBases.First().Key.transform.position) < 25.0f)
+            {
+                Vector3 EBaseOffset = tankAI.VisibleEnemyBases.First().Key.transform.position + Offset;
+                m_NewPos = new GameObject("MoveAround");
+                m_NewPos.transform.position = EBaseOffset;
+                tankAI.FollowPathToWorldPoint(m_NewPos, 1f);
+                Destroy(m_NewPos);
+            }
+        }
+        if (tankAI.FriendlyBases.Count > 0)
+        {
+            var closestfbase = tankAI.FriendlyBases.OrderBy(b => b.Value).First().Key;
+            if (Vector3.Distance(tankAI.transform.position, closestfbase.transform.position) < 25.0f)
+            {
+                Vector3 FBaseOffset = closestfbase.transform.position + Offset;
+                m_NewPos = new GameObject("MoveAround");
+                m_NewPos.transform.position = FBaseOffset;
+                tankAI.FollowPathToWorldPoint(m_NewPos, 1f);
+                Destroy(m_NewPos);
+            }
+        }
         tankAI.FollowPathToWorldPoint(tankAI.LastKnownSafestPos, 1f);
-        m_EnemyPos = tankAI.EnemyTank.transform.position;
+        if (tankAI.EnemyTank) m_EnemyPos = tankAI.EnemyTank.transform.position;
     }
 
     public override void OnStateExit(CAD_SmartTank tankAI)
@@ -56,9 +79,9 @@ public class CAD_RetreatState : CAD_State
         Transitions = new()
         {
 
-            new CAD_Transition("Safe Distance", tankAI => tankAI.transform.position.x <= tankAI.LastKnownSafestPos.transform.position.x - 10.0f && tankAI.transform.position.x >= tankAI.LastKnownSafestPos.transform.position.x + 10.0f
-            && tankAI.transform.position.z <= tankAI.LastKnownSafestPos.transform.position.z - 10.0f && tankAI.transform.position.z >= tankAI.LastKnownSafestPos.transform.position.z + 10.0f),
-            new CAD_Transition("Fuel too Low", tankAI => tankAI.Fuel <= 30.0f)
+            new CAD_Transition("Safe Distance", tankAI => Vector3.Distance(tankAI.transform.position, tankAI.LastKnownSafestPos.transform.position) < 25.0f),
+            new CAD_Transition("Fuel too Low", tankAI => tankAI.Fuel <= 30.0f),
+            new CAD_Transition("Fuel Spotted", tankAI => tankAI.VisibleConsumables.Where(c => c.Key.CompareTag("Fuel")).Count() > 0)
         };
     }
 }
