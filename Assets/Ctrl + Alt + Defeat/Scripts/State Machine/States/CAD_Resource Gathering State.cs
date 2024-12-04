@@ -161,6 +161,10 @@ public class CAD_Resource_Gathering_State : CAD_State
         Transitions = new()
         {
             new CAD_Transition("Enough Resources", tankAI => tankAI.Health >= 60.0f && tankAI.Ammo >= 5.0f && tankAI.Fuel >= 70.0f),
+            new CAD_Transition("Enough to Attack Enemy", tankAI => tankAI.Health >= 60.0f && tankAI.Ammo > 0.0f 
+            && tankAI.Fuel > 50.0f && tankAI.EnemyTank),
+            new CAD_Transition("Enough to Attack Base", tankAI => tankAI.Health > 20.0f && tankAI.Ammo > 0.0f
+            && tankAI.Fuel > 50.0f && tankAI.VisibleEnemyBases.Count > 0.0f),
             new CAD_Transition("Retreat for Safety", tankAI => tankAI.EnemyTank && tankAI.Fuel >= 70.0f)
         };
     }
