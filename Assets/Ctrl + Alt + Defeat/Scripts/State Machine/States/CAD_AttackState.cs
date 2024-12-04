@@ -36,6 +36,8 @@ public class CAD_AttackState : CAD_State
         Vector3 direction = tankAI.EnemyTank.transform.position - tankAI.transform.position;
         Vector3 aimOffset = new Vector3(0, 0, 10);
 
+
+        // When in front of enemy turret
         if (Vector3.Dot(direction.normalized, enemyTurret.forward) > 0 && m_CurrentStage == PathStage.None)
         {
             Vector3 offsetPos = tankAI.EnemyTank.transform.position + aimOffset;
@@ -63,6 +65,7 @@ public class CAD_AttackState : CAD_State
             tankAI.FollowPathToWorldPoint(m_MidPoint, 1);
             m_CurrentStage = PathStage.MidPoint;
         }
+        // When behind enemy turret
         else if (Vector3.Dot(direction.normalized, enemyTurret.forward) < 0 && m_CurrentStage == PathStage.None)
         {
             tankAI.TurretFireAtPoint(tankAI.EnemyTank);
