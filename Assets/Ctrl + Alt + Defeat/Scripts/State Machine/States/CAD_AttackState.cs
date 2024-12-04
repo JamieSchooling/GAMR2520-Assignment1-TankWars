@@ -11,7 +11,7 @@ public class CAD_AttackState : CAD_State
     private GameObject m_TargetPos;
     private GameObject m_MidPoint;
     private PathStage m_CurrentStage = PathStage.None;
-    public bool m_entryShotFired = false;
+    private bool m_EntryShotFired;
 
     enum PathStage
     {
@@ -70,7 +70,7 @@ public class CAD_AttackState : CAD_State
         else if (Vector3.Dot(direction.normalized, enemyTurret.forward) < 0 && m_CurrentStage == PathStage.None)
         {
             tankAI.TurretFireAtPoint(tankAI.EnemyTank);
-            m_entryShotFired = true;
+            m_EntryShotFired = true;
         }
 
         if (m_CurrentStage == PathStage.MidPoint && Vector3.Distance(tankAI.transform.position, m_MidPoint.transform.position) < 1)
@@ -93,7 +93,7 @@ public class CAD_AttackState : CAD_State
 
     public override void OnStateExit(CAD_SmartTank tankAI)
     {
-        m_entryShotFired = false;
+        // TODO: Implement OnStateExit
     }
 
     /// <summary>
@@ -103,9 +103,10 @@ public class CAD_AttackState : CAD_State
     {
         Transitions = new()
         {
-            new CAD_Transition("Low Resources", tankAI => tankAI.Health <= 30.0f || tankAI.Ammo <= 4.0f || tankAI.Fuel <= 50.0f),
+            new CAD_Transition("Low Health or Fuel", tankAI => tankAI.Health <= 30.0f || tankAI.Fuel <= 50.0f),
+            new CAD_Transition("Low Ammo", tankAI => tankAI.Ammo == 0.0f),
             new CAD_Transition("Tank Lost", tankAI => !tankAI.EnemyTank),
-            new CAD_Transition("Entry Shot Fired", tankAI => m_entryShotFired)
+            new CAD_Transition("Entry Shot Fired", tankAI => m_EntryShotFired)
         };
     }
 }
