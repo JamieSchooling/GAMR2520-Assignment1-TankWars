@@ -270,6 +270,7 @@ MonoBehaviour:
   - {fileID: 7516501704302463045}
   - {fileID: -8994685101611574945}
   - {fileID: 2146293204778174276}
+  - {fileID: 2520209303618172722}
 --- !u!114 &1578745791153334103
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -387,6 +388,55 @@ MonoBehaviour:
       _dynamic: 1
   m_State: {fileID: 11400000, guid: ee8ea367fe011fd438ce781f18900a7c, type: 2}
   m_PreviousState: {fileID: 11400000, guid: ee8ea367fe011fd438ce781f18900a7c, type: 2}
+--- !u!114 &2520209303618172722
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0adaa6f7371072048bdbc750a84c0b42, type: 3}
+  m_Name: Kiting State
+  m_EditorClassIdentifier: 
+  graph: {fileID: 11400000}
+  position: {x: 168, y: 104}
+  ports:
+    keys:
+    - m_InputNode
+    - Low Resources
+    - Tank Lost
+    values:
+    - _fieldName: m_InputNode
+      _node: {fileID: 2520209303618172722}
+      _typeQualifiedName: System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral,
+        PublicKeyToken=b77a5c561934e089
+      connections: []
+      _direction: 0
+      _connectionType: 0
+      _typeConstraint: 0
+      _dynamic: 0
+    - _fieldName: Low Resources
+      _node: {fileID: 2520209303618172722}
+      _typeQualifiedName: CAD_Transition, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+      connections: []
+      _direction: 1
+      _connectionType: 1
+      _typeConstraint: 0
+      _dynamic: 1
+    - _fieldName: Tank Lost
+      _node: {fileID: 2520209303618172722}
+      _typeQualifiedName: CAD_Transition, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+      connections: []
+      _direction: 1
+      _connectionType: 1
+      _typeConstraint: 0
+      _dynamic: 1
+  m_State: {fileID: 11400000, guid: b2d334c1ae0392c4682b7dead61d18b1, type: 2}
+  m_PreviousState: {fileID: 11400000, guid: b2d334c1ae0392c4682b7dead61d18b1, type: 2}
 --- !u!114 &7516501704302463045
 MonoBehaviour:
   m_ObjectHideFlags: 0
