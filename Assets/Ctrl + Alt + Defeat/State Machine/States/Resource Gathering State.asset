@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f01d9dca06f9cd9499982313c413ee5f, type: 3}
+  m_Name: Resource Gathering State
+  m_EditorClassIdentifier: 
+  m_ResourceWaypoints:
+  - {x: -74.2, y: 14.33931, z: 64.7}
+  - {x: 68.5, y: 14.33931, z: 74.5}
+  - {x: 63.3, y: 14.33931, z: -32.6}
+  - {x: 32.1, y: 14.33931, z: -67.9}
+  - {x: -59.1, y: 14.33931, z: -87.2}
+  - {x: -67.5, y: 14.33931, z: -39.7}

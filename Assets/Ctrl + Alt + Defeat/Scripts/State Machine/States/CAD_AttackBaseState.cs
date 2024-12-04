@@ -24,24 +24,25 @@ public class CAD_AttackBaseState : CAD_State
 
     public override void OnStateUpdate(CAD_SmartTank tankAI)
     {
-        if (tankAI.VisibleEnemyBases.Count > 0)
+        if (tankAI.VisibleEnemyBases.Count <= 0) return;
+
+        if (!tankAI.VisibleEnemyBases.First().Key) return;
+
+        if (Vector3.Distance(tankAI.transform.position, tankAI.VisibleEnemyBases.First().Key.transform.position) > 25.0f)
         {
-            if (Vector3.Distance(tankAI.transform.position, tankAI.VisibleEnemyBases.First().Key.transform.position) > 25.0f)
-            {
-                tankAI.FollowPathToWorldPoint(tankAI.VisibleEnemyBases.First().Key, 1f);
-            }
-            else
-            {
-                tankAI.TurretFireAtPoint(tankAI.VisibleEnemyBases.First().Key);
-            }
+            tankAI.FollowPathToWorldPoint(tankAI.VisibleEnemyBases.First().Key, 1f);
+        }
+        else
+        {
+            tankAI.TurretFireAtPoint(tankAI.VisibleEnemyBases.First().Key);
         }
     }
-
     private void OnEnable()
     {
         Transitions = new()
         {
-            new CAD_Transition("Low Resources", tankAI => tankAI.Health <= 30.0f || tankAI.Ammo <= 4.0f || tankAI.Fuel <= 50.0f),
+            new CAD_Transition("Low Health or Fuel", tankAI => tankAI.Health <= 30.0f || tankAI.Fuel <= 50.0f),
+            new CAD_Transition("Low Ammo", tankAI => tankAI.Ammo == 0.0f),
             new CAD_Transition("Tank Found", tankAI => tankAI.EnemyTank),
             new CAD_Transition("Base Lost", tankAI => tankAI.VisibleEnemyBases.Count == 0)
         };

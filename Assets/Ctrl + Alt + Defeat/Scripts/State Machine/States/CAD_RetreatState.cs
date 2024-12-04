@@ -3,86 +3,72 @@ using System.Linq;
 using System.Collections.Generic;
 
 /// <summary>
-/// Represents a state where the AI-controlled tank retreats, seeking consumables based on current resource levels.
+/// Represents a state where the AI-controlled tank retreats until a safe distance from the assailant.
 /// </summary>
 [CreateAssetMenu(menuName = "AI/States/Retreat State")]
 public class CAD_RetreatState : CAD_State
 {
     /// <summary>
-    /// Holds the time in seconds since the last random path finding target was generated.
+    /// Stores the last known position of the enemy tank.
     /// </summary>
-    private float m_CurrentTime = 0;
+    private Vector3 m_EnemyPos;
+    private GameObject m_NewPos;
+    Vector3 Offset = new Vector3(25, 0, 25);
 
     public override void OnStateEnter(CAD_SmartTank tankAI)
     {
+
     }
 
     /// <summary>
-    /// Determines what consumables to find based on current resource levels.
+    ///  Called every frame to update the state behavior. Goes to the opposite side from enemy tank's position.
     /// </summary>
     /// <param name="tankAI">The SmartTank instance running the StateMachine.</param>
     public override void OnStateUpdate(CAD_SmartTank tankAI)
     {
-        List<string> consumablesToFind = new();
-
-        if (tankAI.Health <= 30.0f)
+        GameObject SafestPos = new GameObject("SafestPos");
+        SafestPos.transform.position = m_EnemyPos * -1;
+        tankAI.LastKnownSafestPos = SafestPos;
+        if (tankAI.EnemyTank)
         {
-            consumablesToFind.Add("Health");
+            Vector3 TankOffset = tankAI.EnemyTank.transform.position + Offset;
+            m_NewPos = new GameObject("MoveAround");
+            m_NewPos.transform.position = TankOffset;
+            tankAI.FollowPathToWorldPoint(m_NewPos, 1f);
+            Destroy(m_NewPos);
         }
-        if (tankAI.Ammo <= 4.0f)
+        if (tankAI.VisibleEnemyBases.Count > 0)
         {
-            consumablesToFind.Add("Ammo");
+            if (Vector3.Distance(tankAI.transform.position, tankAI.VisibleEnemyBases.First().Key.transform.position) < 25.0f)
+            {
+                Vector3 EBaseOffset = tankAI.VisibleEnemyBases.First().Key.transform.position + Offset;
+                m_NewPos = new GameObject("MoveAround");
+                m_NewPos.transform.position = EBaseOffset;
+                tankAI.FollowPathToWorldPoint(m_NewPos, 1f);
+                Destroy(m_NewPos);
+            }
         }
-        if (tankAI.Fuel <= 50.0f)
+        if (tankAI.FriendlyBases.Count > 0)
         {
-            consumablesToFind.Add("Fuel");
+            var closestfbase = tankAI.FriendlyBases.OrderBy(b => b.Value).First().Key;
+            if (Vector3.Distance(tankAI.transform.position, closestfbase.transform.position) < 25.0f)
+            {
+                Vector3 FBaseOffset = closestfbase.transform.position + Offset;
+                m_NewPos = new GameObject("MoveAround");
+                m_NewPos.transform.position = FBaseOffset;
+                tankAI.FollowPathToWorldPoint(m_NewPos, 1f);
+                Destroy(m_NewPos);
+            }
         }
-
-        FindConsumables(tankAI, consumablesToFind);
+        tankAI.FollowPathToWorldPoint(tankAI.LastKnownSafestPos, 1f);
+        if (tankAI.EnemyTank) m_EnemyPos = tankAI.EnemyTank.transform.position;
     }
 
     public override void OnStateExit(CAD_SmartTank tankAI)
     {
-        // TODO: Implement OnStateExit
-    }
-
-    /// <summary>
-    /// Finds the closest consumable out of the required types, and if none are found, follows a path to a random world point.
-    /// </summary>
-    /// <param name="tankAI">The SmartTank instance running the StateMachine.</param>
-    /// <param name="consumableTypes">List of tags corresponding to the types of consumables needing found.</param>
-    private void FindConsumables(CAD_SmartTank tankAI, List<string> consumableTypes)
-    {
-        if (tankAI.VisibleConsumables.Count > 0)
-        {
-            // Filter consumables matching the required types
-            var potentialConsumables = tankAI.VisibleConsumables
-                .Where(c => consumableTypes.Any(type => c.Key.CompareTag(type)))
-                .OrderBy(c => c.Value) // Order by distance
-                .ToList();
-
-            if (potentialConsumables.Count > 0)
-            {
-                // Get the closest consumable
-                GameObject consumable = potentialConsumables.First().Key;
-                tankAI.FollowPathToWorldPoint(consumable, 1f);
-            }
-            else
-            {
-                tankAI.FollowPathToRandomWorldPoint(1f);
-            }
-        }
-        else
-        {
-            tankAI.FollowPathToRandomWorldPoint(1f);
-        }
-
-        m_CurrentTime += Time.deltaTime;
-        if (m_CurrentTime > 10)
-        {
-            tankAI.GenerateNewRandomWorldPoint();
-            m_CurrentTime = 0;
-        }
+        GameObject lastEnemyPos = new GameObject("LastEnemyPos");
+        lastEnemyPos.transform.position = m_EnemyPos;
+        tankAI.LastKnownEnemyPos = lastEnemyPos;
     }
 
     /// <summary>
@@ -92,7 +78,10 @@ public class CAD_RetreatState : CAD_State
     {
         Transitions = new()
         {
-            new CAD_Transition("Enough Resources", tankAI => tankAI.Health > 30 && tankAI.Ammo > 4 && tankAI.Fuel > 50)
+
+            new CAD_Transition("Safe Distance", tankAI => Vector3.Distance(tankAI.transform.position, tankAI.LastKnownSafestPos.transform.position) < 25.0f),
+            new CAD_Transition("Fuel too Low", tankAI => tankAI.Fuel <= 30.0f),
+            new CAD_Transition("Fuel Spotted", tankAI => tankAI.VisibleConsumables.Where(c => c.Key.CompareTag("Fuel")).Count() > 0)
         };
     }
 }

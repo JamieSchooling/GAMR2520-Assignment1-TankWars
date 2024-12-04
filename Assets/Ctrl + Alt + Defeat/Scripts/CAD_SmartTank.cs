@@ -42,6 +42,24 @@ public class CAD_SmartTank : AITank
     }
 
     /// <summary>
+    /// Returns Dictionary(GameObject base, float distance) of friendly bases (bases in Base LayerMask).
+    /// </summary>
+    /// <returns>All enemy bases currently visible.</returns>
+    public Dictionary<GameObject, float> FriendlyBases
+    {
+        get
+        {
+            Dictionary<GameObject, float> DistanceFriendlyBases = new Dictionary<GameObject, float>();
+            foreach (GameObject b in a_GetMyBases) 
+            {
+                if (!b) continue;
+                float distance = Vector3.Distance(transform.position, b.transform.position);
+                DistanceFriendlyBases.Add(b, distance);
+            }
+            return DistanceFriendlyBases;
+        }
+    }
+    /// <summary>
     /// Property for retrieving tank's last known enemy position. Replaces the current GameObject when set.
     /// </summary>
     /// <returns> GameObject at last known enemy tank position.</returns>
@@ -52,6 +70,20 @@ public class CAD_SmartTank : AITank
         {
             Destroy(m_LastKnownEnemyPos);
             m_LastKnownEnemyPos = value;
+        }
+    }
+
+    /// <summary>
+    /// Property for retrieving tank's last known safest position. Replaces the current GameObject when set.
+    /// </summary>
+    /// <returns> GameObject at last known safest position.</returns>
+    public GameObject LastKnownSafestPos
+    {
+        get => m_LastKnownSafestPos;
+        set
+        {
+            Destroy(m_LastKnownSafestPos);
+            m_LastKnownSafestPos = value;
         }
     }
 
@@ -76,6 +108,11 @@ public class CAD_SmartTank : AITank
     private GameObject m_LastKnownEnemyPos = null;
 
     /// <summary>
+    /// GameObject at last known safest position.
+    /// </summary>
+    private GameObject m_LastKnownSafestPos = null;
+
+    /// <summary>
     /// Instance of StateMachine that reads a StateMachineGraph.
     /// </summary>
     private CAD_StateMachineProcessor m_StateMachineProcessor;
@@ -86,6 +123,13 @@ public class CAD_SmartTank : AITank
     public void GenerateNewRandomWorldPoint()
     {
         a_GenerateRandomPoint();
+    }
+
+    public GameObject CreateWaypoint(Vector3 position)
+    {
+        GameObject Waypoint = new GameObject("Waypoint");
+        Waypoint.transform.position = position;
+        return Waypoint;
     }
 
     /// <summary>

@@ -13,12 +13,13 @@ MonoBehaviour:
   m_Name: Attack State
   m_EditorClassIdentifier: 
   graph: {fileID: 11400000}
-  position: {x: -200, y: 56}
+  position: {x: -216, y: 56}
   ports:
     keys:
     - m_InputNode
+    - Low Health or Fuel
+    - Low Ammo
     - Tank Lost
-    - Low Resources
     values:
     - _fieldName: m_InputNode
       _node: {fileID: -8994685101611574945}
@@ -32,6 +33,40 @@ MonoBehaviour:
       _connectionType: 0
       _typeConstraint: 0
       _dynamic: 0
+    - _fieldName: Low Health or Fuel
+      _node: {fileID: -8994685101611574945}
+      _typeQualifiedName: CAD_Transition, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+      connections:
+      - fieldName: m_InputNode
+        node: {fileID: 7516501704302463045}
+        reroutePoints:
+        - {x: -0, y: 144}
+        - {x: -0, y: 240}
+        - {x: -528, y: 240}
+        - {x: -528, y: 288}
+      _direction: 1
+      _connectionType: 1
+      _typeConstraint: 0
+      _dynamic: 1
+    - _fieldName: Low Ammo
+      _node: {fileID: -8994685101611574945}
+      _typeQualifiedName: CAD_Transition, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+      connections:
+      - fieldName: m_InputNode
+        node: {fileID: 2637673713473164175}
+        reroutePoints:
+        - {x: -0, y: 160}
+        - {x: 16, y: 160}
+        - {x: 16, y: 224}
+        - {x: -272, y: 224}
+        - {x: -272, y: 288}
+        - {x: -224, y: 288}
+      _direction: 1
+      _connectionType: 1
+      _typeConstraint: 0
+      _dynamic: 1
     - _fieldName: Tank Lost
       _node: {fileID: -8994685101611574945}
       _typeQualifiedName: CAD_Transition, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
@@ -40,30 +75,11 @@ MonoBehaviour:
       - fieldName: m_InputNode
         node: {fileID: -5750083703257732420}
         reroutePoints:
-        - {x: 16, y: 128}
-        - {x: 48, y: 128}
-        - {x: 48, y: -144}
+        - {x: -0, y: 192}
+        - {x: 32, y: 192}
         - {x: 32, y: -144}
         - {x: -528, y: -144}
         - {x: -528, y: -96}
-      _direction: 1
-      _connectionType: 1
-      _typeConstraint: 0
-      _dynamic: 1
-    - _fieldName: Low Resources
-      _node: {fileID: -8994685101611574945}
-      _typeQualifiedName: CAD_Transition, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-        PublicKeyToken=null
-      connections:
-      - fieldName: m_InputNode
-        node: {fileID: 7516501704302463045}
-        reroutePoints:
-        - {x: 16, y: 176}
-        - {x: 16, y: 176}
-        - {x: 16, y: 240}
-        - {x: -288, y: 240}
-        - {x: -528, y: 240}
-        - {x: -528, y: 288}
       _direction: 1
       _connectionType: 1
       _typeConstraint: 0
@@ -87,9 +103,10 @@ MonoBehaviour:
   ports:
     keys:
     - m_InputNode
-    - Base Found
+    - Low Health or Fuel
+    - Low Ammo
     - Tank Found
-    - Low Resources
+    - Base Found
     values:
     - _fieldName: m_InputNode
       _node: {fileID: -5750083703257732420}
@@ -105,28 +122,45 @@ MonoBehaviour:
       - fieldName: Tank Lost
         node: {fileID: -8994685101611574945}
         reroutePoints: []
+      - fieldName: Enough Resources
+        node: {fileID: 2637673713473164175}
+        reroutePoints: []
       - fieldName: m_OutputNode
         node: {fileID: 1578745791153334103}
-        reroutePoints: []
-      - fieldName: Enough Resources
-        node: {fileID: 7516501704302463045}
         reroutePoints: []
       _direction: 0
       _connectionType: 0
       _typeConstraint: 0
       _dynamic: 0
-    - _fieldName: Base Found
+    - _fieldName: Low Health or Fuel
       _node: {fileID: -5750083703257732420}
       _typeQualifiedName: CAD_Transition, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
       connections:
       - fieldName: m_InputNode
-        node: {fileID: 2146293204778174276}
+        node: {fileID: 7516501704302463045}
         reroutePoints:
         - {x: -304, y: -48}
-        - {x: -304, y: 16}
-        - {x: -528, y: 16}
-        - {x: -528, y: 64}
+        - {x: -288, y: -48}
+        - {x: -288, y: 240}
+        - {x: -528, y: 240}
+        - {x: -528, y: 288}
+      _direction: 1
+      _connectionType: 1
+      _typeConstraint: 0
+      _dynamic: 1
+    - _fieldName: Low Ammo
+      _node: {fileID: -5750083703257732420}
+      _typeQualifiedName: CAD_Transition, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+      connections:
+      - fieldName: m_InputNode
+        node: {fileID: 2637673713473164175}
+        reroutePoints:
+        - {x: -304, y: -32}
+        - {x: -272, y: -32}
+        - {x: -272, y: 288}
+        - {x: -224, y: 288}
       _direction: 1
       _connectionType: 1
       _typeConstraint: 0
@@ -139,25 +173,26 @@ MonoBehaviour:
       - fieldName: m_InputNode
         node: {fileID: -1352826466940553513}
         reroutePoints:
-        - {x: -208, y: -32}
-        - {x: -208, y: -80}
+        - {x: -304, y: -16}
+        - {x: -256, y: -16}
+        - {x: -256, y: -80}
+        - {x: -224, y: -80}
       _direction: 1
       _connectionType: 1
       _typeConstraint: 0
       _dynamic: 1
-    - _fieldName: Low Resources
+    - _fieldName: Base Found
       _node: {fileID: -5750083703257732420}
       _typeQualifiedName: CAD_Transition, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
       connections:
       - fieldName: m_InputNode
-        node: {fileID: 7516501704302463045}
+        node: {fileID: 2146293204778174276}
         reroutePoints:
-        - {x: -288, y: -0}
-        - {x: -288, y: 0}
-        - {x: -288, y: 240}
-        - {x: -528, y: 240}
-        - {x: -528, y: 288}
+        - {x: -304, y: -0}
+        - {x: -304, y: 48}
+        - {x: -528, y: 48}
+        - {x: -528, y: 96}
       _direction: 1
       _connectionType: 1
       _typeConstraint: 0
@@ -177,13 +212,14 @@ MonoBehaviour:
   m_Name: Chase State
   m_EditorClassIdentifier: 
   graph: {fileID: 11400000}
-  position: {x: -200, y: -136}
+  position: {x: -216, y: -136}
   ports:
     keys:
     - m_InputNode
-    - Tank In Range
+    - Low Health or Fuel
+    - Low Ammo
     - Tank Lost
-    - Low Resources
+    - Tank In Range
     values:
     - _fieldName: m_InputNode
       _node: {fileID: -1352826466940553513}
@@ -200,18 +236,38 @@ MonoBehaviour:
       _connectionType: 0
       _typeConstraint: 0
       _dynamic: 0
-    - _fieldName: Tank In Range
+    - _fieldName: Low Health or Fuel
       _node: {fileID: -1352826466940553513}
       _typeQualifiedName: CAD_Transition, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
       connections:
       - fieldName: m_InputNode
-        node: {fileID: -8994685101611574945}
+        node: {fileID: 7516501704302463045}
         reroutePoints:
+        - {x: -0, y: -64}
+        - {x: -0, y: -160}
+        - {x: -288, y: -160}
+        - {x: -288, y: 240}
+        - {x: -528, y: 240}
+        - {x: -528, y: 288}
+      _direction: 1
+      _connectionType: 1
+      _typeConstraint: 0
+      _dynamic: 1
+    - _fieldName: Low Ammo
+      _node: {fileID: -1352826466940553513}
+      _typeQualifiedName: CAD_Transition, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+      connections:
+      - fieldName: m_InputNode
+        node: {fileID: 2637673713473164175}
+        reroutePoints:
+        - {x: -0, y: -48}
         - {x: 16, y: -48}
-        - {x: 16, y: 48}
-        - {x: -208, y: 48}
-        - {x: -208, y: 96}
+        - {x: 16, y: -176}
+        - {x: -272, y: -176}
+        - {x: -272, y: 288}
+        - {x: -224, y: 288}
       _direction: 1
       _connectionType: 1
       _typeConstraint: 0
@@ -224,7 +280,8 @@ MonoBehaviour:
       - fieldName: m_InputNode
         node: {fileID: -5750083703257732420}
         reroutePoints:
-        - {x: 32, y: -32}
+        - {x: -0, y: -16}
+        - {x: 32, y: -16}
         - {x: 32, y: -144}
         - {x: -528, y: -144}
         - {x: -528, y: -96}
@@ -232,19 +289,18 @@ MonoBehaviour:
       _connectionType: 1
       _typeConstraint: 0
       _dynamic: 1
-    - _fieldName: Low Resources
+    - _fieldName: Tank In Range
       _node: {fileID: -1352826466940553513}
       _typeQualifiedName: CAD_Transition, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
       connections:
       - fieldName: m_InputNode
-        node: {fileID: 7516501704302463045}
+        node: {fileID: -8994685101611574945}
         reroutePoints:
-        - {x: 32, y: -0}
-        - {x: 32, y: 240}
-        - {x: -288, y: 240}
-        - {x: -528, y: 240}
-        - {x: -528, y: 288}
+        - {x: -0, y: 16}
+        - {x: -0, y: 48}
+        - {x: -224, y: 48}
+        - {x: -224, y: 96}
       _direction: 1
       _connectionType: 1
       _typeConstraint: 0
@@ -270,6 +326,7 @@ MonoBehaviour:
   - {fileID: 7516501704302463045}
   - {fileID: -8994685101611574945}
   - {fileID: 2146293204778174276}
+  - {fileID: 2637673713473164175}
 --- !u!114 &1578745791153334103
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -283,7 +340,7 @@ MonoBehaviour:
   m_Name: Entry
   m_EditorClassIdentifier: 
   graph: {fileID: 11400000}
-  position: {x: -808, y: -136}
+  position: {x: -840, y: -136}
   ports:
     keys:
     - m_OutputNode
@@ -296,8 +353,8 @@ MonoBehaviour:
       - fieldName: m_InputNode
         node: {fileID: -5750083703257732420}
         reroutePoints:
-        - {x: -592, y: -96}
-        - {x: -528, y: -96}
+        - {x: -622.49866, y: -94.39935}
+        - {x: -531.49866, y: -95.39935}
       _direction: 1
       _connectionType: 0
       _typeConstraint: 0
@@ -315,13 +372,14 @@ MonoBehaviour:
   m_Name: Attack Base State
   m_EditorClassIdentifier: 
   graph: {fileID: 11400000}
-  position: {x: -520, y: 24}
+  position: {x: -520, y: 56}
   ports:
     keys:
     - m_InputNode
-    - Base Lost
+    - Low Health or Fuel
+    - Low Ammo
     - Tank Found
-    - Low Resources
+    - Base Lost
     values:
     - _fieldName: m_InputNode
       _node: {fileID: 2146293204778174276}
@@ -335,19 +393,35 @@ MonoBehaviour:
       _connectionType: 0
       _typeConstraint: 0
       _dynamic: 0
-    - _fieldName: Base Lost
+    - _fieldName: Low Health or Fuel
       _node: {fileID: 2146293204778174276}
       _typeQualifiedName: CAD_Transition, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
       connections:
       - fieldName: m_InputNode
-        node: {fileID: -5750083703257732420}
+        node: {fileID: 7516501704302463045}
         reroutePoints:
-        - {x: -304, y: 112}
-        - {x: -304, y: 176}
-        - {x: -544, y: 176}
-        - {x: -544, y: -96}
-        - {x: -528, y: -96}
+        - {x: -304, y: 144}
+        - {x: -288, y: 144}
+        - {x: -288, y: 240}
+        - {x: -528, y: 240}
+        - {x: -528, y: 288}
+      _direction: 1
+      _connectionType: 1
+      _typeConstraint: 0
+      _dynamic: 1
+    - _fieldName: Low Ammo
+      _node: {fileID: 2146293204778174276}
+      _typeQualifiedName: CAD_Transition, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+      connections:
+      - fieldName: m_InputNode
+        node: {fileID: 2637673713473164175}
+        reroutePoints:
+        - {x: -304, y: 160}
+        - {x: -272, y: 160}
+        - {x: -272, y: 288}
+        - {x: -224, y: 288}
       _direction: 1
       _connectionType: 1
       _typeConstraint: 0
@@ -360,33 +434,118 @@ MonoBehaviour:
       - fieldName: m_InputNode
         node: {fileID: -1352826466940553513}
         reroutePoints:
-        - {x: -240, y: 128}
-        - {x: -240, y: 0}
-        - {x: -208, y: 0}
-        - {x: -208, y: -32}
-        - {x: -208, y: -80}
+        - {x: -304, y: 176}
+        - {x: -256, y: 176}
+        - {x: -256, y: -80}
+        - {x: -224, y: -80}
       _direction: 1
       _connectionType: 1
       _typeConstraint: 0
       _dynamic: 1
-    - _fieldName: Low Resources
+    - _fieldName: Base Lost
       _node: {fileID: 2146293204778174276}
       _typeQualifiedName: CAD_Transition, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
       connections:
       - fieldName: m_InputNode
-        node: {fileID: 7516501704302463045}
+        node: {fileID: -5750083703257732420}
         reroutePoints:
-        - {x: -288, y: 160}
-        - {x: -288, y: 240}
-        - {x: -528, y: 240}
-        - {x: -528, y: 288}
+        - {x: -304, y: 192}
+        - {x: -240, y: 192}
+        - {x: -240, y: -144}
+        - {x: -528, y: -144}
+        - {x: -528, y: -96}
       _direction: 1
       _connectionType: 1
       _typeConstraint: 0
       _dynamic: 1
   m_State: {fileID: 11400000, guid: ee8ea367fe011fd438ce781f18900a7c, type: 2}
   m_PreviousState: {fileID: 11400000, guid: ee8ea367fe011fd438ce781f18900a7c, type: 2}
+--- !u!114 &2637673713473164175
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0adaa6f7371072048bdbc750a84c0b42, type: 3}
+  m_Name: Resource Gathering State
+  m_EditorClassIdentifier: 
+  graph: {fileID: 11400000}
+  position: {x: -216, y: 248}
+  ports:
+    keys:
+    - m_InputNode
+    - Enough Resources
+    - Retreat for Safety
+    values:
+    - _fieldName: m_InputNode
+      _node: {fileID: 2637673713473164175}
+      _typeQualifiedName: System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral,
+        PublicKeyToken=b77a5c561934e089
+      connections:
+      - fieldName: Low Ammo
+        node: {fileID: -5750083703257732420}
+        reroutePoints: []
+      - fieldName: Low Ammo
+        node: {fileID: 2146293204778174276}
+        reroutePoints: []
+      - fieldName: Low Ammo
+        node: {fileID: -1352826466940553513}
+        reroutePoints: []
+      - fieldName: Low Ammo
+        node: {fileID: -8994685101611574945}
+        reroutePoints: []
+      - fieldName: Safe Distance
+        node: {fileID: 7516501704302463045}
+        reroutePoints: []
+      - fieldName: Fuel too Low
+        node: {fileID: 7516501704302463045}
+        reroutePoints: []
+      - fieldName: Fuel Spotted
+        node: {fileID: 7516501704302463045}
+        reroutePoints: []
+      _direction: 0
+      _connectionType: 0
+      _typeConstraint: 0
+      _dynamic: 0
+    - _fieldName: Enough Resources
+      _node: {fileID: 2637673713473164175}
+      _typeQualifiedName: CAD_Transition, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+      connections:
+      - fieldName: m_InputNode
+        node: {fileID: -5750083703257732420}
+        reroutePoints:
+        - {x: -0, y: 336}
+        - {x: 32, y: 336}
+        - {x: 32, y: -144}
+        - {x: -528, y: -144}
+        - {x: -528, y: -96}
+      _direction: 1
+      _connectionType: 1
+      _typeConstraint: 0
+      _dynamic: 1
+    - _fieldName: Retreat for Safety
+      _node: {fileID: 2637673713473164175}
+      _typeQualifiedName: CAD_Transition, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+      connections:
+      - fieldName: m_InputNode
+        node: {fileID: 7516501704302463045}
+        reroutePoints:
+        - {x: -0, y: 352}
+        - {x: 0, y: 400}
+        - {x: -528, y: 400}
+        - {x: -528, y: 288}
+      _direction: 1
+      _connectionType: 1
+      _typeConstraint: 0
+      _dynamic: 1
+  m_State: {fileID: 11400000, guid: e67aecabe0fe7fc488bac3beb6af4c9c, type: 2}
+  m_PreviousState: {fileID: 11400000, guid: e67aecabe0fe7fc488bac3beb6af4c9c, type: 2}
 --- !u!114 &7516501704302463045
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -404,43 +563,78 @@ MonoBehaviour:
   ports:
     keys:
     - m_InputNode
-    - Enough Resources
+    - Safe Distance
+    - Fuel too Low
+    - Fuel Spotted
     values:
     - _fieldName: m_InputNode
       _node: {fileID: 7516501704302463045}
       _typeQualifiedName: System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral,
         PublicKeyToken=b77a5c561934e089
       connections:
-      - fieldName: Low Resources
-        node: {fileID: 2146293204778174276}
-        reroutePoints: []
-      - fieldName: Low Resources
+      - fieldName: Low Health or Fuel
         node: {fileID: -5750083703257732420}
         reroutePoints: []
-      - fieldName: Low Resources
+      - fieldName: Low Health or Fuel
+        node: {fileID: 2146293204778174276}
+        reroutePoints: []
+      - fieldName: Low Health or Fuel
         node: {fileID: -1352826466940553513}
         reroutePoints: []
-      - fieldName: Low Resources
+      - fieldName: Low Health or Fuel
         node: {fileID: -8994685101611574945}
+        reroutePoints: []
+      - fieldName: Retreat for Safety
+        node: {fileID: 2637673713473164175}
         reroutePoints: []
       _direction: 0
       _connectionType: 0
       _typeConstraint: 0
       _dynamic: 0
-    - _fieldName: Enough Resources
+    - _fieldName: Safe Distance
       _node: {fileID: 7516501704302463045}
       _typeQualifiedName: CAD_Transition, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
       connections:
       - fieldName: m_InputNode
-        node: {fileID: -5750083703257732420}
+        node: {fileID: 2637673713473164175}
         reroutePoints:
-        - {x: -304, y: 336}
-        - {x: -304, y: 368}
-        - {x: -544, y: 368}
-        - {x: -544, y: 177.50003}
-        - {x: -544.8, y: -96.100006}
-        - {x: -528.8, y: -94.5}
+        - {x: -305.88165, y: 322.5255}
+        - {x: -271.88165, y: 320.5255}
+        - {x: -271.88165, y: 286.5255}
+        - {x: -224.88164, y: 286.5255}
+      _direction: 1
+      _connectionType: 1
+      _typeConstraint: 0
+      _dynamic: 1
+    - _fieldName: Fuel too Low
+      _node: {fileID: 7516501704302463045}
+      _typeQualifiedName: CAD_Transition, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+      connections:
+      - fieldName: m_InputNode
+        node: {fileID: 2637673713473164175}
+        reroutePoints:
+        - {x: -303.88165, y: 337.5255}
+        - {x: -271.88165, y: 336.5255}
+        - {x: -270.88165, y: 287.5255}
+        - {x: -225.88164, y: 287.5255}
+      _direction: 1
+      _connectionType: 1
+      _typeConstraint: 0
+      _dynamic: 1
+    - _fieldName: Fuel Spotted
+      _node: {fileID: 7516501704302463045}
+      _typeQualifiedName: CAD_Transition, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+      connections:
+      - fieldName: m_InputNode
+        node: {fileID: 2637673713473164175}
+        reroutePoints:
+        - {x: -302.88165, y: 356.5255}
+        - {x: -270.88165, y: 351.5255}
+        - {x: -270.88165, y: 288.5255}
+        - {x: -224.88164, y: 289.5255}
       _direction: 1
       _connectionType: 1
       _typeConstraint: 0
