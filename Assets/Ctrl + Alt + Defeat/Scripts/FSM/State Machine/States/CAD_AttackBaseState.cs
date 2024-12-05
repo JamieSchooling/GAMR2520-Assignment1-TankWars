@@ -12,17 +12,17 @@ using UnityEngine;
 
 public class CAD_AttackBaseState : CAD_State
 {
-    public override void OnStateEnter(CAD_SmartTank tankAI)
+    public override void OnStateEnter(CAD_SmartTankFSM tankAI)
     {
         
     }
 
-    public override void OnStateExit(CAD_SmartTank tankAI)
+    public override void OnStateExit(CAD_SmartTankFSM tankAI)
     {
         //throw new System.NotImplementedException();
     }
 
-    public override void OnStateUpdate(CAD_SmartTank tankAI)
+    public override void OnStateUpdate(CAD_SmartTankFSM tankAI)
     {
         if (tankAI.VisibleEnemyBases.Count <= 0) return;
 

@@ -14,10 +14,10 @@ public class CAD_Transition
     /// A function that defines a condition to evaluate for a transition to occur.
     /// </summary>
     /// <value>
-    /// A <see cref="Func{SmartTank, bool}"/> representing the condition. It takes a <see cref="CAD_SmartTank"/> 
+    /// A <see cref="Func{SmartTank, bool}"/> representing the condition. It takes a <see cref="CAD_SmartTankFSM"/> 
     /// as an input and returns a bool indicating whether the condition is met.
     /// </value>
-    public Func<CAD_SmartTank, bool> Condition { get; private set; }
+    public Func<CAD_SmartTankFSM, bool> Condition { get; private set; }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="CAD_Transition"/> class with the specified name and condition.
@@ -27,9 +27,9 @@ public class CAD_Transition
     /// </param>
     /// <param name="condition">
     /// A function that defines the condition to evaluate for the transition to occur. 
-    /// It takes a <see cref="CAD_SmartTank"/> as input and returns a <see cref="bool"/> indicating whether the transition condition is met.
+    /// It takes a <see cref="CAD_SmartTankFSM"/> as input and returns a <see cref="bool"/> indicating whether the transition condition is met.
     /// </param>
-    public CAD_Transition(string name, Func<CAD_SmartTank, bool> condition)
+    public CAD_Transition(string name, Func<CAD_SmartTankFSM, bool> condition)
     {
         Name = name;
         Condition = condition;

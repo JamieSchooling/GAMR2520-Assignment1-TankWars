@@ -38,7 +38,7 @@ public class CAD_RetreatState : CAD_State
     /// </summary>
     private GameObject m_CurrentWaypoint;
 
-    public override void OnStateEnter(CAD_SmartTank tankAI)
+    public override void OnStateEnter(CAD_SmartTankFSM tankAI)
     {
 
     }
@@ -47,7 +47,7 @@ public class CAD_RetreatState : CAD_State
     ///  Called every frame to update the state behavior. Goes to the opposite side from enemy tank's position.
     /// </summary>
     /// <param name="tankAI">The SmartTank instance running the StateMachine.</param>
-    public override void OnStateUpdate(CAD_SmartTank tankAI)
+    public override void OnStateUpdate(CAD_SmartTankFSM tankAI)
     {
         GameObject safestPos = new GameObject("SafestPos");
         safestPos.transform.position = m_EnemyPos * -1;
@@ -113,13 +113,13 @@ public class CAD_RetreatState : CAD_State
         GoToSafePos(tankAI);
     }
 
-    private void GoToSafePos(CAD_SmartTank tankAI)
+    private void GoToSafePos(CAD_SmartTankFSM tankAI)
     {
         tankAI.FollowPathToWorldPoint(tankAI.LastKnownSafestPos, 1f);
         if (tankAI.EnemyTank) m_EnemyPos = tankAI.EnemyTank.transform.position;
     }
 
-    public override void OnStateExit(CAD_SmartTank tankAI)
+    public override void OnStateExit(CAD_SmartTankFSM tankAI)
     {
         GameObject lastEnemyPos = new GameObject("LastEnemyPos");
         lastEnemyPos.transform.position = m_EnemyPos;

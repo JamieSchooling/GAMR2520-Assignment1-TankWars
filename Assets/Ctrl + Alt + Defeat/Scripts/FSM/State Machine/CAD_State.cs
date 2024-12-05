@@ -15,17 +15,17 @@ public abstract class CAD_State : ScriptableObject
     /// Called when this state is transitioned into.
     /// </summary>
     /// <param name="tankAI">The SmartTank instance running the StateMachine.</param>
-    public abstract void OnStateEnter(CAD_SmartTank tankAI);
+    public abstract void OnStateEnter(CAD_SmartTankFSM tankAI);
         
     /// <summary>
     /// Called when this state is updated.
     /// </summary>
     /// <param name="tankAI">The SmartTank instance running the StateMachine.</param>
-    public abstract void OnStateUpdate(CAD_SmartTank tankAI);
+    public abstract void OnStateUpdate(CAD_SmartTankFSM tankAI);
         
     /// <summary>
     /// Called after this state meets a transition condition.
     /// </summary>
     /// <param name="tankAI">The SmartTank instance running the StateMachine.</param>
-    public abstract void OnStateExit(CAD_SmartTank tankAI);
+    public abstract void OnStateExit(CAD_SmartTankFSM tankAI);
 }

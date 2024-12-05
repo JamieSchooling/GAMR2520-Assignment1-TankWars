@@ -19,7 +19,7 @@ public class CAD_AttackState : CAD_State
         TargetPoint
     }
 
-    public override void OnStateEnter(CAD_SmartTank tankAI)
+    public override void OnStateEnter(CAD_SmartTankFSM tankAI)
     {
         // TODO: Implement OnStateEnter
     }
@@ -28,7 +28,7 @@ public class CAD_AttackState : CAD_State
     /// Called every frame to update the state behavior. Fires at the enemy tank if detected.
     /// </summary>
     /// <param name="tankAI">The SmartTank instance running the StateMachine.</param>
-    public override void OnStateUpdate(CAD_SmartTank tankAI)
+    public override void OnStateUpdate(CAD_SmartTankFSM tankAI)
     {
         if (!tankAI.EnemyTank) return;
 
@@ -89,7 +89,7 @@ public class CAD_AttackState : CAD_State
 
     }
 
-    public override void OnStateExit(CAD_SmartTank tankAI)
+    public override void OnStateExit(CAD_SmartTankFSM tankAI)
     {
         // TODO: Implement OnStateExit
     }

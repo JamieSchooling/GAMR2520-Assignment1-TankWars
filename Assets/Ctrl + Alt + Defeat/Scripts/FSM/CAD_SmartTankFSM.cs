@@ -5,7 +5,7 @@ using UnityEngine;
 /// <summary>
 /// Main Tank AI class that controls tank AI behaviour. Contains wrapper properties for accessing tank info, and wrapper methods for using certain AI functionality.
 /// </summary>
-public class CAD_SmartTank : AITank
+public class CAD_SmartTankFSM : AITank
 {
     /// <summary>
     /// State machine graph that contains the intended behaviour of the AI.
