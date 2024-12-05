@@ -125,11 +125,11 @@ MonoBehaviour:
       - fieldName: Tank Lost
         node: {fileID: -8994685101611574945}
         reroutePoints: []
-      - fieldName: m_OutputNode
-        node: {fileID: 1578745791153334103}
-        reroutePoints: []
       - fieldName: Enough Resources
         node: {fileID: 2637673713473164175}
+        reroutePoints: []
+      - fieldName: m_OutputNode
+        node: {fileID: 1578745791153334103}
         reroutePoints: []
       _direction: 0
       _connectionType: 0
@@ -343,7 +343,7 @@ MonoBehaviour:
   m_Name: Entry
   m_EditorClassIdentifier: 
   graph: {fileID: 11400000}
-  position: {x: -872, y: -152}
+  position: {x: -872, y: -136}
   ports:
     keys:
     - m_OutputNode
@@ -356,8 +356,8 @@ MonoBehaviour:
       - fieldName: m_InputNode
         node: {fileID: -5750083703257732420}
         reroutePoints:
-        - {x: -622.49866, y: -94.39935}
-        - {x: -528, y: -96}
+        - {x: -656, y: -96}
+        - {x: -544, y: -96}
       _direction: 1
       _connectionType: 0
       _typeConstraint: 0
