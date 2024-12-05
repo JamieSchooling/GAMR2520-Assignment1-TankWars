@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,12 +13,14 @@ using UnityEngine.UIElements;
 public class CAD_SearchState : CAD_State
 {
     [SerializeField] private Vector3[] m_PatrolPoints;
-    /// <summary>
+    [SerializeField] private float m_sleepPeriod;
+    /// <summary> 
     /// Holds the time in seconds since the last random path finding target was generated.
     /// </summary>
     private float m_CurrentTime;
     private GameObject m_CurrentPoint;
     private int m_CurrentIndex = 0;
+    private bool m_tankFound = false;
 
     /// <summary>
     /// Called when the state is entered. Initializes time tracking for the state.
@@ -48,6 +51,7 @@ public class CAD_SearchState : CAD_State
     /// <param name="tankAI">The SmartTank instance running the StateMachine.</param>
     public override void OnStateUpdate(CAD_SmartTank tankAI)
     {
+
         if (tankAI.LastKnownEnemyPos)
         {
             if (Vector3.Distance(tankAI.transform.position, tankAI.LastKnownEnemyPos.transform.position) < 5.0f)
@@ -79,14 +83,16 @@ public class CAD_SearchState : CAD_State
     {
         while (true)
         {
-            Debug.Log(Vector3.Distance(tankAI.transform.position, m_CurrentPoint.transform.position));
+            if (tankAI.EnemyTank) m_tankFound = true;
             if (Vector3.Distance(tankAI.transform.position, m_CurrentPoint.transform.position) < 25.0f)
             {
 
                 m_CurrentIndex++;
                 if (m_CurrentIndex >= m_PatrolPoints.Count())
                 {
+                    if (!m_tankFound) {Debug.Log("waiting"); new WaitForSecondsRealtime(m_sleepPeriod); }
                     m_CurrentIndex = 0;
+                    m_tankFound = false;
                 }
 
                 Destroy(m_CurrentPoint);
