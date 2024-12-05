@@ -34,7 +34,7 @@ public class CAD_Resource_Gathering_State : CAD_State
 
     private float m_CurrentMoveSpeed = 1.0f;
 
-    public override void OnStateEnter(CAD_SmartTank tankAI)
+    public override void OnStateEnter(CAD_SmartTankFSM tankAI)
     {
         //Makes sure it starts at the closest resource waypoint
         float closestDistance = float.PositiveInfinity;
@@ -58,7 +58,7 @@ public class CAD_Resource_Gathering_State : CAD_State
     /// Ignores Ammo when above 5 shots
     /// </summary>
     /// <param name="tankAI">The SmartTank instance running the StateMachine.</param>
-    public override void OnStateUpdate(CAD_SmartTank tankAI)
+    public override void OnStateUpdate(CAD_SmartTankFSM tankAI)
     {
         List<string> consumablesToFind = new();
 
@@ -102,7 +102,7 @@ public class CAD_Resource_Gathering_State : CAD_State
     /// </summary>
     /// <param name="tankAI">The SmartTank instance running the StateMachine.</param>
     /// <param name="consumableTypes">List of tags corresponding to the types of consumables needing found.</param>
-    private void FindConsumables(CAD_SmartTank tankAI, List<string> consumableTypes)
+    private void FindConsumables(CAD_SmartTankFSM tankAI, List<string> consumableTypes)
     {
         if (tankAI.VisibleConsumables.Count > 0)
         {
@@ -129,7 +129,7 @@ public class CAD_Resource_Gathering_State : CAD_State
         }
     }
 
-    public override void OnStateExit(CAD_SmartTank tankAI)
+    public override void OnStateExit(CAD_SmartTankFSM tankAI)
     {
         // TODO: Implement OnStateExit
     }
@@ -139,7 +139,7 @@ public class CAD_Resource_Gathering_State : CAD_State
     /// </summary>
     /// <param name="tankAI"></param>
     /// <returns></returns>
-    private IEnumerator UpdateWaypoint(CAD_SmartTank tankAI)
+    private IEnumerator UpdateWaypoint(CAD_SmartTankFSM tankAI)
     {
         while (true)
         {

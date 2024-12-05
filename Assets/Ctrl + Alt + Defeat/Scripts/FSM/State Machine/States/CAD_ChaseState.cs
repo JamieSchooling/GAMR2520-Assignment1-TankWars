@@ -13,7 +13,7 @@ public class CAD_ChaseState : CAD_State
     /// </summary>
     private Vector3 m_EnemyPos;
 
-    public override void OnStateEnter(CAD_SmartTank tankAI)
+    public override void OnStateEnter(CAD_SmartTankFSM tankAI)
     {
         // TODO: Implement OnStateEnter
     }
@@ -22,7 +22,7 @@ public class CAD_ChaseState : CAD_State
     ///  Called every frame to update the state behavior. Follows the enemy tank's position.
     /// </summary>
     /// <param name="tankAI">The SmartTank instance running the StateMachine.</param>
-    public override void OnStateUpdate(CAD_SmartTank tankAI)
+    public override void OnStateUpdate(CAD_SmartTankFSM tankAI)
     {
         if (tankAI.EnemyTank)
         {
@@ -35,7 +35,7 @@ public class CAD_ChaseState : CAD_State
     /// Called when the state is exited. The last known position of the enemy tank is saved.
     /// </summary>
     /// <param name="tankAI">The SmartTank instance exiting the state.</param>
-    public override void OnStateExit(CAD_SmartTank tankAI)
+    public override void OnStateExit(CAD_SmartTankFSM tankAI)
     {
         GameObject lastEnemyPos = new GameObject("LastEnemyPos");
         lastEnemyPos.transform.position = m_EnemyPos;

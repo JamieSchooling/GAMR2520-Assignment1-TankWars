@@ -27,7 +27,7 @@ public class CAD_SearchState : CAD_State
     /// Called when the state is entered. Initializes time tracking for the state.
     /// </summary>
     /// <param name="tankAI">The SmartTank instance entering the state.</param>
-    public override void OnStateEnter(CAD_SmartTank tankAI)
+    public override void OnStateEnter(CAD_SmartTankFSM tankAI)
     {
         m_CurrentTime = 0;
         m_Waiting = false;
@@ -52,7 +52,7 @@ public class CAD_SearchState : CAD_State
     /// approach consumables, or move to a random world point if neither are found.
     /// </summary>
     /// <param name="tankAI">The SmartTank instance running the StateMachine.</param>
-    public override void OnStateUpdate(CAD_SmartTank tankAI)
+    public override void OnStateUpdate(CAD_SmartTankFSM tankAI)
     {
         if (tankAI.LastKnownEnemyPos)
         {
@@ -73,12 +73,12 @@ public class CAD_SearchState : CAD_State
         }
     }
 
-    public override void OnStateExit(CAD_SmartTank tankAI)
+    public override void OnStateExit(CAD_SmartTankFSM tankAI)
     {
         // TODO: Implement OnStateExit
     }
 
-    private IEnumerator UpdatePatrolPoint(CAD_SmartTank tankAI)
+    private IEnumerator UpdatePatrolPoint(CAD_SmartTankFSM tankAI)
     {
         while (true)
         {

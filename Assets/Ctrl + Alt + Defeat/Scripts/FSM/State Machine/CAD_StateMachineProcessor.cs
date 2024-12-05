@@ -25,7 +25,7 @@ public class CAD_StateMachineProcessor
     /// <summary>
     /// The AI tank controlled by this state machine.
     /// </summary>
-    private CAD_SmartTank m_TankAI;
+    private CAD_SmartTankFSM m_TankAI;
 
     /// <summary>
     /// Indicates whether the state machine is running.
@@ -36,7 +36,7 @@ public class CAD_StateMachineProcessor
     /// Initializes a new instance of the <see cref="CAD_StateMachineProcessor"/> class.
     /// </summary>
     /// <param name="tankAI">The AI tank to control.</param>
-    public CAD_StateMachineProcessor(CAD_SmartTank tankAI)
+    public CAD_StateMachineProcessor(CAD_SmartTankFSM tankAI)
     {
         m_TankAI = tankAI;
     }
