@@ -89,6 +89,78 @@ MonoBehaviour:
       _dynamic: 1
   m_State: {fileID: 11400000, guid: eb3f8e4d91ca900488a1fe31636622c0, type: 2}
   m_PreviousState: {fileID: 11400000, guid: eb3f8e4d91ca900488a1fe31636622c0, type: 2}
+--- !u!114 &-8487437091022216709
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0adaa6f7371072048bdbc750a84c0b42, type: 3}
+  m_Name: Resource Gathering State
+  m_EditorClassIdentifier: 
+  graph: {fileID: 11400000}
+  position: {x: -824, y: -24}
+  ports:
+    keys:
+    - m_InputNode
+    - Enough Resources
+    - Enough to Attack Enemy
+    - Enough to Attack Base
+    - Retreat for Safety
+    values:
+    - _fieldName: m_InputNode
+      _node: {fileID: -8487437091022216709}
+      _typeQualifiedName: System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral,
+        PublicKeyToken=b77a5c561934e089
+      connections:
+      - fieldName: m_OutputNode
+        node: {fileID: 1578745791153334103}
+        reroutePoints: []
+      _direction: 0
+      _connectionType: 0
+      _typeConstraint: 0
+      _dynamic: 0
+    - _fieldName: Enough Resources
+      _node: {fileID: -8487437091022216709}
+      _typeQualifiedName: CAD_Transition, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+      connections: []
+      _direction: 1
+      _connectionType: 1
+      _typeConstraint: 0
+      _dynamic: 1
+    - _fieldName: Enough to Attack Enemy
+      _node: {fileID: -8487437091022216709}
+      _typeQualifiedName: CAD_Transition, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+      connections: []
+      _direction: 1
+      _connectionType: 1
+      _typeConstraint: 0
+      _dynamic: 1
+    - _fieldName: Enough to Attack Base
+      _node: {fileID: -8487437091022216709}
+      _typeQualifiedName: CAD_Transition, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+      connections: []
+      _direction: 1
+      _connectionType: 1
+      _typeConstraint: 0
+      _dynamic: 1
+    - _fieldName: Retreat for Safety
+      _node: {fileID: -8487437091022216709}
+      _typeQualifiedName: CAD_Transition, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+      connections: []
+      _direction: 1
+      _connectionType: 1
+      _typeConstraint: 0
+      _dynamic: 1
+  m_State: {fileID: 11400000, guid: e67aecabe0fe7fc488bac3beb6af4c9c, type: 2}
+  m_PreviousState: {fileID: 11400000, guid: e67aecabe0fe7fc488bac3beb6af4c9c, type: 2}
 --- !u!114 &-5750083703257732420
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -124,9 +196,6 @@ MonoBehaviour:
         reroutePoints: []
       - fieldName: Tank Lost
         node: {fileID: -8994685101611574945}
-        reroutePoints: []
-      - fieldName: m_OutputNode
-        node: {fileID: 1578745791153334103}
         reroutePoints: []
       - fieldName: Enough Resources
         node: {fileID: 2637673713473164175}
@@ -330,6 +399,7 @@ MonoBehaviour:
   - {fileID: -8994685101611574945}
   - {fileID: 2146293204778174276}
   - {fileID: 2637673713473164175}
+  - {fileID: -8487437091022216709}
 --- !u!114 &1578745791153334103
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -354,10 +424,8 @@ MonoBehaviour:
         PublicKeyToken=b77a5c561934e089
       connections:
       - fieldName: m_InputNode
-        node: {fileID: -5750083703257732420}
-        reroutePoints:
-        - {x: -622.49866, y: -94.39935}
-        - {x: -528, y: -96}
+        node: {fileID: -8487437091022216709}
+        reroutePoints: []
       _direction: 1
       _connectionType: 0
       _typeConstraint: 0

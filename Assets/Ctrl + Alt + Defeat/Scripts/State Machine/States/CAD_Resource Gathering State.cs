@@ -32,6 +32,8 @@ public class CAD_Resource_Gathering_State : CAD_State
     /// </summary>
     private int m_WaypointIndex = 0;
 
+    private float m_CurrentMoveSpeed = 1.0f;
+
     public override void OnStateEnter(CAD_SmartTank tankAI)
     {
         //Makes sure it starts at the closest resource waypoint
@@ -88,6 +90,9 @@ public class CAD_Resource_Gathering_State : CAD_State
             consumablesToFind.Add("Ammo");
         }
 
+        m_CurrentMoveSpeed = (tankAI.Fuel >= 40) ? 1.0f : 0.5f;
+        m_CurrentMoveSpeed = (tankAI.Fuel >= 10) ? m_CurrentMoveSpeed : 0.0f;
+
         FindConsumables(tankAI, consumablesToFind);
     }
 
@@ -111,16 +116,16 @@ public class CAD_Resource_Gathering_State : CAD_State
             {
                 // Get the closest consumable
                 GameObject consumable = potentialConsumables.First().Key;
-                tankAI.FollowPathToWorldPoint(consumable, 1f);
+                tankAI.FollowPathToWorldPoint(consumable, m_CurrentMoveSpeed);
             }
             else
             {
-                tankAI.FollowPathToWorldPoint(m_CurrentWaypoint, 1f);
+                tankAI.FollowPathToWorldPoint(m_CurrentWaypoint, m_CurrentMoveSpeed);
             }
         }
         else
         {
-            tankAI.FollowPathToWorldPoint(m_CurrentWaypoint, 1f);
+            tankAI.FollowPathToWorldPoint(m_CurrentWaypoint, m_CurrentMoveSpeed);
         }
     }
 
@@ -161,8 +166,8 @@ public class CAD_Resource_Gathering_State : CAD_State
         Transitions = new()
         {
             new CAD_Transition("Enough Resources", tankAI => tankAI.Health >= 60.0f && tankAI.Ammo >= 5.0f && tankAI.Fuel >= 70.0f),
-            new CAD_Transition("Enough to Attack Enemy", tankAI => tankAI.Health >= 60.0f && tankAI.Ammo > 0.0f 
-            && tankAI.Fuel > 50.0f && tankAI.EnemyTank),
+            new CAD_Transition("Enough to Attack Enemy", tankAI => ((tankAI.Health >= 60.0f && tankAI.Ammo > 0.0f 
+            && tankAI.Fuel > 50.0f) || tankAI.Fuel <= 10.0f) && tankAI.EnemyTank),
             new CAD_Transition("Enough to Attack Base", tankAI => tankAI.Health > 20.0f && tankAI.Ammo > 0.0f
             && tankAI.Fuel > 50.0f && tankAI.VisibleEnemyBases.Count > 0.0f),
             new CAD_Transition("Retreat for Safety", tankAI => tankAI.EnemyTank && tankAI.Fuel >= 70.0f)
