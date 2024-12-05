@@ -148,6 +148,11 @@ public class CAD_SmartTank : AITank
         a_FollowPathToRandomPoint(normalizedSpeed);
     }
 
+    public void StopTank()
+    {
+        a_StopTank();
+    }
+
     /// <summary>
     /// Wrapper method for firing at a point in the scene.
     /// </summary>

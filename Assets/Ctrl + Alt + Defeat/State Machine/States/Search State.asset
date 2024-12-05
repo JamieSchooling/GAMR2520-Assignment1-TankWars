@@ -21,4 +21,4 @@ MonoBehaviour:
   - {x: -55.5, y: 0, z: -7.2}
   - {x: -53.8, y: 0, z: 44.9}
   - {x: -53.8, y: 0, z: 44.9}
-  m_sleepPeriod: 10
+  m_WaitPeriod: 10
