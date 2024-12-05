@@ -1,18 +1,27 @@
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 /// <summary>
-/// Represents a state where the AI-controlled tank searches for the last known enemy position or consumables. 
-/// If neither is found, the tank moves to a random world point.
+/// Represents a state where the AI-controlled tank searches for the enemy, prioritising the last known enemy position. 
+/// Follows a set path if the enemy is not found at the last known position.
 /// </summary>
 [CreateAssetMenu(menuName = "AI/States/Search State")]
 public class CAD_SearchState : CAD_State
 {
-    /// <summary>
+    [SerializeField] private Vector3[] m_PatrolPoints;
+    [SerializeField] private float m_WaitPeriod = 10.0f;
+    /// <summary> 
     /// Holds the time in seconds since the last random path finding target was generated.
     /// </summary>
     private float m_CurrentTime;
+    private GameObject m_CurrentPoint;
+    private int m_CurrentIndex = 0;
+    private int m_StartIndex = 0;
+    private bool m_Waiting = false;
 
     /// <summary>
     /// Called when the state is entered. Initializes time tracking for the state.
@@ -21,6 +30,21 @@ public class CAD_SearchState : CAD_State
     public override void OnStateEnter(CAD_SmartTank tankAI)
     {
         m_CurrentTime = 0;
+        m_Waiting = false;
+        // Makes sure it starts at the closest waypoint
+        float beststart = float.PositiveInfinity;
+        for (int i = 0; i < m_PatrolPoints.Length; i++)
+        {
+            float currentstart = Vector3.Distance(tankAI.transform.position, m_PatrolPoints[i]);
+            if (currentstart < beststart)
+            {
+                m_CurrentIndex = i;
+                beststart = currentstart;
+            }
+        }
+        m_StartIndex = m_CurrentIndex;
+        m_CurrentPoint = tankAI.CreateWaypoint(m_PatrolPoints[m_CurrentIndex]);
+        tankAI.StartCoroutine(UpdatePatrolPoint(tankAI));
     }
 
     /// <summary>
@@ -39,28 +63,44 @@ public class CAD_SearchState : CAD_State
             }
             tankAI.FollowPathToWorldPoint(tankAI.LastKnownEnemyPos, 1f);
         }
-        else if (tankAI.VisibleConsumables.Count > 0)
+        else if (!m_Waiting)
         {
-            GameObject consumable = tankAI.VisibleConsumables.First().Key;
-            tankAI.FollowPathToWorldPoint(consumable, 1f);
-            m_CurrentTime += Time.deltaTime;
+            tankAI.FollowPathToWorldPoint(m_CurrentPoint, 1f);
         }
         else
         {
-            tankAI.FollowPathToRandomWorldPoint(1f);
-        }
-
-        m_CurrentTime += Time.deltaTime;
-        if (m_CurrentTime > 10)
-        {
-            tankAI.GenerateNewRandomWorldPoint();
-            m_CurrentTime = 0;
+            tankAI.StopTank();
         }
     }
 
     public override void OnStateExit(CAD_SmartTank tankAI)
     {
         // TODO: Implement OnStateExit
+    }
+
+    private IEnumerator UpdatePatrolPoint(CAD_SmartTank tankAI)
+    {
+        while (true)
+        {
+            if (Vector3.Distance(tankAI.transform.position, m_CurrentPoint.transform.position) < 25.0f)
+            {
+                m_CurrentIndex++;
+                if (m_CurrentIndex >= m_PatrolPoints.Count())
+                {
+                    m_CurrentIndex = 0;
+                }
+                if (m_CurrentIndex == m_StartIndex)
+                {
+                    m_Waiting = true;
+                    yield return new WaitForSeconds(m_WaitPeriod);
+                    m_Waiting = false;
+                }
+
+                Destroy(m_CurrentPoint);
+                m_CurrentPoint = tankAI.CreateWaypoint(m_PatrolPoints[m_CurrentIndex]);
+            }
+            yield return new WaitForEndOfFrame();
+        }
     }
 
     /// <summary>

@@ -12,3 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb54d183205f6814cb8fe06211b84d8e, type: 3}
   m_Name: Search State
   m_EditorClassIdentifier: 
+  m_PatrolPoints:
+  - {x: 55.4, y: 0, z: 34.2}
+  - {x: 56.1, y: 0, z: -5.1}
+  - {x: 33.6, y: 0, z: -53.7}
+  - {x: -4.2, y: 0, z: -62.5}
+  - {x: -50.3, y: 0, z: -67.3}
+  - {x: -55.5, y: 0, z: -7.2}
+  - {x: -53.8, y: 0, z: 44.9}
+  - {x: -53.8, y: 0, z: 44.9}
+  m_WaitPeriod: 10
