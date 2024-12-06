@@ -121,7 +121,7 @@ MonoBehaviour:
         m_Negate: 0
       m_Operators: 
     m_Action: {fileID: 11400000, guid: 9176ee63c36c34847999c71041669d1e, type: 2}
-  - m_Name: New Rule
+  - m_Name: Search when out of ammo
     m_Conditions:
       m_Conditions:
       - m_Name: IsWaypointValid
@@ -130,7 +130,9 @@ MonoBehaviour:
         m_Negate: 0
       - m_Name: IsOutOfAmmo
         m_Negate: 0
-      m_Operators: 0000000000000000
+      - m_Name: IsOutOfFuel
+        m_Negate: 1
+      m_Operators: 000000000000000000000000
     m_Action: {fileID: 11400000, guid: cad47f380748ffb4291339cb19dad7d0, type: 2}
   - m_Name: Searching
     m_Conditions:

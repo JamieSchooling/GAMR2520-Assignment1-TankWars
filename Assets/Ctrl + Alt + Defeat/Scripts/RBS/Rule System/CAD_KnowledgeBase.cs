@@ -4,6 +4,7 @@ using UnityEngine;
 public class CAD_KnowledgeBase
 {
     public bool IsLowFuel => m_TankAI.FuelLevel <= 30.0f;
+    public bool IsOutOfFuel => m_TankAI.FuelLevel <= 10.0f;
     public bool IsLowHealth {
         get 
         {
