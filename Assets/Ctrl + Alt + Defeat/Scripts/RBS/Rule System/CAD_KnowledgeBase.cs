@@ -38,6 +38,8 @@ public class CAD_KnowledgeBase
     public bool HasReachedSearchWaypoint => Vector3.Distance(m_TankAI.transform.position, CurrentSearchWaypoint) < 25.0f;
     public bool IsWaypointValid => CurrentSearchWaypoint != Vector3.zero;
 
+    public bool HasNotSeenEnemyForAWhile => TimeSinceEnemySeen >= 30.0f;
+
     public bool Default => true;
 
     public Vector3 EnemyPosition => NearestEnemyTank.transform.position;
@@ -55,6 +57,8 @@ public class CAD_KnowledgeBase
 
     public float DistanceToEnemy => m_TankAI.TanksFound.OrderBy(t => t.Value).First().Value;
     public float DistanceToBase => m_TankAI.BasesFound.OrderBy(t => t.Value).First().Value;
+    public float TimeLastSeenEnemy { get; set; }
+    public float TimeSinceEnemySeen => Time.time - TimeLastSeenEnemy;
 
     private CAD_SmartTankRBS m_TankAI;
 

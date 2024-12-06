@@ -8,6 +8,7 @@ public class CAD_BackAwayFromEnemyAction : CAD_Action
     public override void Execute(CAD_SmartTankRBS tankAI, CAD_KnowledgeBase knowledgeBase)
     {
         knowledgeBase.CurrentSearchWaypoint = knowledgeBase.EnemyPosition;
+        knowledgeBase.TimeLastSeenEnemy = Time.time;
         tankAI.GoTo((knowledgeBase.NearestEnemyTank.transform.forward * m_BackAwayDistance) 
             + (knowledgeBase.NearestEnemyTank.transform.right * m_BackAwayDistance));
     }

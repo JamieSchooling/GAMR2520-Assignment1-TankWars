@@ -12,121 +12,139 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d890bce96090064d8738a33f7a9a841, type: 3}
   m_Name: Rules
   m_EditorClassIdentifier: 
-  rules:
-  - Name: Enemy too close
-    conditions:
-      conditions:
-      - Name: IsEnemySpotted
-        negate: 0
-      - Name: IsEnemyInRange
-        negate: 0
-      - Name: IsEnemyTooClose
-        negate: 0
-      operators: 0000000000000000
-    action: {fileID: 11400000, guid: 5c37f9d56eaf4ae4d8c5aeda6239a615, type: 2}
-  - Name: Enemy seen and in range
-    conditions:
-      conditions:
-      - Name: IsEnemySpotted
-        negate: 0
-      - Name: IsEnemyInRange
-        negate: 0
-      - Name: IsLowHealth
-        negate: 1
-      - Name: IsOutOfAmmo
-        negate: 1
-      operators: 000000000000000000000000
-    action: {fileID: 11400000, guid: d57170ac2d61e7743954901c71f5f837, type: 2}
-  - Name: Enemy seen and out of range
-    conditions:
-      conditions:
-      - Name: IsEnemySpotted
-        negate: 0
-      - Name: IsEnemyInRange
-        negate: 1
-      - Name: IsLowHealth
-        negate: 1
-      - Name: IsLowFuel
-        negate: 1
-      - Name: IsLowAmmo
-        negate: 1
-      operators: 00000000000000000000000000000000
-    action: {fileID: 11400000, guid: b76898922cfd21449a2a114419b4b4e3, type: 2}
-  - Name: Base seen and in range
-    conditions:
-      conditions:
-      - Name: IsBaseSpotted
-        negate: 0
-      - Name: IsBaseInRange
-        negate: 0
-      - Name: IsLowHealth
-        negate: 1
-      - Name: IsOutOfAmmo
-        negate: 1
-      operators: 000000000000000000000000
-    action: {fileID: 11400000, guid: 80ede0dc5ac2b1e4fac3e480a1761c93, type: 2}
-  - Name: Base seen and out of range
-    conditions:
-      conditions:
-      - Name: IsBaseSpotted
-        negate: 0
-      - Name: IsBaseInRange
-        negate: 1
-      - Name: IsLowHealth
-        negate: 1
-      - Name: IsLowFuel
-        negate: 1
-      - Name: IsLowAmmo
-        negate: 1
-      operators: 00000000000000000000000000000000
-    action: {fileID: 11400000, guid: db8dff8de6dddd94382b6b72ba3e8972, type: 2}
-  - Name: Fuel Seen
-    conditions:
-      conditions:
-      - Name: IsFuelSpotted
-        negate: 0
-      - Name: IsFuelFull
-        negate: 1
-      operators: 00000000
-    action: {fileID: 11400000, guid: 0ef26ba3baab58d4b94590b85a1829dd, type: 2}
-  - Name: Health Seen
-    conditions:
-      conditions:
-      - Name: IsHealthSpotted
-        negate: 0
-      - Name: IsHealthFull
-        negate: 1
-      operators: 00000000
-    action: {fileID: 11400000, guid: c9ed30c3be369c840b02e9a4e43f07a2, type: 2}
-  - Name: Ammo Seen
-    conditions:
-      conditions:
-      - Name: IsAmmoSpotted
-        negate: 0
-      - Name: IsAmmoFull
-        negate: 1
-      operators: 00000000
-    action: {fileID: 11400000, guid: 3c9ca5b1eb7b5034f8b0abe74baf86b9, type: 2}
-  - Name: Reached Search Waypoint
-    conditions:
-      conditions:
-      - Name: HasReachedSearchWaypoint
-        negate: 0
-      operators: 
-    action: {fileID: 11400000, guid: 956723a6344cbab4699de28c0db9e375, type: 2}
-  - Name: Searching
-    conditions:
-      conditions:
-      - Name: IsWaypointValid
-        negate: 0
-      - Name: IsLowFuel
-        negate: 1
-      operators: 00000000
-    action: {fileID: 11400000, guid: cad47f380748ffb4291339cb19dad7d0, type: 2}
-  - Name: Stop and Spin
-    conditions:
-      conditions:
-      - Name: Default
-        negate: 0
-      operators: 
-    action: {fileID: 11400000, guid: 9176ee63c36c34847999c71041669d1e, type: 2}
+  m_Rules:
+  - m_Name: Enemy too close
+    m_Conditions:
+      m_Conditions:
+      - m_Name: IsEnemySpotted
+        m_Negate: 0
+      - m_Name: IsEnemyInRange
+        m_Negate: 0
+      - m_Name: IsEnemyTooClose
+        m_Negate: 0
+      m_Operators: 0000000000000000
+    m_Action: {fileID: 11400000, guid: 5c37f9d56eaf4ae4d8c5aeda6239a615, type: 2}
+  - m_Name: Enemy seen and in range
+    m_Conditions:
+      m_Conditions:
+      - m_Name: IsEnemySpotted
+        m_Negate: 0
+      - m_Name: IsEnemyInRange
+        m_Negate: 0
+      - m_Name: IsLowHealth
+        m_Negate: 1
+      - m_Name: IsOutOfAmmo
+        m_Negate: 1
+      m_Operators: 000000000000000000000000
+    m_Action: {fileID: 11400000, guid: d57170ac2d61e7743954901c71f5f837, type: 2}
+  - m_Name: Enemy seen and out of range
+    m_Conditions:
+      m_Conditions:
+      - m_Name: IsEnemySpotted
+        m_Negate: 0
+      - m_Name: IsEnemyInRange
+        m_Negate: 1
+      - m_Name: IsLowHealth
+        m_Negate: 1
+      - m_Name: IsLowFuel
+        m_Negate: 1
+      - m_Name: IsLowAmmo
+        m_Negate: 1
+      m_Operators: 00000000000000000000000000000000
+    m_Action: {fileID: 11400000, guid: b76898922cfd21449a2a114419b4b4e3, type: 2}
+  - m_Name: Base seen and in range
+    m_Conditions:
+      m_Conditions:
+      - m_Name: IsBaseSpotted
+        m_Negate: 0
+      - m_Name: IsBaseInRange
+        m_Negate: 0
+      - m_Name: IsLowHealth
+        m_Negate: 1
+      - m_Name: IsOutOfAmmo
+        m_Negate: 1
+      m_Operators: 000000000000000000000000
+    m_Action: {fileID: 11400000, guid: 80ede0dc5ac2b1e4fac3e480a1761c93, type: 2}
+  - m_Name: Base seen and out of range
+    m_Conditions:
+      m_Conditions:
+      - m_Name: IsBaseSpotted
+        m_Negate: 0
+      - m_Name: IsBaseInRange
+        m_Negate: 1
+      - m_Name: IsLowHealth
+        m_Negate: 1
+      - m_Name: IsLowFuel
+        m_Negate: 1
+      - m_Name: IsLowAmmo
+        m_Negate: 1
+      m_Operators: 00000000000000000000000000000000
+    m_Action: {fileID: 11400000, guid: db8dff8de6dddd94382b6b72ba3e8972, type: 2}
+  - m_Name: Fuel Seen
+    m_Conditions:
+      m_Conditions:
+      - m_Name: IsFuelSpotted
+        m_Negate: 0
+      - m_Name: IsFuelFull
+        m_Negate: 1
+      m_Operators: 
+    m_Action: {fileID: 11400000, guid: 0ef26ba3baab58d4b94590b85a1829dd, type: 2}
+  - m_Name: Health Seen
+    m_Conditions:
+      m_Conditions:
+      - m_Name: IsHealthSpotted
+        m_Negate: 0
+      - m_Name: IsHealthFull
+        m_Negate: 1
+      m_Operators: 
+    m_Action: {fileID: 11400000, guid: c9ed30c3be369c840b02e9a4e43f07a2, type: 2}
+  - m_Name: Ammo Seen
+    m_Conditions:
+      m_Conditions:
+      - m_Name: IsAmmoSpotted
+        m_Negate: 0
+      - m_Name: IsAmmoFull
+        m_Negate: 1
+      m_Operators: 00000000
+    m_Action: {fileID: 11400000, guid: 3c9ca5b1eb7b5034f8b0abe74baf86b9, type: 2}
+  - m_Name: Reached Search Waypoint
+    m_Conditions:
+      m_Conditions:
+      - m_Name: HasReachedSearchWaypoint
+        m_Negate: 0
+      m_Operators: 
+    m_Action: {fileID: 11400000, guid: 956723a6344cbab4699de28c0db9e375, type: 2}
+  - m_Name: Not found anything for a while
+    m_Conditions:
+      m_Conditions:
+      - m_Name: HasNotSeenEnemyForAWhile
+        m_Negate: 0
+      m_Operators: 
+    m_Action: {fileID: 11400000, guid: 9176ee63c36c34847999c71041669d1e, type: 2}
+  - m_Name: New Rule
+    m_Conditions:
+      m_Conditions:
+      - m_Name: IsWaypointValid
+        m_Negate: 0
+      - m_Name: IsLowAmmo
+        m_Negate: 0
+      - m_Name: IsOutOfAmmo
+        m_Negate: 0
+      m_Operators: 0000000000000000
+    m_Action: {fileID: 11400000, guid: cad47f380748ffb4291339cb19dad7d0, type: 2}
+  - m_Name: Searching
+    m_Conditions:
+      m_Conditions:
+      - m_Name: IsWaypointValid
+        m_Negate: 0
+      - m_Name: IsLowFuel
+        m_Negate: 1
+      m_Operators: 00000000
+    m_Action: {fileID: 11400000, guid: cad47f380748ffb4291339cb19dad7d0, type: 2}
+  - m_Name: Stop and Spin
+    m_Conditions:
+      m_Conditions:
+      - m_Name: Default
+        m_Negate: 0
+      m_Operators: 
+    m_Action: {fileID: 11400000, guid: 9176ee63c36c34847999c71041669d1e, type: 2}
