@@ -1,93 +1,63 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// Represents the state where the AI-controlled tank attacks an enemy tank. The tank fires at the enemy when detected.
-/// If the tank loses the enemy or has low resources, it transitions to other states.
+/// When it has gotten an entry shot on the enemy tank, and resources are still healthy it will enter a berserk state that will kite around the enemy while attacking.
+/// This allows it to go full on with the offense while we are in safe position to do so.
 /// </summary>
 [CreateAssetMenu(menuName = "AI/States/Attack State")]
+
 public class CAD_AttackState : CAD_State
 {
-    private GameObject m_TargetPos;
-    private GameObject m_MidPoint;
-    private PathStage m_CurrentStage = PathStage.None;
-
-    enum PathStage
-    {
-        None,
-        MidPoint,
-        TargetPoint
-    }
+    private GameObject m_ReposPoint;
+    [SerializeField] private Vector3[] m_kitingWaypoints;
+    private int WaypointIndex = 0;
+    private GameObject m_CurrentWaypoint;
 
     public override void OnStateEnter(CAD_SmartTankFSM tankAI)
     {
-        // TODO: Implement OnStateEnter
+        Vector3 test = tankAI.transform.position + new Vector3(0, 0, 25);
+
+        Vector3 kitingCorner1 = tankAI.EnemyTank.transform.position + new Vector3(25, 0, -25); // Bottom Right Corner
+        Vector3 kitingCorner2 = tankAI.EnemyTank.transform.position + new Vector3(-25, 0, -25); // Bottom Left Corner
+        Vector3 kitingCorner3 = tankAI.EnemyTank.transform.position + new Vector3(-25, 0, 25); // Top Left Corner
+        Vector3 kitingCorner4 = tankAI.EnemyTank.transform.position + new Vector3(25, 0, 25); // Top Right Corner
+
+        m_ReposPoint = tankAI.CreateWaypoint(test);
     }
 
-    /// <summary>
-    /// Called every frame to update the state behavior. Fires at the enemy tank if detected.
-    /// </summary>
-    /// <param name="tankAI">The SmartTank instance running the StateMachine.</param>
     public override void OnStateUpdate(CAD_SmartTankFSM tankAI)
     {
         if (!tankAI.EnemyTank) return;
-        tankAI.TurretFireAtPoint(tankAI.EnemyTank);
 
-        //Transform enemyTurret = tankAI.EnemyTank.transform.Find("Model/Turret");
-        //Vector3 direction = tankAI.EnemyTank.transform.position - tankAI.transform.position;
-        //Vector3 aimOffset = new Vector3(0, 0, 10);
+        Transform enemyTurret = tankAI.EnemyTank.transform.Find("Model/Turret");
+        Vector3 direction = tankAI.EnemyTank.transform.position - tankAI.transform.position;
+
+        // tankAI.FaceTurretAtPoint(tankAI.EnemyTank); Method doesn't exist anymore?
+        tankAI.FollowPathToWorldPoint(m_ReposPoint, 1);
+
+        for (int i = 0; i < m_kitingWaypoints.Length; i++)
+        {
+            float bestStart = float.PositiveInfinity;
+            float currentStart = Vector3.Distance(tankAI.transform.position, m_kitingWaypoints[i]);
+            if (currentStart < bestStart)
+            {
+                WaypointIndex = i;
+                bestStart = currentStart;
+            }
+            m_CurrentWaypoint = tankAI.CreateWaypoint(m_kitingWaypoints[WaypointIndex]);
+        }
+
+        //Vector3 kitingGap = direction / 2;
 
 
-        //// When in front of enemy turret
-        //if (Vector3.Dot(direction.normalized, enemyTurret.forward) > 0 && m_CurrentStage == PathStage.None)
+        //if (Vector3.Dot(direction.normalized, enemyTurret.forward) < 0)
         //{
-        //    Vector3 offsetPos = tankAI.EnemyTank.transform.position + aimOffset;
-        //    offsetPos.x *= enemyTurret.forward.x;
-        //    offsetPos.y *= enemyTurret.forward.y;
-        //    offsetPos.z *= enemyTurret.forward.z;
-
-        //    m_TargetPos = new GameObject("attackPos");
-        //    m_TargetPos.transform.position = offsetPos;
-
-        //    Vector3 tankToTarget = offsetPos - tankAI.transform.position;
-
-        //    Debug.DrawLine(tankAI.transform.position, m_TargetPos.transform.position, Color.black);
-
-        //    Vector3 halfwayPoint = tankAI.transform.position + (tankToTarget * 0.5f) + aimOffset;
-
-        //    halfwayPoint.x *= enemyTurret.right.x;
-        //    halfwayPoint.y *= enemyTurret.right.y;
-        //    halfwayPoint.z *= enemyTurret.right.z;
-
-        //    m_MidPoint = new GameObject("midPoint");
-        //    m_MidPoint.transform.position = halfwayPoint;
-        //    Debug.DrawLine(tankAI.transform.position, m_MidPoint.transform.position, Color.green);
-
-        //    tankAI.FollowPathToWorldPoint(m_MidPoint, 1);
-        //    m_CurrentStage = PathStage.MidPoint;
-        //}
-        //// When behind enemy turret
-        //else if (Vector3.Dot(direction.normalized, enemyTurret.forward) < 0 && m_CurrentStage == PathStage.None)
-        //{
+        //    tankAI.FollowPathToWorldPoint(m_ReposPoint, 1);
         //    tankAI.TurretFireAtPoint(tankAI.EnemyTank);
+        //    Destroy(m_ReposPoint);
         //}
-
-        //if (m_CurrentStage == PathStage.MidPoint && Vector3.Distance(tankAI.transform.position, m_MidPoint.transform.position) < 1)
-        //{
-        //    Destroy(m_MidPoint);
-        //    m_MidPoint = null;
-        //    tankAI.FollowPathToWorldPoint(m_TargetPos, 1);
-        //    m_CurrentStage = PathStage.TargetPoint;
-        //}
-
-        //if (m_CurrentStage == PathStage.TargetPoint && Vector3.Distance(tankAI.transform.position, m_MidPoint.transform.position) < 1)
-        //{
-        //    Destroy(m_TargetPos);
-        //    m_TargetPos = null;
-        //    m_CurrentStage = PathStage.None;
-        //}
-
-
     }
 
     public override void OnStateExit(CAD_SmartTankFSM tankAI)
@@ -105,6 +75,7 @@ public class CAD_AttackState : CAD_State
             new CAD_Transition("Low Health or Fuel", tankAI => tankAI.Health <= 30.0f || tankAI.Fuel <= 50.0f),
             new CAD_Transition("Low Ammo", tankAI => tankAI.Ammo == 0.0f),
             new CAD_Transition("Tank Lost", tankAI => !tankAI.EnemyTank)
+
         };
     }
 }
