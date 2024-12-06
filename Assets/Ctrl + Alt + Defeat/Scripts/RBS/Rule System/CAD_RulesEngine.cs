@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 /// <summary>
 /// The decision processor that checks all rules every update and selects which action to perform.
@@ -30,7 +31,8 @@ public class CAD_RulesEngine
     {
         foreach (var rule in m_Rules)
         {
-            if (rule.Condition(m_TankAI))
+            Debug.Log($"{rule.Condition.Name}: {rule.Condition.Check(m_TankAI)}");
+            if (rule.Condition.Check(m_TankAI))
             {
                 rule.Action(m_TankAI);
                 break; // Found a rule to execute, stop checking others.

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 /// <summary>
 /// Represents a single rule. Each rule has a condition function and an action function.
@@ -6,13 +7,23 @@ using System;
 /// </summary>
 public class CAD_Rule
 {
-    public Func<CAD_SmartTankRBS, bool> Condition { get; private set; }
+    public struct ConditionInfo
+    {
+        public string Name;
+        public Func<CAD_SmartTankRBS, bool> Check;
+    }
+
+    public ConditionInfo Condition { get; private set; }
     public Action<CAD_SmartTankRBS> Action { get; private set; }
     public int Priority { get; private set; }
 
-    public CAD_Rule(Func<CAD_SmartTankRBS, bool> condition, Action<CAD_SmartTankRBS> action, int priority)
+    public CAD_Rule(string conditionName, Func<CAD_SmartTankRBS, bool> condition, Action<CAD_SmartTankRBS> action, int priority)
     {
-        Condition = condition;
+        Condition = new ConditionInfo
+        {
+            Name = conditionName,
+            Check = condition,
+        };
         Action = action;
         Priority = priority;
     }
