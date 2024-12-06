@@ -3,40 +3,32 @@ using UnityEngine;
 using UnityEditorInternal;
 using System.Collections.Generic;
 
-public class CAD_DecisionRulesEditorWindow : EditorWindow
+public class CAD_RulesEditorWindow : EditorWindow
 {
-    private CAD_Rules decisionRules;
-    private SerializedObject serializedDecisionRules;
-    private ReorderableList ruleList;
-    private List<string> knowledgeBaseMembers; 
-    private List<bool> foldouts = new List<bool>();
-    private Vector2 scrollPos; // Scroll position variable
-
-    [MenuItem("Window/Decision Rules Editor")]
-    public static CAD_DecisionRulesEditorWindow ShowWindow()
-    {
-        var window = GetWindow<CAD_DecisionRulesEditorWindow>("Decision Rules Editor");
-        window.Show();
-        return window;
-    }
+    private CAD_Rules m_Rules;
+    private SerializedObject m_SerializedRules;
+    private ReorderableList m_RuleList;
+    private List<string> m_KnowledgeBaseMembers; 
+    private List<bool> m_Foldouts = new List<bool>();
+    private Vector2 m_ScrollPosition;
 
     private void OnEnable()
     {
-        knowledgeBaseMembers = CAD_KnowledgeBaseUtils.GetBooleanMembers();
+        m_KnowledgeBaseMembers = CAD_KnowledgeBaseUtils.GetBooleanMembers();
     }
 
     public void SetAsset(CAD_Rules rules)
     {
-        decisionRules = rules;
-        if (decisionRules != null)
+        m_Rules = rules;
+        if (m_Rules != null)
         {
-            serializedDecisionRules = new SerializedObject(decisionRules);
+            m_SerializedRules = new SerializedObject(m_Rules);
             InitializeRuleList();
         }
         else
         {
-            serializedDecisionRules = null;
-            ruleList = null;
+            m_SerializedRules = null;
+            m_RuleList = null;
         }
         Repaint();
     }
@@ -44,85 +36,85 @@ public class CAD_DecisionRulesEditorWindow : EditorWindow
     private void OnGUI()
     {
         EditorGUI.BeginChangeCheck();
-        var newDecisionRules = (CAD_Rules)EditorGUILayout.ObjectField("Decision Rules", decisionRules, typeof(CAD_Rules), false);
+        var newDecisionRules = (CAD_Rules)EditorGUILayout.ObjectField("Rules", m_Rules, typeof(CAD_Rules), false);
         if (EditorGUI.EndChangeCheck())
         {
             SetAsset(newDecisionRules);
         }
 
-        if (decisionRules == null)
+        if (m_Rules == null)
         {
-            EditorGUILayout.HelpBox("Please assign a Decision Rules object.", MessageType.Info);
+            EditorGUILayout.HelpBox("Please assign a Rules object.", MessageType.Info);
             return;
         }
 
-        if (ruleList != null)
+        if (m_RuleList != null)
         {
-            serializedDecisionRules.Update();
+            m_SerializedRules.Update();
             // Begin Scroll View
-            scrollPos = EditorGUILayout.BeginScrollView(scrollPos);
+            m_ScrollPosition = EditorGUILayout.BeginScrollView(m_ScrollPosition);
             // Draw the ReorderableList
-            ruleList.DoLayoutList();
+            m_RuleList.DoLayoutList();
             // End Scroll View
             EditorGUILayout.EndScrollView();
-            serializedDecisionRules.ApplyModifiedProperties();
+            m_SerializedRules.ApplyModifiedProperties();
         }
     }
 
     private void InitializeRuleList()
     {
-        SerializedProperty rulesProp = serializedDecisionRules.FindProperty("rules");
+        SerializedProperty rulesProp = m_SerializedRules.FindProperty("m_Rules");
 
         // Initialize foldouts based on the number of rules
-        foldouts = new List<bool>();
+        m_Foldouts = new List<bool>();
         for (int i = 0; i < rulesProp.arraySize; i++)
         {
-            foldouts.Add(false); // Initially collapsed
+            m_Foldouts.Add(false); // Initially collapsed
         }
 
-        ruleList = new ReorderableList(serializedDecisionRules, rulesProp, true, true, true, true);
+        m_RuleList = new ReorderableList(m_SerializedRules, rulesProp, true, true, true, true);
 
         // Draw header
-        ruleList.drawHeaderCallback = (Rect rect) =>
+        m_RuleList.drawHeaderCallback = (Rect rect) =>
         {
-            EditorGUI.LabelField(rect, "Decision Rules (Highest priority at top)", EditorStyles.boldLabel);
+            EditorGUI.LabelField(rect, "Rules (Highest priority at top)", EditorStyles.boldLabel);
         };
 
         // Draw each element
-        ruleList.drawElementCallback = (Rect rect, int index, bool isActive, bool isFocused) =>
+        m_RuleList.drawElementCallback = (Rect rect, int index, bool isActive, bool isFocused) =>
         {
             SerializedProperty element = rulesProp.GetArrayElementAtIndex(index);
 
-            SerializedProperty ruleNameProp = element.FindPropertyRelative("Name");
-            SerializedProperty conditionsProp = element.FindPropertyRelative("conditions");
-            SerializedProperty actionProp = element.FindPropertyRelative("action");
+            SerializedProperty ruleNameProp = element.FindPropertyRelative("m_Name");
+            SerializedProperty conditionsProp = element.FindPropertyRelative("m_Conditions");
+            SerializedProperty actionProp = element.FindPropertyRelative("m_Action");
 
             // Ensure foldouts list is in sync
-            if (foldouts.Count <= index)
-                foldouts.Add(false);
+            if (m_Foldouts.Count <= index)
+                m_Foldouts.Add(false);
 
             float lineHeight = EditorGUIUtility.singleLineHeight;
             float spacing = 2f;
 
-            Rect nameRect = new Rect(rect.x + 20, rect.y + spacing, rect.width, lineHeight);
+            Rect nameRect = new Rect(rect.x + 20, rect.y + spacing, 300, lineHeight);
             EditorGUI.PropertyField(nameRect, ruleNameProp, new GUIContent(""));
 
             // Draw the foldout
             Rect foldoutRect = new Rect(rect.x, rect.y, rect.width, EditorGUIUtility.singleLineHeight);
-            foldouts[index] = EditorGUI.Foldout(foldoutRect, foldouts[index], "", true);
+            m_Foldouts[index] = EditorGUI.Foldout(foldoutRect, m_Foldouts[index], "", true);
 
-            if (foldouts[index])
+            if (m_Foldouts[index])
             {
                 EditorGUI.indentLevel++;
 
-                float y = rect.y + EditorGUIUtility.singleLineHeight + 2;
+                float y = rect.y + EditorGUIUtility.singleLineHeight + 10;
 
                 y += DrawComplexConditionsInline(new Rect(rect.x, y, rect.width, EditorGUIUtility.singleLineHeight), conditionsProp, ref rect);
 
                 EditorGUILayout.Space();
 
                 // Draw Action
-                Rect actionRect = new Rect(rect.x, y, rect.width, EditorGUIUtility.singleLineHeight);
+                Rect actionRect = new Rect(rect.x, y, 400, EditorGUIUtility.singleLineHeight);
                 EditorGUI.PropertyField(
                     actionRect,
                     actionProp,
@@ -134,31 +126,31 @@ public class CAD_DecisionRulesEditorWindow : EditorWindow
         };
 
         // Calculate element height based on foldout state
-        ruleList.elementHeightCallback = (int index) =>
+        m_RuleList.elementHeightCallback = (int index) =>
         {
-            SerializedProperty element = serializedDecisionRules.FindProperty("rules").GetArrayElementAtIndex(index);
-            SerializedProperty conditionsProp = element.FindPropertyRelative("conditions");
+            SerializedProperty element = m_SerializedRules.FindProperty("m_Rules").GetArrayElementAtIndex(index);
+            SerializedProperty conditionsProp = element.FindPropertyRelative("m_Conditions");
 
             float lineHeight = EditorGUIUtility.singleLineHeight;
             float spacing = 2f;
 
             float height = lineHeight + spacing; // Foldout
 
-            if (index < foldouts.Count && foldouts[index])
+            if (index < m_Foldouts.Count && m_Foldouts[index])
             {
                 Rect rect = new();
                 // Calculate height for conditions
                 height += DrawComplexConditionsInline(new Rect(0, 0, 0, 0), conditionsProp, ref rect) + spacing;
 
                 // Add height for Action field
-                height += lineHeight + spacing;
+                height += lineHeight + spacing + 10;
             }
 
             return height;
         };
 
         // Draw background with divider lines and alternating colors
-        ruleList.drawElementBackgroundCallback = (Rect rect, int index, bool isActive, bool isFocused) =>
+        m_RuleList.drawElementBackgroundCallback = (Rect rect, int index, bool isActive, bool isFocused) =>
         {
             if (Event.current.type == EventType.Repaint)
             {
@@ -172,7 +164,7 @@ public class CAD_DecisionRulesEditorWindow : EditorWindow
             }
         };
 
-        ruleList.onAddCallback = (ReorderableList list) =>
+        m_RuleList.onAddCallback = (ReorderableList list) =>
         {
             int newIndex = list.serializedProperty.arraySize;
             list.serializedProperty.arraySize++;
@@ -184,28 +176,28 @@ public class CAD_DecisionRulesEditorWindow : EditorWindow
             // Initialize other properties as needed
 
             // Add a new foldout state
-            foldouts.Add(false);
+            m_Foldouts.Add(false);
         };
 
-        ruleList.onRemoveCallback = (ReorderableList list) =>
+        m_RuleList.onRemoveCallback = (ReorderableList list) =>
         {
-            if (list.index >= 0 && list.index < foldouts.Count)
+            if (list.index >= 0 && list.index < m_Foldouts.Count)
             {
-                foldouts.RemoveAt(list.index);
+                m_Foldouts.RemoveAt(list.index);
             }
             ReorderableList.defaultBehaviours.DoRemoveButton(list);
         };
 
-        ruleList.onReorderCallback = (ReorderableList list) =>
+        m_RuleList.onReorderCallback = (ReorderableList list) =>
         {
             // Reorder the foldouts list to match the new order of the rules
             List<bool> newFoldouts = new List<bool>();
             SerializedProperty rulesProp = list.serializedProperty;
             for (int i = 0; i < rulesProp.arraySize; i++)
             {
-                newFoldouts.Add(foldouts[i]);
+                newFoldouts.Add(m_Foldouts[i]);
             }
-            foldouts = newFoldouts;
+            m_Foldouts = newFoldouts;
         };
 
 
@@ -213,8 +205,8 @@ public class CAD_DecisionRulesEditorWindow : EditorWindow
 
     private float DrawComplexConditionsInline(Rect rect, SerializedProperty conditionsProp, ref Rect parentRect)
     {
-        SerializedProperty conditionsList = conditionsProp.FindPropertyRelative("conditions");
-        SerializedProperty operatorsList = conditionsProp.FindPropertyRelative("operators");
+        SerializedProperty conditionsList = conditionsProp.FindPropertyRelative("m_Conditions");
+        SerializedProperty operatorsList = conditionsProp.FindPropertyRelative("m_Operators");
 
         // Ensure at least one condition
         if (conditionsList.arraySize == 0)
@@ -234,20 +226,20 @@ public class CAD_DecisionRulesEditorWindow : EditorWindow
 
         // Draw the first condition with a negate toggle
         SerializedProperty firstCondition = conditionsList.GetArrayElementAtIndex(0);
-        SerializedProperty firstConditionNameProp = firstCondition.FindPropertyRelative("Name");
-        SerializedProperty firstConditionNegateProp = firstCondition.FindPropertyRelative("negate");
+        SerializedProperty firstConditionNameProp = firstCondition.FindPropertyRelative("m_Name");
+        SerializedProperty firstConditionNegateProp = firstCondition.FindPropertyRelative("m_Negate");
 
         // Toggle first
         Rect firstToggleRect = new Rect(rect.x, y, toggleWidth, lineHeight);
         firstConditionNegateProp.boolValue = EditorGUI.ToggleLeft(firstToggleRect, "Not", firstConditionNegateProp.boolValue);
 
         // Dropdown next
-        int firstSelectedIndex = Mathf.Max(0, knowledgeBaseMembers.IndexOf(firstConditionNameProp.stringValue));
+        int firstSelectedIndex = Mathf.Max(0, m_KnowledgeBaseMembers.IndexOf(firstConditionNameProp.stringValue));
         Rect firstConditionRect = new Rect(rect.x + toggleWidth + spacing, y, conditionWidth, lineHeight);
-        int newFirstIndex = EditorGUI.Popup(firstConditionRect, firstSelectedIndex, knowledgeBaseMembers.ToArray());
+        int newFirstIndex = EditorGUI.Popup(firstConditionRect, firstSelectedIndex, m_KnowledgeBaseMembers.ToArray());
         if (newFirstIndex != firstSelectedIndex)
         {
-            firstConditionNameProp.stringValue = knowledgeBaseMembers[newFirstIndex];
+            firstConditionNameProp.stringValue = m_KnowledgeBaseMembers[newFirstIndex];
         }
 
         float x = rect.x + toggleWidth + spacing + conditionWidth + spacing; // Move past the first condition block
@@ -264,8 +256,8 @@ public class CAD_DecisionRulesEditorWindow : EditorWindow
 
             // Condition
             SerializedProperty condition = conditionsList.GetArrayElementAtIndex(i);
-            SerializedProperty conditionNameProp = condition.FindPropertyRelative("Name");
-            SerializedProperty conditionNegateProp = condition.FindPropertyRelative("negate");
+            SerializedProperty conditionNameProp = condition.FindPropertyRelative("m_Name");
+            SerializedProperty conditionNegateProp = condition.FindPropertyRelative("m_Negate");
 
             // Toggle
             Rect toggleRect = new Rect(x, y, toggleWidth, lineHeight);
@@ -273,11 +265,11 @@ public class CAD_DecisionRulesEditorWindow : EditorWindow
 
             // Popup
             Rect conditionRect = new Rect(x + toggleWidth + spacing, y, conditionWidth, lineHeight);
-            int selectedIndex = Mathf.Max(0, knowledgeBaseMembers.IndexOf(conditionNameProp.stringValue));
-            int newIndex = EditorGUI.Popup(conditionRect, selectedIndex, knowledgeBaseMembers.ToArray());
+            int selectedIndex = Mathf.Max(0, m_KnowledgeBaseMembers.IndexOf(conditionNameProp.stringValue));
+            int newIndex = EditorGUI.Popup(conditionRect, selectedIndex, m_KnowledgeBaseMembers.ToArray());
             if (newIndex != selectedIndex)
             {
-                conditionNameProp.stringValue = knowledgeBaseMembers[newIndex];
+                conditionNameProp.stringValue = m_KnowledgeBaseMembers[newIndex];
             }
 
             x += toggleWidth + spacing + conditionWidth + spacing;
@@ -287,8 +279,8 @@ public class CAD_DecisionRulesEditorWindow : EditorWindow
 
         // Add/Remove Buttons
         float buttonY = y;
-        Rect addButtonRect = new Rect(rect.x, buttonY, 100, lineHeight);
-        if (GUI.Button(addButtonRect, "Add Condition"))
+        Rect addButtonRect = new Rect(rect.x + 10, buttonY, 30, lineHeight);
+        if (GUI.Button(addButtonRect, "+"))
         {
             conditionsList.arraySize++;
             operatorsList.arraySize = conditionsList.arraySize - 1;
@@ -296,8 +288,8 @@ public class CAD_DecisionRulesEditorWindow : EditorWindow
 
         if (conditionsList.arraySize > 1)
         {
-            Rect removeButtonRect = new Rect(rect.x + 110, buttonY, 150, lineHeight);
-            if (GUI.Button(removeButtonRect, "Remove Last Condition"))
+            Rect removeButtonRect = new Rect(rect.x + 40, buttonY, 30, lineHeight);
+            if (GUI.Button(removeButtonRect, "-"))
             {
                 conditionsList.arraySize--;
                 operatorsList.arraySize = conditionsList.arraySize - 1;
