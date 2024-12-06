@@ -16,15 +16,6 @@ public class CAD_RulesEngine
         m_Rules = rules;
     }
 
-    ///// <summary>
-    ///// Add a rule to the engine.
-    ///// </summary>
-    //public void AddRule(CAD_Rule rule)
-    //{
-    //    m_Rules.Add(rule);
-    //    m_Rules = m_Rules.OrderBy(r => r.Priority).ToList();
-    //}
-
     /// <summary>
     /// Check conditions and perform the best-matching action.
     /// </summary>
@@ -32,10 +23,10 @@ public class CAD_RulesEngine
     {
         foreach (var rule in m_Rules.Rules)
         {
-            Debug.Log($"{rule.Name}: {rule.conditions.Evaluate(knowledgeBase)}");
-            if (rule.conditions.Evaluate(knowledgeBase))
+            Debug.Log($"{rule.Name}: {rule.Conditions.Evaluate(knowledgeBase)}");
+            if (rule.Conditions.Evaluate(knowledgeBase))
             {
-                rule.action.Execute(m_TankAI, knowledgeBase);
+                rule.Action.Execute(m_TankAI, knowledgeBase);
                 break; // Found a rule to execute, stop checking others.
             }
         }

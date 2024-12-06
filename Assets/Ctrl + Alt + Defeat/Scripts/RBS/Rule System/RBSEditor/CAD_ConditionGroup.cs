@@ -6,23 +6,26 @@ using UnityEngine;
 [Serializable]
 public class CAD_ConditionGroup
 {
-    public List<CAD_Condition> conditions = new();
-    public List<CAD_LogicalOperator> operators;
+    [SerializeField] private List<CAD_Condition> m_Conditions = new();
+    [SerializeField] private List<CAD_LogicalOperator> m_Operators = new();
+
+    public List<CAD_Condition> Conditions => m_Conditions;
+    public List<CAD_LogicalOperator> Operators => m_Operators;
 
     public bool Evaluate(CAD_KnowledgeBase knowledgeBase)
     {
-        bool result = EvaluateCondition(conditions[0].Name, knowledgeBase);
+        bool result = EvaluateCondition(Conditions[0].Name, knowledgeBase);
 
-        for (int i = 1; i < conditions.Count; i++)
+        for (int i = 1; i < Conditions.Count; i++)
         {
-            switch (operators[i - 1])
+            switch (Operators[i - 1])
             {
                 case CAD_LogicalOperator.AND:
                     if (!result) return false;
-                    bool evaluation = EvaluateCondition(conditions[i].Name, knowledgeBase);
-                    result = result && (conditions[i].negate ? !evaluation : evaluation); break;
+                    bool evaluation = EvaluateCondition(Conditions[i].Name, knowledgeBase);
+                    result = result && (Conditions[i].Negate ? !evaluation : evaluation); break;
                 case CAD_LogicalOperator.OR:
-                    result = (conditions[i].negate ? !result : result) || EvaluateCondition(conditions[i].Name, knowledgeBase); break;
+                    result = (Conditions[i].Negate ? !result : result) || EvaluateCondition(Conditions[i].Name, knowledgeBase); break;
             }
         }
 

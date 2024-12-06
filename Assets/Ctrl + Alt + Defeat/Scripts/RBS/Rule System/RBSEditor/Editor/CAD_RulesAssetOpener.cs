@@ -10,12 +10,12 @@ public class CAD_DecisionRulesAssetOpener : AssetModificationProcessor
         // Get the selected asset   
         Object obj = EditorUtility.InstanceIDToObject(instanceID);
 
-        // Check if the selected asset is of type CAD_DecisionRules
+        // Check if the selected asset is of type CAD_Rules
         if (obj is CAD_Rules decisionRules)
         {
             // Open the custom editor window
-            CAD_DecisionRulesEditorWindow window = EditorWindow.GetWindow<CAD_DecisionRulesEditorWindow>();
-            window.titleContent = new GUIContent("Decision Rules Editor");
+            CAD_RulesEditorWindow window = EditorWindow.GetWindow<CAD_RulesEditorWindow>();
+            window.titleContent = new GUIContent("Rules Editor");
             window.Show();
 
             // Assign the asset to the editor window
