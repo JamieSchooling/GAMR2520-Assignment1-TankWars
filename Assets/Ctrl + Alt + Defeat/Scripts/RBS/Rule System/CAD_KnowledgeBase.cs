@@ -36,6 +36,9 @@ public class CAD_KnowledgeBase
     public bool IsAmmoSpotted => m_TankAI.ConsumablesFound.Where(c => c.Key.CompareTag("Ammo")).Count() > 0;
 
     public bool HasReachedSearchWaypoint => Vector3.Distance(m_TankAI.transform.position, CurrentSearchWaypoint) < 25.0f;
+    public bool IsWaypointValid => CurrentSearchWaypoint != Vector3.zero;
+
+    public bool Default => true;
 
     public Vector3 EnemyPosition => NearestEnemyTank.transform.position;
     public Vector3 EnemyBasePosition => NearestEnemyBase ? NearestEnemyBase.transform.position : Vector3.zero;

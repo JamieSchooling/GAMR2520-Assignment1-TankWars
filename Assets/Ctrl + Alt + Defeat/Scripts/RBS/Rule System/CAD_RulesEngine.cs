@@ -8,33 +8,34 @@ using UnityEngine;
 public class CAD_RulesEngine
 {
     private CAD_SmartTankRBS m_TankAI;
-    private List<CAD_Rule> m_Rules = new List<CAD_Rule>();
+    private CAD_Rules m_Rules;
 
-    public CAD_RulesEngine(CAD_SmartTankRBS tankAI)
+    public CAD_RulesEngine(CAD_SmartTankRBS tankAI, CAD_Rules rules)
     {
         m_TankAI = tankAI;
+        m_Rules = rules;
     }
 
-    /// <summary>
-    /// Add a rule to the engine.
-    /// </summary>
-    public void AddRule(CAD_Rule rule)
-    {
-        m_Rules.Add(rule);
-        m_Rules = m_Rules.OrderBy(r => r.Priority).ToList();
-    }
+    ///// <summary>
+    ///// Add a rule to the engine.
+    ///// </summary>
+    //public void AddRule(CAD_Rule rule)
+    //{
+    //    m_Rules.Add(rule);
+    //    m_Rules = m_Rules.OrderBy(r => r.Priority).ToList();
+    //}
 
     /// <summary>
     /// Check conditions and perform the best-matching action.
     /// </summary>
-    public void Update()
+    public void Update(CAD_KnowledgeBase knowledgeBase)
     {
-        foreach (var rule in m_Rules)
+        foreach (var rule in m_Rules.Rules)
         {
-            Debug.Log($"{rule.Condition.Name}: {rule.Condition.Check(m_TankAI)}");
-            if (rule.Condition.Check(m_TankAI))
+            Debug.Log($"{rule.Name}: {rule.conditions.Evaluate(knowledgeBase)}");
+            if (rule.conditions.Evaluate(knowledgeBase))
             {
-                rule.Action(m_TankAI);
+                rule.action.Execute(m_TankAI, knowledgeBase);
                 break; // Found a rule to execute, stop checking others.
             }
         }

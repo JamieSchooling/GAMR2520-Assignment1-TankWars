@@ -99897,6 +99897,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7cb3a0c9db1e3ce42a6c5f9f5d741151, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_Rules: {fileID: 11400000, guid: 7fc7b3f3167a164468897c966611a412, type: 2}
   m_SearchWaypoints:
   - {x: -74.2, y: 14.33931, z: 64.7}
   - {x: 68.5, y: 14.33931, z: 74.5}

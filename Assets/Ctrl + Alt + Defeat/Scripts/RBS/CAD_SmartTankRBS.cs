@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class CAD_SmartTankRBS : AITank
 {
+    [SerializeField] private CAD_Rules m_Rules;
     [SerializeField] private Vector3[] m_SearchWaypoints;
 
     public float FuelLevel => a_GetFuelLevel;
@@ -23,16 +24,15 @@ public class CAD_SmartTankRBS : AITank
 
     public override void AITankStart()
     {
-        m_RulesEngine = new(this);
+        m_RulesEngine = new(this, m_Rules);
         m_KnowledgeBase = new(this);
-        InitializeRules(m_RulesEngine);
         m_KnowledgeBase.CurrentSearchWaypoint = GetClosestSearchWayPoint();
         m_CurrentWaypointIndex = m_SearchWaypoints.ToList().IndexOf(m_KnowledgeBase.CurrentSearchWaypoint);
     }
 
     public override void AITankUpdate()
     {
-        m_RulesEngine.Update();
+        m_RulesEngine.Update(m_KnowledgeBase);
     }
 
     public override void AIOnCollisionEnter(Collision collision)
@@ -40,104 +40,20 @@ public class CAD_SmartTankRBS : AITank
         // TODO: Implement Collision Response
     }
 
-    private void InitializeRules(CAD_RulesEngine rulesEngine)
+    public void Attack(Vector3 position)
     {
-        rulesEngine.AddRule(new CAD_Rule(
-            priority: 1,
-            conditionName: "Enemy too close",
-            condition: (tank) => m_KnowledgeBase.IsEnemySpotted && m_KnowledgeBase.IsEnemyInRange && m_KnowledgeBase.IsEnemyTooClose,
-            action: (tank) => {
-                m_KnowledgeBase.CurrentSearchWaypoint = m_KnowledgeBase.EnemyPosition;
-                tank.GoTo((m_KnowledgeBase.NearestEnemyTank.transform.forward * 20.0f) + (m_KnowledgeBase.NearestEnemyTank.transform.right * 20.0f));
-            }));
-
-        // Attack if enemy in range and well-equipped
-        rulesEngine.AddRule(new CAD_Rule(
-            priority: 2,
-            conditionName: "Enemy seen and in range",
-            condition: (tank) => m_KnowledgeBase.IsEnemySpotted && m_KnowledgeBase.IsEnemyInRange && !m_KnowledgeBase.IsLowHealth && !m_KnowledgeBase.IsOutOfAmmo,
-            action: (tank) => {
-                m_KnowledgeBase.CurrentSearchWaypoint = m_KnowledgeBase.EnemyPosition;
-                tank.Attack(m_KnowledgeBase.EnemyPosition);
-            }));
-
-        // Attack if enemy spotted and out of range
-        rulesEngine.AddRule(new CAD_Rule(
-            priority: 5,
-            conditionName: "Enemy seen and out of range",
-            condition: (tank) => m_KnowledgeBase.IsEnemySpotted && !m_KnowledgeBase.IsEnemyInRange 
-                                && !m_KnowledgeBase.IsLowHealth && !m_KnowledgeBase.IsLowFuel && !m_KnowledgeBase.IsLowAmmo,
-            action: (tank) => {
-                m_KnowledgeBase.CurrentSearchWaypoint = m_KnowledgeBase.EnemyPosition;
-                tank.GoTo(m_KnowledgeBase.EnemyPosition);
-            }));
-
-        // Attack if base spotted and in range
-        rulesEngine.AddRule(new CAD_Rule(
-            priority: 10,
-            conditionName: "Base spotted and in range",
-            condition: (tank) => m_KnowledgeBase.IsBaseSpotted && m_KnowledgeBase.IsBaseInRange && !m_KnowledgeBase.IsLowHealth && !m_KnowledgeBase.IsLowAmmo,
-            action: (tank) => tank.Attack(m_KnowledgeBase.EnemyBasePosition)));
-
-        // Attack if base spotted and out of range
-        rulesEngine.AddRule(new CAD_Rule(
-            priority: 10,
-            conditionName: "Base seen and out of range",
-            condition: (tank) => m_KnowledgeBase.IsBaseSpotted && !m_KnowledgeBase.IsBaseInRange && !m_KnowledgeBase.IsLowHealth && !m_KnowledgeBase.IsLowAmmo && !m_KnowledgeBase.IsLowFuel,
-            action: (tank) => tank.GoTo(m_KnowledgeBase.EnemyBasePosition)));
-
-        rulesEngine.AddRule(new CAD_Rule(
-            priority: 20,
-            conditionName: "Fuel Seen",
-            condition: (tank) => m_KnowledgeBase.IsFuelSpotted && !m_KnowledgeBase.IsFuelFull,
-            action: (tank) => tank.GoTo(m_KnowledgeBase.NearestFuelConsumable.transform.position)));
-
-        rulesEngine.AddRule(new CAD_Rule(
-            priority: 30,
-            conditionName: "Health Seen",
-            condition: (tank) => m_KnowledgeBase.IsHealthSpotted && !m_KnowledgeBase.IsHealthFull && !m_KnowledgeBase.IsLowFuel,
-            action: (tank) => tank.GoTo(m_KnowledgeBase.NearestHealthConsumable.transform.position)));
-
-        rulesEngine.AddRule(new CAD_Rule(
-            priority: 40,
-            conditionName: "Ammo Seen",
-            condition: (tank) => m_KnowledgeBase.IsAmmoSpotted && !m_KnowledgeBase.IsAmmoFull && !m_KnowledgeBase.IsLowFuel,
-            action: (tank) => tank.GoTo(m_KnowledgeBase.NearestAmmoConsumable.transform.position)));
-
-        rulesEngine.AddRule(new CAD_Rule(
-            priority: 50,
-            conditionName: "Reached Search Waypoint",
-            condition: (tank) => m_KnowledgeBase.HasReachedSearchWaypoint,
-            action: (tank) => tank.NextSearchWaypoint()));
-
-        rulesEngine.AddRule(new CAD_Rule(
-            priority: 60,
-            conditionName: "Searching",
-            condition: (tank) => m_KnowledgeBase.CurrentSearchWaypoint != Vector3.zero && !m_KnowledgeBase.IsLowFuel,
-            action: (tank) => tank.GoTo(m_KnowledgeBase.CurrentSearchWaypoint)));
-
-        rulesEngine.AddRule(new CAD_Rule(
-            priority: 100,
-            conditionName: "Camping",
-            condition: (tank) => true, // Always true if this point is reached
-            action: (tank) => tank.SpinTurret()));
-    }
-
-    private void Attack(Vector3 position)
-    {
-        if (m_KnowledgeBase.IsEnemySpotted) Debug.Log(m_KnowledgeBase.DistanceToEnemy);
         GameObject target = CreateWaypoint(position, "Target");
         a_FaceTurretToPoint(target);
         a_FireAtPoint(target);
     }
 
-    private void GoTo(Vector3 position, float speed = 1.0f)
+    public void GoTo(Vector3 position, float speed = 1.0f)
     {
         GameObject waypoint = CreateWaypoint(position, "Waypoint");
         a_FollowPathToPoint(waypoint, speed);
     }
 
-    private void NextSearchWaypoint()
+    public void NextSearchWaypoint()
     {
         m_CurrentWaypointIndex++;
         if (m_CurrentWaypointIndex >= m_SearchWaypoints.Count())
@@ -147,7 +63,7 @@ public class CAD_SmartTankRBS : AITank
         m_KnowledgeBase.CurrentSearchWaypoint = m_SearchWaypoints[m_CurrentWaypointIndex];
     }
 
-    private Vector3 GetClosestSearchWayPoint()
+    public Vector3 GetClosestSearchWayPoint()
     {
         float closestDistance = float.PositiveInfinity;
         int index = 0;
@@ -163,17 +79,17 @@ public class CAD_SmartTankRBS : AITank
         return m_SearchWaypoints[index];
     }
 
-    private void SpinTurret()
+    public void SpinTurret()
     {
         Transform turret = transform.Find("Model/Turret");
         Vector3 target = turret.forward + turret.right;
         a_FaceTurretToPoint(CreateWaypoint(transform.TransformPoint(target), "Spin Target"));
     }
 
-    private GameObject CreateWaypoint(Vector3 position) => CreateWaypoint(position, "Waypoint", Time.deltaTime);
-    private GameObject CreateWaypoint(Vector3 position, string name) => CreateWaypoint(position, name, Time.deltaTime);
-    private GameObject CreateWaypoint(Vector3 position, float duration) => CreateWaypoint(position, "Waypoint", duration);
-    private GameObject CreateWaypoint(Vector3 position, string name, float duration)
+    public GameObject CreateWaypoint(Vector3 position) => CreateWaypoint(position, "Waypoint", Time.deltaTime);
+    public GameObject CreateWaypoint(Vector3 position, string name) => CreateWaypoint(position, name, Time.deltaTime);
+    public GameObject CreateWaypoint(Vector3 position, float duration) => CreateWaypoint(position, "Waypoint", duration);
+    public GameObject CreateWaypoint(Vector3 position, string name, float duration)
     {
         GameObject waypoint = new GameObject(name);
         waypoint.transform.position = position;
