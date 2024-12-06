@@ -15,9 +15,12 @@ public class CAD_ConditionGroup
     public bool Evaluate(CAD_KnowledgeBase knowledgeBase)
     {
         bool result = EvaluateCondition(Conditions[0].Name, knowledgeBase);
+        result = Conditions[0].Negate ? !result : result;
 
         for (int i = 1; i < Conditions.Count; i++)
         {
+            if (Operators.Count < 1) break;
+
             switch (Operators[i - 1])
             {
                 case CAD_LogicalOperator.AND:
@@ -25,7 +28,9 @@ public class CAD_ConditionGroup
                     bool evaluation = EvaluateCondition(Conditions[i].Name, knowledgeBase);
                     result = result && (Conditions[i].Negate ? !evaluation : evaluation); break;
                 case CAD_LogicalOperator.OR:
-                    result = (Conditions[i].Negate ? !result : result) || EvaluateCondition(Conditions[i].Name, knowledgeBase); break;
+                    if (result) return true;
+                    evaluation = EvaluateCondition(Conditions[i].Name, knowledgeBase);
+                    result = result || (Conditions[i].Negate ? !evaluation : evaluation); break;
             }
         }
 
