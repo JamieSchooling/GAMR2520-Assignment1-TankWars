@@ -14,9 +14,13 @@ public class CAD_AttackState : CAD_State
     [SerializeField] private Vector3[] m_kitingWaypoints;
     private int WaypointIndex = 0;
     private GameObject m_CurrentWaypoint;
+    private bool m_GotShot = false;
+    private float m_HealthOnStateEnter;
 
     public override void OnStateEnter(CAD_SmartTankFSM tankAI)
     {
+        m_HealthOnStateEnter = tankAI.Health;
+
         Vector3 test = tankAI.transform.position + new Vector3(0, 0, 25);
 
         Vector3 kitingCorner1 = tankAI.EnemyTank.transform.position + new Vector3(25, 0, -25); // Bottom Right Corner
@@ -49,20 +53,15 @@ public class CAD_AttackState : CAD_State
             m_CurrentWaypoint = tankAI.CreateWaypoint(m_kitingWaypoints[WaypointIndex]);
         }
 
-        //Vector3 kitingGap = direction / 2;
-
-
-        //if (Vector3.Dot(direction.normalized, enemyTurret.forward) < 0)
-        //{
-        //    tankAI.FollowPathToWorldPoint(m_ReposPoint, 1);
-        //    tankAI.TurretFireAtPoint(tankAI.EnemyTank);
-        //    Destroy(m_ReposPoint);
-        //}
+        if (tankAI.Health < m_HealthOnStateEnter)
+        {
+            m_GotShot = true;
+        }
     }
 
     public override void OnStateExit(CAD_SmartTankFSM tankAI)
     {
-        // TODO: Implement OnStateExit
+        m_GotShot = false;
     }
 
     /// <summary>
@@ -74,7 +73,8 @@ public class CAD_AttackState : CAD_State
         {
             new CAD_Transition("Low Health or Fuel", tankAI => tankAI.Health <= 30.0f || tankAI.Fuel <= 50.0f),
             new CAD_Transition("Low Ammo", tankAI => tankAI.Ammo == 0.0f),
-            new CAD_Transition("Tank Lost", tankAI => !tankAI.EnemyTank)
+            new CAD_Transition("Tank Lost", tankAI => !tankAI.EnemyTank),
+            new CAD_Transition("Got Shot", tankAI => m_GotShot)
 
         };
     }
