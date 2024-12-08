@@ -16,6 +16,7 @@ public class CAD_AttackState : CAD_State
     private GameObject m_CurrentWaypoint;
     private bool m_GotShot = false;
     private float m_HealthOnStateEnter;
+    private GameObject m_AimSpot;
 
     public override void OnStateEnter(CAD_SmartTankFSM tankAI)
     {
@@ -39,19 +40,25 @@ public class CAD_AttackState : CAD_State
         Vector3 direction = tankAI.EnemyTank.transform.position - tankAI.transform.position;
 
         // tankAI.FaceTurretAtPoint(tankAI.EnemyTank); Method doesn't exist anymore?
-        tankAI.FollowPathToWorldPoint(m_ReposPoint, 1);
+        //tankAI.FollowPathToWorldPoint(m_ReposPoint, 1);
 
-        for (int i = 0; i < m_kitingWaypoints.Length; i++)
-        {
-            float bestStart = float.PositiveInfinity;
-            float currentStart = Vector3.Distance(tankAI.transform.position, m_kitingWaypoints[i]);
-            if (currentStart < bestStart)
-            {
-                WaypointIndex = i;
-                bestStart = currentStart;
-            }
-            m_CurrentWaypoint = tankAI.CreateWaypoint(m_kitingWaypoints[WaypointIndex]);
-        }
+        //for (int i = 0; i < m_kitingWaypoints.Length; i++)
+        //{
+        //    float bestStart = float.PositiveInfinity;
+        //    float currentStart = Vector3.Distance(tankAI.transform.position, m_kitingWaypoints[i]);
+        //    if (currentStart < bestStart)
+        //    {
+        //        WaypointIndex = i;
+        //        bestStart = currentStart;
+        //    }
+        //    m_CurrentWaypoint = tankAI.CreateWaypoint(m_kitingWaypoints[WaypointIndex]);
+        //}
+
+        Transform enemyLocation = tankAI.EnemyTank.transform;
+        Vector3 aimSpot = enemyLocation.position;
+        m_AimSpot = tankAI.CreateWaypoint(aimSpot);
+        tankAI.TurretFireAtPoint(m_AimSpot);
+        Destroy(m_AimSpot);
 
         if (tankAI.Health < m_HealthOnStateEnter)
         {
