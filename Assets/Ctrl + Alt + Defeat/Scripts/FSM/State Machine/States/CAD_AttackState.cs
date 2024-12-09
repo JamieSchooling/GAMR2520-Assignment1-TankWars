@@ -21,38 +21,11 @@ public class CAD_AttackState : CAD_State
     public override void OnStateEnter(CAD_SmartTankFSM tankAI)
     {
         m_HealthOnStateEnter = tankAI.Health;
-
-        Vector3 test = tankAI.transform.position + new Vector3(0, 0, 25);
-
-        Vector3 kitingCorner1 = tankAI.EnemyTank.transform.position + new Vector3(25, 0, -25); // Bottom Right Corner
-        Vector3 kitingCorner2 = tankAI.EnemyTank.transform.position + new Vector3(-25, 0, -25); // Bottom Left Corner
-        Vector3 kitingCorner3 = tankAI.EnemyTank.transform.position + new Vector3(-25, 0, 25); // Top Left Corner
-        Vector3 kitingCorner4 = tankAI.EnemyTank.transform.position + new Vector3(25, 0, 25); // Top Right Corner
-
-        m_ReposPoint = tankAI.CreateWaypoint(test);
     }
 
     public override void OnStateUpdate(CAD_SmartTankFSM tankAI)
     {
         if (!tankAI.EnemyTank) return;
-
-        Transform enemyTurret = tankAI.EnemyTank.transform.Find("Model/Turret");
-        Vector3 direction = tankAI.EnemyTank.transform.position - tankAI.transform.position;
-
-        // tankAI.FaceTurretAtPoint(tankAI.EnemyTank); Method doesn't exist anymore?
-        //tankAI.FollowPathToWorldPoint(m_ReposPoint, 1);
-
-        //for (int i = 0; i < m_kitingWaypoints.Length; i++)
-        //{
-        //    float bestStart = float.PositiveInfinity;
-        //    float currentStart = Vector3.Distance(tankAI.transform.position, m_kitingWaypoints[i]);
-        //    if (currentStart < bestStart)
-        //    {
-        //        WaypointIndex = i;
-        //        bestStart = currentStart;
-        //    }
-        //    m_CurrentWaypoint = tankAI.CreateWaypoint(m_kitingWaypoints[WaypointIndex]);
-        //}
 
         Transform enemyLocation = tankAI.EnemyTank.transform;
         Vector3 aimSpot = enemyLocation.position;
