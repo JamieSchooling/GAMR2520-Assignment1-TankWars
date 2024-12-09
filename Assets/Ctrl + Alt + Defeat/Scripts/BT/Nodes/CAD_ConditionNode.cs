@@ -3,19 +3,17 @@ using System;
 public class CAD_ConditionNode : CAD_BTNode
 {
     private Func<CAD_SmartTankBT, bool> m_Condition;
-    private CAD_BTNode m_Child;
 
-    public CAD_ConditionNode(Func<CAD_SmartTankBT, bool> condition, CAD_BTNode child)
+    public CAD_ConditionNode(Func<CAD_SmartTankBT, bool> condition)
     {
         m_Condition = condition;
-        m_Child = child;
     }
 
     public override CAD_BTState Execute(CAD_SmartTankBT tankAI)
     {
         if (m_Condition(tankAI))
         {
-            return m_Child.Execute(tankAI);
+            return CAD_BTState.Success;
         }
         else
         {
