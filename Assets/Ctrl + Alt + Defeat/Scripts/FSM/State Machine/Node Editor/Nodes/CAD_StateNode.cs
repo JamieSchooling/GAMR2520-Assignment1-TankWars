@@ -3,6 +3,7 @@ using UnityEditor;
 using UnityEngine;
 using XNode;
 
+[CreateNodeMenu("State Machine/State")]
 public class CAD_StateNode : XNode.Node
 {
     [Input] private int m_InputNode;

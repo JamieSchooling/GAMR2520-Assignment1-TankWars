@@ -1,13 +1,15 @@
-using System.Collections.Generic;
+using UnityEngine;
+using XNode;
 
-public class CAD_BehaviourTree
+[CreateAssetMenu(menuName = "AI/Behaviour Tree")]
+public class CAD_BehaviourTree : NodeGraph
 {
-    private List<CAD_BTNode> m_Nodes = new();
+    private CAD_NodeBT m_Root;
 
-    public List<CAD_BTNode> Nodes => m_Nodes;
+    public CAD_NodeBT Root => m_Root;
 
-    public void AddNode(CAD_BTNode node)
+    public void Start()
     {
-        m_Nodes.Add(node);
+        m_Root = nodes.Find(n => n is CAD_RootNode) as CAD_NodeBT;
     }
 }

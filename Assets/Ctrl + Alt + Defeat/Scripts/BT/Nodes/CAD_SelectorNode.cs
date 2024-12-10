@@ -1,22 +1,21 @@
 using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
 
-public class CAD_SelectorNode : CAD_BTNode
+[CreateNodeMenu("Behaviour Tree/Selector")]
+public class CAD_SelectorNode : CAD_NodeBT
 {
-    private List<CAD_BTNode> m_Children;
+    [Input(ShowBackingValue.Never), SerializeField] private int m_Parent;
+    [Output(ShowBackingValue.Never), SerializeField] private int m_Children;
 
-    public CAD_SelectorNode(params CAD_SequenceNode[] children)
+    public override CAD_NodeStateBT Execute(CAD_SmartTankBT tankAI)
     {
-        m_Children.AddRange(children);
-    }
-
-    public override CAD_BTState Execute(CAD_SmartTankBT tankAI)
-    {
-        foreach (CAD_BTNode node in m_Children)
+        foreach (CAD_NodeBT node in GetConnectedChildren())
         {
-            CAD_BTState state = node.Execute(tankAI);
-            if (state == CAD_BTState.Success)
-                return CAD_BTState.Success;
+            CAD_NodeStateBT state = node.Execute(tankAI);
+            if (state == CAD_NodeStateBT.Success)
+                return CAD_NodeStateBT.Success;
         }
-        return CAD_BTState.Failure;
+        return CAD_NodeStateBT.Failure;
     }
 }

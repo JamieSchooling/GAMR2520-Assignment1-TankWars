@@ -1,23 +1,21 @@
-using System;
+using UnityEngine;
 
-public class CAD_ConditionNode : CAD_BTNode
+[CreateNodeMenu("Behaviour Tree/Condition")]
+public class CAD_ConditionNode : CAD_NodeBT
 {
-    private Func<CAD_SmartTankBT, bool> m_Condition;
+    [Input(ShowBackingValue.Never), SerializeField] private int m_Parent;
 
-    public CAD_ConditionNode(Func<CAD_SmartTankBT, bool> condition)
-    {
-        m_Condition = condition;
-    }
+    [SerializeField] private CAD_ConditionBT m_Condition;
 
-    public override CAD_BTState Execute(CAD_SmartTankBT tankAI)
+    public override CAD_NodeStateBT Execute(CAD_SmartTankBT tankAI)
     {
-        if (m_Condition(tankAI))
+        if (m_Condition.Evaluate(tankAI))
         {
-            return CAD_BTState.Success;
+            return CAD_NodeStateBT.Success;
         }
         else
         {
-            return CAD_BTState.Failure;
+            return CAD_NodeStateBT.Failure;
         }
     }
 }
