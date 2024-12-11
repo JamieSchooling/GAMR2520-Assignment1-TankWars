@@ -125,6 +125,11 @@ public class CAD_SmartTankFSM : AITank
         a_GenerateRandomPoint();
     }
 
+    /// <summary>
+    /// Property for creating a waypoint gameobject. Replaces the current GameObject when set.
+    /// </summary>
+    /// <param name="position"></param>
+    /// <returns></returns>
     public GameObject CreateWaypoint(Vector3 position)
     {
         GameObject Waypoint = new GameObject("Waypoint");
@@ -148,6 +153,9 @@ public class CAD_SmartTankFSM : AITank
         a_FollowPathToRandomPoint(normalizedSpeed);
     }
 
+    /// <summary>
+    /// Wrapper method for stopping the tank
+    /// </summary>
     public void StopTank()
     {
         a_StopTank();
