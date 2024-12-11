@@ -82998,6 +82998,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BehaviourTree: {fileID: 11400000, guid: eb799706da815e7489e909038c60cf76, type: 2}
+  m_SearchWaypoints:
+  - {x: -74.2, y: 14.33931, z: 64.7}
+  - {x: 68.5, y: 14.33931, z: 74.5}
+  - {x: 63.3, y: 14.33931, z: -32.6}
+  - {x: 32.1, y: 14.33931, z: -67.9}
+  - {x: -59.1, y: 14.33931, z: -87.2}
+  - {x: -67.5, y: 14.33931, z: -39.7}
 --- !u!114 &3680932204938758700
 MonoBehaviour:
   m_ObjectHideFlags: 0

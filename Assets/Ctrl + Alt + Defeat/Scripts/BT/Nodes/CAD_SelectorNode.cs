@@ -13,6 +13,8 @@ public class CAD_SelectorNode : CAD_NodeBT
         foreach (CAD_NodeBT node in GetConnectedChildren())
         {
             CAD_NodeStateBT state = node.Execute(tankAI);
+            if (state == CAD_NodeStateBT.Running)
+                return CAD_NodeStateBT.Running;
             if (state == CAD_NodeStateBT.Success)
                 return CAD_NodeStateBT.Success;
         }

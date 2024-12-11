@@ -6,6 +6,7 @@ using UnityEngine;
 public class CAD_SmartTankBT : AITank
 {
     [SerializeField] private CAD_BehaviourTree m_BehaviourTree;
+    [SerializeField] private Vector3[] m_SearchWaypoints;
 
     public float FuelLevel => a_GetFuelLevel;
     public float HealthLevel => a_GetHealthLevel;
@@ -14,6 +15,10 @@ public class CAD_SmartTankBT : AITank
     public Dictionary<GameObject, float> BasesFound => a_BasesFound;
     public List<GameObject> FriendlyBases => a_GetMyBases;
     public Dictionary<GameObject, float> ConsumablesFound => a_ConsumablesFound;
+    public Vector3[] Waypoints => m_SearchWaypoints;
+    public Vector3 CurrentWaypoint => LastKnownEnemyPos == Vector3.zero ? Waypoints[CurrentWaypointIndex] : LastKnownEnemyPos;
+    public int CurrentWaypointIndex { get; set; } = 0;
+    public Vector3 LastKnownEnemyPos { get; set; } = Vector3.zero;
 
     public override void AITankStart()
     {
