@@ -8,8 +8,6 @@ public class CAD_IsEnemyInRangeCondition : CAD_ConditionBT
 {
     public override bool Evaluate(CAD_SmartTankBT tankAI)
     {
-        if (tankAI.TanksFound.Count <= 0) return false;
-
         float distance = Vector3.Distance(tankAI.TanksFound.First().Key.transform.position,
                                             tankAI.transform.position);
 

@@ -20,7 +20,7 @@ public class CAD_ConditionNode : CAD_NodeBT
     {
         if (m_ConditionInstance.Evaluate(tankAI))
         {
-            return GetConnectedChildren()[0].Execute(tankAI);
+            return GetConnectedChildren().Count > 0 ? GetConnectedChildren()[0].Execute(tankAI) : CAD_NodeStateBT.Success;
         }
         else
         {
