@@ -3,19 +3,18 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// 
+/// Represents the state in which the tank will go on the offence and commence attacking the enemy tank.
+/// Also handles movement while in aggression/engaged with the enemy.
 /// </summary>
 [CreateAssetMenu(menuName = "AI/States/Attack State")]
 
 public class CAD_AttackState : CAD_State
 {
-    //
-    private GameObject m_ReposPoint;
-    [SerializeField] private Vector3[] m_kitingWaypoints;
-    private int WaypointIndex = 0;
-    private GameObject m_CurrentWaypoint;
+    // Keeps a record of if the tank has been shot by the enemy
     private bool m_GotShot = false;
+    // Keeps a record of how much health the tank has when it enters aggression
     private float m_HealthOnStateEnter;
+    // Keeps a record of where the tank should be aiming before firing a shot
     private GameObject m_AimSpot;
 
     public override void OnStateEnter(CAD_SmartTankFSM tankAI)
@@ -35,6 +34,7 @@ public class CAD_AttackState : CAD_State
         //Fire at the waypoint
         m_AimSpot = tankAI.CreateWaypoint(aimSpot);
         tankAI.TurretFireAtPoint(m_AimSpot);
+        // Destroys the variable to not flood the scene with redundant objects
         Destroy(m_AimSpot);
 
         //Registers when we get shot
