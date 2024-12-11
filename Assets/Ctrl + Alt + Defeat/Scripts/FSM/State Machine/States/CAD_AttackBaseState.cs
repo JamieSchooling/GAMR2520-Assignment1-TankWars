@@ -24,19 +24,32 @@ public class CAD_AttackBaseState : CAD_State
 
     public override void OnStateUpdate(CAD_SmartTankFSM tankAI)
     {
+        //If the tank cannot see any enemy bases, do nothing
         if (tankAI.VisibleEnemyBases.Count <= 0) return;
 
+        //Checks if the GameObject is Null
+        //Should never happen but just in case
         if (!tankAI.VisibleEnemyBases.First().Key) return;
 
+        //Checks if we are too far from the enemy bases
         if (Vector3.Distance(tankAI.transform.position, tankAI.VisibleEnemyBases.First().Key.transform.position) > 25.0f)
         {
+            //Moves towards the closest enemy base
             tankAI.FollowPathToWorldPoint(tankAI.VisibleEnemyBases.First().Key, 1f);
         }
         else
         {
+            //Shoots the closest enemy base
             tankAI.TurretFireAtPoint(tankAI.VisibleEnemyBases.First().Key);
         }
     }
+    /// <summary>
+    /// Creates a list of transitions for this state. Called when the ScriptableObject becomes enabled and active.
+    /// Should the tank's health or fuel be too low we move to the retreat state
+    /// Should the tank's ammo be too low we move to the resource gathering state
+    /// Should the tank find the enemy we move to the chase state
+    /// Should the tank lose the enemy bases we move to the search state
+    /// </summary>
     private void OnEnable()
     {
         Transitions = new()

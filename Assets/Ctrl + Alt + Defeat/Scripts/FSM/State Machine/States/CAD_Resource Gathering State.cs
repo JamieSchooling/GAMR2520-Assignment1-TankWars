@@ -32,6 +32,9 @@ public class CAD_Resource_Gathering_State : CAD_State
     /// </summary>
     private int m_WaypointIndex = 0;
 
+    /// <summary>
+    /// Holds the current move speed
+    /// </summary>
     private float m_CurrentMoveSpeed = 1.0f;
 
     public override void OnStateEnter(CAD_SmartTankFSM tankAI)
@@ -47,7 +50,9 @@ public class CAD_Resource_Gathering_State : CAD_State
                 closestDistance = currentDistance;
             }
         }
+        //Creates a waypoint gameobject at the intended patrol point
         m_CurrentWaypoint = tankAI.CreateWaypoint(m_ResourceWaypoints[m_WaypointIndex]);
+        //Calls the Coroutine to update the waypoints asynchronously 
         tankAI.StartCoroutine(UpdateWaypoint(tankAI));
     }
 
@@ -90,9 +95,11 @@ public class CAD_Resource_Gathering_State : CAD_State
             consumablesToFind.Add("Ammo");
         }
 
+        //If fuel is too low, the tank slows down to use less
         m_CurrentMoveSpeed = (tankAI.Fuel >= 40) ? 1.0f : 0.5f;
+        //If fuel is extremely low, the tank stops moving
         m_CurrentMoveSpeed = (tankAI.Fuel >= 10) ? m_CurrentMoveSpeed : 0.0f;
-
+        //calls the find cosumables function
         FindConsumables(tankAI, consumablesToFind);
     }
 
@@ -104,6 +111,7 @@ public class CAD_Resource_Gathering_State : CAD_State
     /// <param name="consumableTypes">List of tags corresponding to the types of consumables needing found.</param>
     private void FindConsumables(CAD_SmartTankFSM tankAI, List<string> consumableTypes)
     {
+        //Checks if there are any visible consumables
         if (tankAI.VisibleConsumables.Count > 0)
         {
             // Filter consumables matching the required types
@@ -111,20 +119,23 @@ public class CAD_Resource_Gathering_State : CAD_State
                 .Where(c => consumableTypes.Any(type => c.Key.CompareTag(type)))
                 .OrderBy(c => c.Value) // Order by distance
                 .ToList();
-
+            //Checks if there are any potential cosumables based on what is needed
             if (potentialConsumables.Count > 0)
             {
                 // Get the closest consumable
                 GameObject consumable = potentialConsumables.First().Key;
+                //Move towards the closest cosumable
                 tankAI.FollowPathToWorldPoint(consumable, m_CurrentMoveSpeed);
             }
             else
             {
+                //Move towards the next waypoint
                 tankAI.FollowPathToWorldPoint(m_CurrentWaypoint, m_CurrentMoveSpeed);
             }
         }
         else
         {
+            //Move towards the next waypoint
             tankAI.FollowPathToWorldPoint(m_CurrentWaypoint, m_CurrentMoveSpeed);
         }
     }
@@ -143,15 +154,19 @@ public class CAD_Resource_Gathering_State : CAD_State
     {
         while (true)
         {
+            //Checks if the tank is within a certain area of the designated waypoint
             if (Vector3.Distance(tankAI.transform.position, m_CurrentWaypoint.transform.position) < 25.0f)
             {
+                //Increases the current index in the list
                 m_WaypointIndex++;
+                //Checks if the current index is outside the bounds of the list, resetting it should it be true
                 if (m_WaypointIndex >= m_ResourceWaypoints.Count())
                 {
                     m_WaypointIndex = 0;
                 }
-
+                //Destroys the current waypoint so the game objects dont stack up
                 Destroy(m_CurrentWaypoint);
+                //Makes a new waypoint for the tank to follow, essentially updating it
                 m_CurrentWaypoint = tankAI.CreateWaypoint(m_ResourceWaypoints[m_WaypointIndex]);
             }
             yield return new WaitForEndOfFrame();
@@ -160,6 +175,10 @@ public class CAD_Resource_Gathering_State : CAD_State
 
     /// <summary>
     /// Creates list of transitions for this state. Called when the ScriptableObject becomes enabled and active.
+    /// Should the tank have enough of each resource, we move to the search state
+    /// Should the tank have enough resources to start a fight and have seen the enemy, we move to the attack state
+    /// Should the tank have enough resources to shoot the enemy bases and have seen them, we move to the attack base state
+    /// Should the tank see the enemy and have enough fuel to retreat, we move to the retreat state
     /// </summary>
     private void OnEnable()
     {
