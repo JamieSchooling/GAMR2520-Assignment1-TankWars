@@ -87,7 +87,7 @@ MonoBehaviour:
         m_Negate: 0
       - m_Name: IsFuelFull
         m_Negate: 1
-      m_Operators: 
+      m_Operators: 00000000
     m_Action: {fileID: 11400000, guid: 0ef26ba3baab58d4b94590b85a1829dd, type: 2}
   - m_Name: Health Seen
     m_Conditions:
@@ -98,6 +98,17 @@ MonoBehaviour:
         m_Negate: 1
       m_Operators: 
     m_Action: {fileID: 11400000, guid: c9ed30c3be369c840b02e9a4e43f07a2, type: 2}
+  - m_Name: Retreat
+    m_Conditions:
+      m_Conditions:
+      - m_Name: IsEnemySpotted
+        m_Negate: 0
+      - m_Name: IsLowHealth
+        m_Negate: 0
+      - m_Name: IsLowFuel
+        m_Negate: 1
+      m_Operators: 0000000000000000
+    m_Action: {fileID: 11400000, guid: 32db86510af4fa44fa9037239985f538, type: 2}
   - m_Name: Ammo Seen
     m_Conditions:
       m_Conditions:
