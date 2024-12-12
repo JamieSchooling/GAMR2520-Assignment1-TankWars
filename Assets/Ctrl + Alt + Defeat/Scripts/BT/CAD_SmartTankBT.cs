@@ -48,6 +48,13 @@ public class CAD_SmartTankBT : AITank
         a_FollowPathToPoint(waypoint, speed);
     }
 
+    public void SpinTurret()
+    {
+        Transform turret = transform.Find("Model/Turret");
+        Vector3 target = turret.forward + turret.right;
+        a_FaceTurretToPoint(CreateWaypoint(transform.TransformPoint(target), "Spin Target"));
+    }
+
     public GameObject CreateWaypoint(Vector3 position) => CreateWaypoint(position, "Waypoint", Time.deltaTime);
     public GameObject CreateWaypoint(Vector3 position, string name) => CreateWaypoint(position, name, Time.deltaTime);
     public GameObject CreateWaypoint(Vector3 position, float duration) => CreateWaypoint(position, "Waypoint", duration);
@@ -57,15 +64,5 @@ public class CAD_SmartTankBT : AITank
         waypoint.transform.position = position;
         Destroy(waypoint, duration);
         return waypoint;
-    }
-
-    private CAD_NodeStateBT Attack(CAD_SmartTankBT tankAI)
-    {
-        Vector3 position = a_TanksFound.First().Key.transform.position;
-        GameObject target = CreateWaypoint(position, "Target");
-        a_FaceTurretToPoint(target);
-        a_FireAtPoint(target);
-
-        return CAD_NodeStateBT.Success;
     }
 }
