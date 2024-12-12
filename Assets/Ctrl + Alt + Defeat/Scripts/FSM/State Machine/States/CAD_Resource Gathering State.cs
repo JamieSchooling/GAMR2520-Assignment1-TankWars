@@ -23,7 +23,7 @@ public class CAD_Resource_Gathering_State : CAD_State
     [SerializeField] private Vector3[] m_ResourceWaypoints;
 
     /// <summary>
-    /// Holds the current waypint game object
+    /// Holds the current waypoint game object
     /// </summary>
     private GameObject m_CurrentWaypoint;
 
