@@ -134,14 +134,21 @@ public class CAD_RetreatState : CAD_State
         GoToSafePos(tankAI);
     }
 
+    /// <summary>
+    /// Moves the tank to the last known safe point.
+    /// </summary>
+    /// <param name="tankAI"></param>
     private void GoToSafePos(CAD_SmartTankFSM tankAI)
     {
-        //Moves the tank to the last known safepoint
         tankAI.FollowPathToWorldPoint(tankAI.LastKnownSafestPos, 1f);
         //If the tank sees the enemy, updates the enemy position
         if (tankAI.EnemyTank) m_EnemyPos = tankAI.EnemyTank.transform.position;
     }
 
+    /// <summary>
+    /// Updates the last known enemy position.
+    /// </summary>
+    /// <param name="tankAI"></param>
     public override void OnStateExit(CAD_SmartTankFSM tankAI)
     {
         //Changes the last known enemy position to be accurate
@@ -153,10 +160,6 @@ public class CAD_RetreatState : CAD_State
 
     /// <summary>
     /// Creates list of transitions for this state. Called when the ScriptableObject becomes enabled and active.
-    /// Should the tank be at the safe position, we move to the resource gathering state
-    /// Should the tanks fuel be too low, we move to the resource gathering state
-    /// Should the tank see fuel, we move to the resource gathering state
-    /// This is done this way to hold priority on certain clauses even though they all go to the same state
     /// </summary>
     private void OnEnable()
     {

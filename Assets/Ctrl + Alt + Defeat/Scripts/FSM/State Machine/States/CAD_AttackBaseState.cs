@@ -22,6 +22,10 @@ public class CAD_AttackBaseState : CAD_State
         //throw new System.NotImplementedException();
     }
 
+    /// <summary>
+    /// Checks distance from the enemy bases, moves towards and shoots the closest enemy base.
+    /// </summary>
+    /// <param name="tankAI">The SmartTank instance entering the state.</param>
     public override void OnStateUpdate(CAD_SmartTankFSM tankAI)
     {
         //If the tank cannot see any enemy bases, do nothing
@@ -43,12 +47,9 @@ public class CAD_AttackBaseState : CAD_State
             tankAI.TurretFireAtPoint(tankAI.VisibleEnemyBases.First().Key);
         }
     }
+
     /// <summary>
     /// Creates a list of transitions for this state. Called when the ScriptableObject becomes enabled and active.
-    /// Should the tank's health or fuel be too low we move to the retreat state
-    /// Should the tank's ammo be too low we move to the resource gathering state
-    /// Should the tank find the enemy we move to the chase state
-    /// Should the tank lose the enemy bases we move to the search state
     /// </summary>
     private void OnEnable()
     {

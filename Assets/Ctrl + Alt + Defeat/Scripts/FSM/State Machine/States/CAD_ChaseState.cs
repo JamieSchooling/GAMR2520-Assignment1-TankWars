@@ -44,10 +44,6 @@ public class CAD_ChaseState : CAD_State
 
     /// <summary>
     /// Creates a list of transitions for this state. Called when the ScriptableObject becomes enabled and active
-    /// Should the tank's health or fuel be too low we move to the retreat state
-    /// Should the tank's ammo be too low we move to the resource gathering state
-    /// Should the tank lose the enemy tank we move to the search state
-    /// Should the enemy tank be in range to fight we move to the attack state
     /// </summary>
     private void OnEnable()
     {

@@ -10,19 +10,32 @@ using UnityEngine;
 
 public class CAD_AttackState : CAD_State
 {
-    // Keeps a record of if the tank has been shot by the enemy
+    /// <summary>
+    /// Keeps a record of if the tank has been shot by the enemy
+    /// </summary>
     private bool m_GotShot = false;
-    // Keeps a record of how much health the tank has when it enters aggression
+    /// <summary>
+    /// Keeps a record of how much health the tank has when it enters aggression
+    /// </summary>
     private float m_HealthOnStateEnter;
-    // Keeps a record of where the tank should be aiming before firing a shot
+    /// <summary>
+    /// Keeps a record of where the tank should be aiming before firing a shot
+    /// </summary>
     private GameObject m_AimSpot;
 
+    /// <summary>
+    /// Gets the tanks starting health as we enter the state
+    /// </summary>
+    /// <param name="tankAI"></param>
     public override void OnStateEnter(CAD_SmartTankFSM tankAI)
     {
-        //Gets the tanks starting health as we enter the state
         m_HealthOnStateEnter = tankAI.Health;
     }
 
+    /// <summary>
+    /// Gets the enemy position, fires at that point.
+    /// </summary>
+    /// <param name="tankAI">The SmartTank instance entering the state.</param>
     public override void OnStateUpdate(CAD_SmartTankFSM tankAI)
     {
         if (!tankAI.EnemyTank) return;
@@ -52,9 +65,6 @@ public class CAD_AttackState : CAD_State
 
     /// <summary>
     /// Creates a list of transitions for this state. Called when the ScriptableObject becomes enabled and active.
-    /// Should the tank's health or fuel be too low we move to the retreat state
-    /// Should the tank's ammo be too low we move to the resource gathering state
-    /// Should the tank lose the enemy tank we move to the search state
     /// </summary>
     private void OnEnable()
     {

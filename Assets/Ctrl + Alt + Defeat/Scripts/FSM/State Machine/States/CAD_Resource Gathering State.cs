@@ -4,14 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// Represents a state where the AI-controlled tank searches for consumables until at high enough stats. 
-/// If none are found, the tank moves to the following world points:
-///(-74.1999969,14.3393097,64.6999969) = Top Left Tree
-///(68.5, 14.3393097, 74.5) = Home Base
-///(63.2999992,14.3393097,-32.5999985) = Above Bottom Right Tree
-///(32.0999985,14.3393097,-67.9000015) = Left of Bottom Right Tree
-///(-59.0999985,14.3393097,-87.1999969) = Enemy Base
-///(-67.5,14.3393097,-39.7000008) = Middle Left
+/// Represents a state where the AI-controlled tank searches for consumables until at high enough stats.
 /// </summary>
 [CreateAssetMenu(menuName = "AI/States/Resource Gathering State")]
 
@@ -37,6 +30,10 @@ public class CAD_Resource_Gathering_State : CAD_State
     /// </summary>
     private float m_CurrentMoveSpeed = 1.0f;
 
+    /// <summary>
+    /// Ensures the tank first goes to the closest waypoint, ans starts the update waypoint coroutine.
+    /// </summary>
+    /// <param name="tankAI"></param>
     public override void OnStateEnter(CAD_SmartTankFSM tankAI)
     {
         //Makes sure it starts at the closest resource waypoint
@@ -148,7 +145,7 @@ public class CAD_Resource_Gathering_State : CAD_State
     /// <summary>
     /// Updates the waypoint index asynchronously
     /// </summary>
-    /// <param name="tankAI"></param>
+    /// <param name="tankAI">The SmartTank instance entering the state.</param>
     /// <returns></returns>
     private IEnumerator UpdateWaypoint(CAD_SmartTankFSM tankAI)
     {
@@ -175,10 +172,6 @@ public class CAD_Resource_Gathering_State : CAD_State
 
     /// <summary>
     /// Creates list of transitions for this state. Called when the ScriptableObject becomes enabled and active.
-    /// Should the tank have enough of each resource, we move to the search state
-    /// Should the tank have enough resources to start a fight and have seen the enemy, we move to the attack state
-    /// Should the tank have enough resources to shoot the enemy bases and have seen them, we move to the attack base state
-    /// Should the tank see the enemy and have enough fuel to retreat, we move to the retreat state
     /// </summary>
     private void OnEnable()
     {
