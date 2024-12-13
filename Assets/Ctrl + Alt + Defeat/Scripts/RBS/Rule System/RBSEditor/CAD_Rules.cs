@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// an object that holds a set of rules, and the knowledge base used within the rules
+/// </summary>
 [CreateAssetMenu(menuName = "AI/DecisionRules")]
 public class CAD_Rules : ScriptableObject
 {

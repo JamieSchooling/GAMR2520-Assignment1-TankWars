@@ -22,6 +22,11 @@ public class CAD_SmartTankRBS : AITank
     private Vector3 m_EnemyPosition = Vector3.zero;
     private int m_CurrentWaypointIndex = 0;
 
+    /// <summary>
+    /// Initialises the rules engine and knowledge base,
+    /// sets the first index of knowledge first search waypoint,
+    /// sets the current waypoint index to the first item in the list
+    /// </summary>
     public override void AITankStart()
     {
         m_RulesEngine = new(this, m_Rules);
@@ -40,6 +45,10 @@ public class CAD_SmartTankRBS : AITank
         // TODO: Implement Collision Response
     }
 
+    /// <summary>
+    /// Creates a GameObject to look at and then fires at the GameObjects position
+    /// </summary>
+    /// <param name="position"></param>
     public void Attack(Vector3 position)
     {
         GameObject target = CreateWaypoint(position, "Target");
@@ -47,12 +56,20 @@ public class CAD_SmartTankRBS : AITank
         a_FireAtPoint(target);
     }
 
+    /// <summary>
+    /// creates a GameObject at waypoint, then the tank goes towards the point using a pathfinding algorithm
+    /// </summary>
+    /// <param name="position"></param>
+    /// <param name="speed"></param>
     public void GoTo(Vector3 position, float speed = 1.0f)
     {
         GameObject waypoint = CreateWaypoint(position, "Waypoint");
         a_FollowPathToPoint(waypoint, speed);
     }
 
+    /// <summary>
+    /// indexes to the next point on the waypoints list
+    /// </summary>
     public void NextSearchWaypoint()
     {
         m_CurrentWaypointIndex++;
@@ -63,6 +80,10 @@ public class CAD_SmartTankRBS : AITank
         m_KnowledgeBase.CurrentSearchWaypoint = m_SearchWaypoints[m_CurrentWaypointIndex];
     }
 
+    /// <summary>
+    /// returns the closest waypoint as a vector 3
+    /// </summary>
+    /// <returns></returns>
     public Vector3 GetClosestSearchWayPoint()
     {
         float closestDistance = float.PositiveInfinity;
@@ -79,6 +100,10 @@ public class CAD_SmartTankRBS : AITank
         return m_SearchWaypoints[index];
     }
 
+
+    /// <summary>
+    /// turns the head of the turret clockwise
+    /// </summary>
     public void SpinTurret()
     {
         Transform turret = transform.Find("Model/Turret");

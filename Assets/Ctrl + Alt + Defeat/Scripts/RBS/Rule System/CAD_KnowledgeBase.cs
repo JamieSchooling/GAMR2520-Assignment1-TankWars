@@ -1,6 +1,9 @@
 using System.Linq;
 using UnityEngine;
 
+/// <summary>
+/// a class that holds all the variables that the tank is allowed to know
+/// </summary>
 public class CAD_KnowledgeBase
 {
     public bool IsLowFuel => m_TankAI.FuelLevel <= 30.0f;
@@ -17,7 +20,7 @@ public class CAD_KnowledgeBase
     }
     public bool IsLowAmmo => m_TankAI.AmmoLevel < 4.0f;
     public bool IsOutOfAmmo => m_TankAI.AmmoLevel < 1.0f;
-
+    
     public bool IsFuelFull => m_TankAI.FuelLevel == 125.0f;
     public bool IsHealthFull => m_TankAI.HealthLevel == 125.0f;
     public bool IsAmmoFull => m_TankAI.AmmoLevel == 20.0f;

@@ -4,6 +4,12 @@ using UnityEngine;
 public class CAD_DecisionRulesAssetOpener : AssetModificationProcessor
 {
     // Called when an asset is double-clicked
+    /// <summary>
+    /// creates an editor asset that can be used to make a set of rules
+    /// </summary>
+    /// <param name="instanceID"></param>
+    /// <param name="line"></param>
+    /// <returns></returns>
     [UnityEditor.Callbacks.OnOpenAsset]
     public static bool OnOpenAsset(int instanceID, int line)
     {

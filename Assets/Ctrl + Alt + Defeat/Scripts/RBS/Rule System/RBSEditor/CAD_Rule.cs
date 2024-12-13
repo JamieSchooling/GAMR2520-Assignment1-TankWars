@@ -1,6 +1,9 @@
 using System;
 using UnityEngine;
 
+/// <summary>
+/// holds the name of the rule followed by the set of conditions it has to meet (m_Conditions) and the action that will get executed (m_Action)
+/// </summary>
 [Serializable]
 public class CAD_Rule
 {

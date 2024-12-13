@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
 
+/// <summary>
+/// Creates an object that holds conditions and operators to make a bigger condition
+/// </summary>
 [Serializable]
 public class CAD_ConditionGroup
 {
