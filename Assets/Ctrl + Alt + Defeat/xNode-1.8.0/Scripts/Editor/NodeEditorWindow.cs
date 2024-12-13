@@ -199,7 +199,12 @@ namespace XNodeEditor {
         public static NodeEditorWindow Open(XNode.NodeGraph graph) {
             if (!graph) return null;
 
-            NodeEditorWindow w = GetWindow(typeof(NodeEditorWindow), false, graph.name, true) as NodeEditorWindow;
+            NodeEditorWindow w;// = GetWindow(typeof(NodeEditorWindow), false, graph.name, true) as NodeEditorWindow;
+            if (HasOpenInstances<NodeEditorWindow>() && GetWindow(typeof(NodeEditorWindow)).titleContent.text == graph.name)
+                w = GetWindow(typeof(NodeEditorWindow)) as NodeEditorWindow;
+            else
+                w = CreateWindow<NodeEditorWindow>(graph.name);
+
             w.wantsMouseMove = true;
             w.graph = graph;
             return w;

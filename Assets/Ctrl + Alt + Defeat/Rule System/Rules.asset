@@ -96,7 +96,7 @@ MonoBehaviour:
         m_Negate: 0
       - m_Name: IsHealthFull
         m_Negate: 1
-      m_Operators: 
+      m_Operators: 00000000
     m_Action: {fileID: 11400000, guid: c9ed30c3be369c840b02e9a4e43f07a2, type: 2}
   - m_Name: Retreat
     m_Conditions:
