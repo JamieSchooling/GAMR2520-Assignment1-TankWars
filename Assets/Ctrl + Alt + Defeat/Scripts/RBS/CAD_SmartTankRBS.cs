@@ -5,21 +5,72 @@ using UnityEngine;
 
 public class CAD_SmartTankRBS : AITank
 {
+    /// <summary>
+    /// The rules the tank should evaluate.
+    /// </summary>
     [SerializeField] private CAD_Rules m_Rules;
+
+    /// <summary>
+    /// The waypoints the tank should follow while patrolling.
+    /// </summary>
     [SerializeField] private Vector3[] m_SearchWaypoints;
 
+    /// <summary>
+    /// The tank's current fuel level
+    /// </summary>
     public float FuelLevel => a_GetFuelLevel;
+
+    /// <summary>
+    /// The tank's current health level
+    /// </summary>
     public float HealthLevel => a_GetHealthLevel;
+
+    /// <summary>
+    /// The tank's current ammo level
+    /// </summary>
     public float AmmoLevel => a_GetAmmoLevel;
+
+    /// <summary>
+    /// A dictionary of all visiable enemy tanks. 
+    /// Key: The visible tank GameObject, Value: Distance to the tank.
+    /// </summary>
     public Dictionary<GameObject, float> TanksFound => a_TanksFound;
+
+    /// <summary>
+    /// A dictionary of all visiable enemy bases. 
+    /// Key: The visible base GameObject, Value: Distance to the base.
+    /// </summary>
     public Dictionary<GameObject, float> BasesFound => a_BasesFound;
+
+    /// <summary>
+    /// List of all remaining friendly bases.
+    /// </summary>
     public List<GameObject> FriendlyBases => a_GetMyBases;
+
+    /// <summary>
+    /// A dictionary of all visiable consumables. 
+    /// Key: The visible consumable GameObject, Value: Distance to the consumable.
+    /// </summary>
     public Dictionary<GameObject, float> ConsumablesFound => a_ConsumablesFound;
 
+    /// <summary>
+    /// The rules engine instance that evaluates this AI's rules.
+    /// </summary>
     private CAD_RulesEngine m_RulesEngine;
+
+    /// <summary>
+    /// Knowledge base instance that holds all facts about this tank AI.
+    /// </summary>
     private CAD_KnowledgeBase m_KnowledgeBase;
 
+    /// <summary>
+    /// Last known enemy position.
+    /// </summary>
     private Vector3 m_EnemyPosition = Vector3.zero;
+
+    /// <summary>
+    /// The index of the current waypoint the tank will navigate to.
+    /// </summary>
     private int m_CurrentWaypointIndex = 0;
 
     /// <summary>
@@ -35,6 +86,9 @@ public class CAD_SmartTankRBS : AITank
         m_CurrentWaypointIndex = m_SearchWaypoints.ToList().IndexOf(m_KnowledgeBase.CurrentSearchWaypoint);
     }
 
+    /// <summary>
+    /// Updates the rules engine with the current knowledge base.
+    /// </summary>
     public override void AITankUpdate()
     {
         m_RulesEngine.Update(m_KnowledgeBase);
@@ -46,7 +100,7 @@ public class CAD_SmartTankRBS : AITank
     }
 
     /// <summary>
-    /// Creates a GameObject to look at and then fires at the GameObjects position
+    /// Creates a GameObject to look at and then fires at the GameObject's position.
     /// </summary>
     /// <param name="position"></param>
     public void Attack(Vector3 position)
@@ -57,7 +111,7 @@ public class CAD_SmartTankRBS : AITank
     }
 
     /// <summary>
-    /// creates a GameObject at waypoint, then the tank goes towards the point using a pathfinding algorithm
+    /// Creates a GameObject at waypoint, then the tank goes towards the point using a pathfinding algorithm
     /// </summary>
     /// <param name="position"></param>
     /// <param name="speed"></param>
@@ -68,7 +122,7 @@ public class CAD_SmartTankRBS : AITank
     }
 
     /// <summary>
-    /// indexes to the next point on the waypoints list
+    /// Increments the current waypoint index, and updates the current waypoint position in the knowledge base.
     /// </summary>
     public void NextSearchWaypoint()
     {
@@ -81,9 +135,9 @@ public class CAD_SmartTankRBS : AITank
     }
 
     /// <summary>
-    /// returns the closest waypoint as a vector 3
+    /// Finds and returns the waypoint position closest to the tanks current position.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>The closet waypoint position</returns>
     public Vector3 GetClosestSearchWayPoint()
     {
         float closestDistance = float.PositiveInfinity;
@@ -102,7 +156,7 @@ public class CAD_SmartTankRBS : AITank
 
 
     /// <summary>
-    /// turns the head of the turret clockwise
+    /// Rotates the turret to the right
     /// </summary>
     public void SpinTurret()
     {
@@ -114,6 +168,14 @@ public class CAD_SmartTankRBS : AITank
     public GameObject CreateWaypoint(Vector3 position) => CreateWaypoint(position, "Waypoint", Time.deltaTime);
     public GameObject CreateWaypoint(Vector3 position, string name) => CreateWaypoint(position, name, Time.deltaTime);
     public GameObject CreateWaypoint(Vector3 position, float duration) => CreateWaypoint(position, "Waypoint", duration);
+    
+    /// <summary>
+    /// Creates a wapoint GameObject at a position in world space. Destroys it after a duration.
+    /// </summary>
+    /// <param name="position">The position to spawn the GameObject.</param>
+    /// <param name="name">The name of the GameObject.</param>
+    /// <param name="duration">The duration the GameObject should exist for.</param>
+    /// <returns>The waypoint GameObject.</returns>
     public GameObject CreateWaypoint(Vector3 position, string name, float duration)
     {
         GameObject waypoint = new GameObject(name);
