@@ -5,6 +5,10 @@ using System.Reflection;
 
 public class CAD_KnowledgeBaseUtils
 {
+    /// <summary>
+    /// Gets all boolean property names from within the KnowledgeBase class.
+    /// </summary>
+    /// <returns>A list of all boolean property names.</returns>
     public static List<string> GetBooleanMembers()
     {
         Type type = typeof(CAD_KnowledgeBase);

@@ -7,7 +7,14 @@ using UnityEngine;
 /// </summary>
 public class CAD_RulesEngine
 {
+    /// <summary>
+    /// Instance of the Smart Tank AI.
+    /// </summary>
     private CAD_SmartTankRBS m_TankAI;
+
+    /// <summary>
+    /// The rules to process.
+    /// </summary>
     private CAD_Rules m_Rules;
 
     public CAD_RulesEngine(CAD_SmartTankRBS tankAI, CAD_Rules rules)
