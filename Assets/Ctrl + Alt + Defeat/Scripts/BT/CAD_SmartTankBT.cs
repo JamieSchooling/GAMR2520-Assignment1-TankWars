@@ -104,7 +104,8 @@ public class CAD_SmartTankBT : AITank
     /// <param name="position">The target position to attack.</param>
     public void Attack(Vector3 position)
     {
-        GameObject target = CreateWaypoint(position, "Target");
+        float rand = UnityEngine.Random.value;
+        GameObject target = CreateWaypoint(rand > 0.8 ? position : TanksFound.First().Key.transform.position, "Target");
         a_FaceTurretToPoint(target);
         a_FireAtPoint(target);
     }
