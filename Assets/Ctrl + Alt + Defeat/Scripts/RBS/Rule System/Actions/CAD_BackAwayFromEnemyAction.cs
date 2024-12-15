@@ -6,10 +6,10 @@ public class CAD_BackAwayFromEnemyAction : CAD_Action
     [SerializeField] private float m_BackAwayDistance = 20.0f;
 
     /// <summary>
-    /// tank backs away from enemy tank if too close
+    /// Moves the tank away from the enemy tank.
     /// </summary>
-    /// <param name="tankAI"></param>
-    /// <param name="knowledgeBase"></param>
+    /// <param name="tankAI">The SmartTank instance that will execute this action.</param>
+    /// <param name="knowledgeBase">The knowledge base that this SmartTank is using.</param>
     public override void Execute(CAD_SmartTankRBS tankAI, CAD_KnowledgeBase knowledgeBase)
     {
         knowledgeBase.CurrentSearchWaypoint = knowledgeBase.EnemyPosition;

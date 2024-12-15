@@ -4,10 +4,10 @@ using UnityEngine;
 public class CAD_GoToNextWaypointAction : CAD_Action
 {
     /// <summary>
-    /// tank goes towards the current search waypoint
+    /// Moves the tank towards the current search waypoint.
     /// </summary>
-    /// <param name="tankAI"></param>
-    /// <param name="knowledgeBase"></param>
+    /// <param name="tankAI">The SmartTank instance that will execute this action.</param>
+    /// <param name="knowledgeBase">The knowledge base that this SmartTank is using.</param>
     public override void Execute(CAD_SmartTankRBS tankAI, CAD_KnowledgeBase knowledgeBase)
     {
         tankAI.GoTo(knowledgeBase.CurrentSearchWaypoint);

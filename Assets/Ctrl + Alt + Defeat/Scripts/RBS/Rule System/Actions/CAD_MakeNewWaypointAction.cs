@@ -4,10 +4,10 @@ using UnityEngine;
 public class CAD_MakeNewWaypointAction : CAD_Action
 {
     /// <summary>
-    /// creates a new waypoint for the database
+    /// Updates the tank's current waypoint.
     /// </summary>
-    /// <param name="tankAI"></param>
-    /// <param name="knowledgeBase"></param>
+    /// <param name="tankAI">The SmartTank instance that will execute this action.</param>
+    /// <param name="knowledgeBase">The knowledge base that this SmartTank is using.</param>
     public override void Execute(CAD_SmartTankRBS tankAI, CAD_KnowledgeBase knowledgeBase)
     {
         tankAI.NextSearchWaypoint();
