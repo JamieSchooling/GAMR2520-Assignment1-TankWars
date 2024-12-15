@@ -2,10 +2,15 @@ using UnityEditor;
 using UnityEngine;
 using XNodeEditor;
 
-
+/// <summary>
+/// Custom editor script for a state node.
+/// </summary>
 [CustomNodeEditor(typeof(CAD_StateNode))]
 public class CAD_StateNodeEditor : NodeEditor
 {
+    /// <summary>
+    /// Removes the text label for the output port. Changes the text colour if the node is active.
+    /// </summary>
     private static GUIStyle editorLabelStyle;
 
     public override void OnBodyGUI()
@@ -20,6 +25,10 @@ public class CAD_StateNodeEditor : NodeEditor
         EditorStyles.label.normal = editorLabelStyle.normal;
     }
 
+    /// <summary>
+    /// Changes the node colour if the node is active.
+    /// </summary>
+    /// <returns>The colour of the node.</returns>
     public override Color GetTint()
     {
         var node = target as CAD_StateNode;

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: CAD_Condition
   m_EditorClassIdentifier: 
   graph: {fileID: 11400000}
-  position: {x: 885.12897, y: -127.370346}
+  position: {x: 696, y: -120}
   ports:
     keys:
     - m_Parent
@@ -59,7 +59,7 @@ MonoBehaviour:
   m_Name: CAD_Action
   m_EditorClassIdentifier: 
   graph: {fileID: 11400000}
-  position: {x: 944.5947, y: 258.61884}
+  position: {x: 936, y: 296}
   ports:
     keys:
     - m_Parent
@@ -91,7 +91,7 @@ MonoBehaviour:
   m_Name: CAD_Selector
   m_EditorClassIdentifier: 
   graph: {fileID: 11400000}
-  position: {x: 1148.8009, y: -546.3905}
+  position: {x: 936, y: -536}
   ports:
     keys:
     - m_Parent
@@ -139,7 +139,7 @@ MonoBehaviour:
   m_Name: CAD_Condition
   m_EditorClassIdentifier: 
   graph: {fileID: 11400000}
-  position: {x: 655.1889, y: 150.0678}
+  position: {x: 696, y: 216}
   ports:
     keys:
     - m_Parent
@@ -185,7 +185,7 @@ MonoBehaviour:
   m_Name: CAD_Condition
   m_EditorClassIdentifier: 
   graph: {fileID: 11400000}
-  position: {x: 1404.8009, y: -626.3905}
+  position: {x: 1176, y: -616}
   ports:
     keys:
     - m_Parent
@@ -228,7 +228,7 @@ MonoBehaviour:
   m_Name: CAD_Selector
   m_EditorClassIdentifier: 
   graph: {fileID: 11400000}
-  position: {x: 347.5395, y: 232.20435}
+  position: {x: 408, y: 264}
   ports:
     keys:
     - m_Parent
@@ -276,7 +276,7 @@ MonoBehaviour:
   m_Name: CAD_Condition
   m_EditorClassIdentifier: 
   graph: {fileID: 11400000}
-  position: {x: 885.12897, y: 0.6296692}
+  position: {x: 696, y: 8}
   ports:
     keys:
     - m_Parent
@@ -322,7 +322,7 @@ MonoBehaviour:
   m_Name: CAD_Action
   m_EditorClassIdentifier: 
   graph: {fileID: 11400000}
-  position: {x: 1134.8943, y: -692.277}
+  position: {x: 936, y: -680}
   ports:
     keys:
     - m_Parent
@@ -354,7 +354,7 @@ MonoBehaviour:
   m_Name: CAD_Action
   m_EditorClassIdentifier: 
   graph: {fileID: 11400000}
-  position: {x: 944.5947, y: 402.61884}
+  position: {x: 936, y: 424}
   ports:
     keys:
     - m_Parent
@@ -386,7 +386,7 @@ MonoBehaviour:
   m_Name: CAD_Condition
   m_EditorClassIdentifier: 
   graph: {fileID: 11400000}
-  position: {x: 885.12897, y: -239.37033}
+  position: {x: 696, y: -232}
   ports:
     keys:
     - m_Parent
@@ -432,7 +432,7 @@ MonoBehaviour:
   m_Name: CAD_Selector
   m_EditorClassIdentifier: 
   graph: {fileID: 11400000}
-  position: {x: 595.99243, y: -149.32011}
+  position: {x: 408, y: -136}
   ports:
     keys:
     - m_Parent
@@ -483,7 +483,7 @@ MonoBehaviour:
   m_Name: CAD_Root
   m_EditorClassIdentifier: 
   graph: {fileID: 11400000}
-  position: {x: -680, y: -376}
+  position: {x: -440, y: -360}
   ports:
     keys:
     - m_Children
@@ -514,7 +514,7 @@ MonoBehaviour:
   m_Name: CAD_Action
   m_EditorClassIdentifier: 
   graph: {fileID: 11400000}
-  position: {x: 1390.8942, y: -756.277}
+  position: {x: 1176, y: -744}
   ports:
     keys:
     - m_Parent
@@ -546,7 +546,7 @@ MonoBehaviour:
   m_Name: CAD_Sequence
   m_EditorClassIdentifier: 
   graph: {fileID: 11400000}
-  position: {x: 894.8943, y: -788.277}
+  position: {x: 696, y: -776}
   ports:
     keys:
     - m_Parent
@@ -594,7 +594,7 @@ MonoBehaviour:
   m_Name: CAD_Condition
   m_EditorClassIdentifier: 
   graph: {fileID: 11400000}
-  position: {x: 1390.8942, y: -932.277}
+  position: {x: 1176, y: -920}
   ports:
     keys:
     - m_Parent
@@ -677,7 +677,7 @@ MonoBehaviour:
   m_Name: CAD_Condition
   m_EditorClassIdentifier: 
   graph: {fileID: 11400000}
-  position: {x: 604.8009, y: -498.39053}
+  position: {x: 408, y: -488}
   ports:
     keys:
     - m_Parent
@@ -723,7 +723,7 @@ MonoBehaviour:
   m_Name: CAD_Selector
   m_EditorClassIdentifier: 
   graph: {fileID: 11400000}
-  position: {x: 1134.8943, y: -852.277}
+  position: {x: 936, y: -840}
   ports:
     keys:
     - m_Parent
@@ -771,7 +771,7 @@ MonoBehaviour:
   m_Name: CAD_Action
   m_EditorClassIdentifier: 
   graph: {fileID: 11400000}
-  position: {x: 939.71497, y: 152.4346}
+  position: {x: 936, y: 200}
   ports:
     keys:
     - m_Parent
@@ -803,7 +803,7 @@ MonoBehaviour:
   m_Name: CAD_Action
   m_EditorClassIdentifier: 
   graph: {fileID: 11400000}
-  position: {x: 1404.8009, y: -450.3905}
+  position: {x: 1176, y: -440}
   ports:
     keys:
     - m_Parent
@@ -835,7 +835,7 @@ MonoBehaviour:
   m_Name: CAD_Selector
   m_EditorClassIdentifier: 
   graph: {fileID: 11400000}
-  position: {x: -123.06287, y: -394.07144}
+  position: {x: -200, y: -360}
   ports:
     keys:
     - m_Parent
@@ -889,7 +889,7 @@ MonoBehaviour:
   m_Name: CAD_Condition
   m_EditorClassIdentifier: 
   graph: {fileID: 11400000}
-  position: {x: 590.8943, y: -804.277}
+  position: {x: 408, y: -792}
   ports:
     keys:
     - m_Parent
@@ -935,7 +935,7 @@ MonoBehaviour:
   m_Name: CAD_Action
   m_EditorClassIdentifier: 
   graph: {fileID: 11400000}
-  position: {x: 1192.5385, y: -219.00261}
+  position: {x: 936, y: -216}
   ports:
     keys:
     - m_Parent
@@ -967,7 +967,7 @@ MonoBehaviour:
   m_Name: CAD_Action
   m_EditorClassIdentifier: 
   graph: {fileID: 11400000}
-  position: {x: 1192.5385, y: 20.997406}
+  position: {x: 936, y: 24}
   ports:
     keys:
     - m_Parent
@@ -999,7 +999,7 @@ MonoBehaviour:
   m_Name: CAD_Sequence
   m_EditorClassIdentifier: 
   graph: {fileID: 11400000}
-  position: {x: 908.8009, y: -482.3905}
+  position: {x: 696, y: -472}
   ports:
     keys:
     - m_Parent
@@ -1047,7 +1047,7 @@ MonoBehaviour:
   m_Name: CAD_Action
   m_EditorClassIdentifier: 
   graph: {fileID: 11400000}
-  position: {x: 1148.8009, y: -386.3905}
+  position: {x: 936, y: -376}
   ports:
     keys:
     - m_Parent
@@ -1079,7 +1079,7 @@ MonoBehaviour:
   m_Name: CAD_Sequence
   m_EditorClassIdentifier: 
   graph: {fileID: 11400000}
-  position: {x: 656.26746, y: 318.03143}
+  position: {x: 696, y: 344}
   ports:
     keys:
     - m_Parent
@@ -1127,7 +1127,7 @@ MonoBehaviour:
   m_Name: CAD_Action
   m_EditorClassIdentifier: 
   graph: {fileID: 11400000}
-  position: {x: 1192.5385, y: -107.00261}
+  position: {x: 936, y: -104}
   ports:
     keys:
     - m_Parent

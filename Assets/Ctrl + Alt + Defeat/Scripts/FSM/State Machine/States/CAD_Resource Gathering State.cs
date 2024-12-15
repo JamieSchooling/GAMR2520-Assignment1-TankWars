@@ -4,14 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// Represents a state where the AI-controlled tank searches for consumables until at high enough stats. 
-/// If none are found, the tank moves to the following world points:
-///(-74.1999969,14.3393097,64.6999969) = Top Left Tree
-///(68.5, 14.3393097, 74.5) = Home Base
-///(63.2999992,14.3393097,-32.5999985) = Above Bottom Right Tree
-///(32.0999985,14.3393097,-67.9000015) = Left of Bottom Right Tree
-///(-59.0999985,14.3393097,-87.1999969) = Enemy Base
-///(-67.5,14.3393097,-39.7000008) = Middle Left
+/// Represents a state where the AI-controlled tank searches for consumables until at high enough stats.
 /// </summary>
 [CreateAssetMenu(menuName = "AI/States/Resource Gathering State")]
 
@@ -23,7 +16,7 @@ public class CAD_Resource_Gathering_State : CAD_State
     [SerializeField] private Vector3[] m_ResourceWaypoints;
 
     /// <summary>
-    /// Holds the current waypint game object
+    /// Holds the current waypoint game object
     /// </summary>
     private GameObject m_CurrentWaypoint;
 
@@ -32,8 +25,15 @@ public class CAD_Resource_Gathering_State : CAD_State
     /// </summary>
     private int m_WaypointIndex = 0;
 
+    /// <summary>
+    /// Holds the current move speed
+    /// </summary>
     private float m_CurrentMoveSpeed = 1.0f;
 
+    /// <summary>
+    /// Ensures the tank first goes to the closest waypoint, ans starts the update waypoint coroutine.
+    /// </summary>
+    /// <param name="tankAI"></param>
     public override void OnStateEnter(CAD_SmartTankFSM tankAI)
     {
         //Makes sure it starts at the closest resource waypoint
@@ -47,7 +47,9 @@ public class CAD_Resource_Gathering_State : CAD_State
                 closestDistance = currentDistance;
             }
         }
+        //Creates a waypoint gameobject at the intended patrol point
         m_CurrentWaypoint = tankAI.CreateWaypoint(m_ResourceWaypoints[m_WaypointIndex]);
+        //Calls the Coroutine to update the waypoints asynchronously 
         tankAI.StartCoroutine(UpdateWaypoint(tankAI));
     }
 
@@ -90,9 +92,11 @@ public class CAD_Resource_Gathering_State : CAD_State
             consumablesToFind.Add("Ammo");
         }
 
+        //If fuel is too low, the tank slows down to use less
         m_CurrentMoveSpeed = (tankAI.Fuel >= 40) ? 1.0f : 0.5f;
+        //If fuel is extremely low, the tank stops moving
         m_CurrentMoveSpeed = (tankAI.Fuel >= 10) ? m_CurrentMoveSpeed : 0.0f;
-
+        //calls the find cosumables function
         FindConsumables(tankAI, consumablesToFind);
     }
 
@@ -104,6 +108,7 @@ public class CAD_Resource_Gathering_State : CAD_State
     /// <param name="consumableTypes">List of tags corresponding to the types of consumables needing found.</param>
     private void FindConsumables(CAD_SmartTankFSM tankAI, List<string> consumableTypes)
     {
+        //Checks if there are any visible consumables
         if (tankAI.VisibleConsumables.Count > 0)
         {
             // Filter consumables matching the required types
@@ -111,20 +116,23 @@ public class CAD_Resource_Gathering_State : CAD_State
                 .Where(c => consumableTypes.Any(type => c.Key.CompareTag(type)))
                 .OrderBy(c => c.Value) // Order by distance
                 .ToList();
-
+            //Checks if there are any potential cosumables based on what is needed
             if (potentialConsumables.Count > 0)
             {
                 // Get the closest consumable
                 GameObject consumable = potentialConsumables.First().Key;
+                //Move towards the closest cosumable
                 tankAI.FollowPathToWorldPoint(consumable, m_CurrentMoveSpeed);
             }
             else
             {
+                //Move towards the next waypoint
                 tankAI.FollowPathToWorldPoint(m_CurrentWaypoint, m_CurrentMoveSpeed);
             }
         }
         else
         {
+            //Move towards the next waypoint
             tankAI.FollowPathToWorldPoint(m_CurrentWaypoint, m_CurrentMoveSpeed);
         }
     }
@@ -137,21 +145,25 @@ public class CAD_Resource_Gathering_State : CAD_State
     /// <summary>
     /// Updates the waypoint index asynchronously
     /// </summary>
-    /// <param name="tankAI"></param>
+    /// <param name="tankAI">The SmartTank instance entering the state.</param>
     /// <returns></returns>
     private IEnumerator UpdateWaypoint(CAD_SmartTankFSM tankAI)
     {
         while (true)
         {
+            //Checks if the tank is within a certain area of the designated waypoint
             if (Vector3.Distance(tankAI.transform.position, m_CurrentWaypoint.transform.position) < 25.0f)
             {
+                //Increases the current index in the list
                 m_WaypointIndex++;
+                //Checks if the current index is outside the bounds of the list, resetting it should it be true
                 if (m_WaypointIndex >= m_ResourceWaypoints.Count())
                 {
                     m_WaypointIndex = 0;
                 }
-
+                //Destroys the current waypoint so the game objects dont stack up
                 Destroy(m_CurrentWaypoint);
+                //Makes a new waypoint for the tank to follow, essentially updating it
                 m_CurrentWaypoint = tankAI.CreateWaypoint(m_ResourceWaypoints[m_WaypointIndex]);
             }
             yield return new WaitForEndOfFrame();

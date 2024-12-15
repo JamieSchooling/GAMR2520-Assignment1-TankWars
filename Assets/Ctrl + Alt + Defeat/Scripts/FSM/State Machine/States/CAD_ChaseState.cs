@@ -43,7 +43,7 @@ public class CAD_ChaseState : CAD_State
     }
 
     /// <summary>
-    /// Creates a list of transitions for this state. Called when the ScriptableObject becomes enabled and active.
+    /// Creates a list of transitions for this state. Called when the ScriptableObject becomes enabled and active
     /// </summary>
     private void OnEnable()
     {

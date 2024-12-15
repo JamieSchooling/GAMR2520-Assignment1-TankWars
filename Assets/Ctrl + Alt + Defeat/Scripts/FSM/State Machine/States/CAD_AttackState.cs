@@ -3,36 +3,54 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// When it has gotten an entry shot on the enemy tank, and resources are still healthy it will enter a berserk state that will kite around the enemy while attacking.
-/// This allows it to go full on with the offense while we are in safe position to do so.
+/// Represents the state in which the tank will go on the offence and commence attacking the enemy tank.
+/// Also handles movement while in aggression/engaged with the enemy.
 /// </summary>
 [CreateAssetMenu(menuName = "AI/States/Attack State")]
 
 public class CAD_AttackState : CAD_State
 {
-    private GameObject m_ReposPoint;
-    [SerializeField] private Vector3[] m_kitingWaypoints;
-    private int WaypointIndex = 0;
-    private GameObject m_CurrentWaypoint;
+    /// <summary>
+    /// Keeps a record of if the tank has been shot by the enemy
+    /// </summary>
     private bool m_GotShot = false;
+    /// <summary>
+    /// Keeps a record of how much health the tank has when it enters aggression
+    /// </summary>
     private float m_HealthOnStateEnter;
+    /// <summary>
+    /// Keeps a record of where the tank should be aiming before firing a shot
+    /// </summary>
     private GameObject m_AimSpot;
 
+    /// <summary>
+    /// Gets the tanks starting health as we enter the state
+    /// </summary>
+    /// <param name="tankAI"></param>
     public override void OnStateEnter(CAD_SmartTankFSM tankAI)
     {
         m_HealthOnStateEnter = tankAI.Health;
     }
 
+    /// <summary>
+    /// Gets the enemy position, fires at that point.
+    /// </summary>
+    /// <param name="tankAI">The SmartTank instance entering the state.</param>
     public override void OnStateUpdate(CAD_SmartTankFSM tankAI)
     {
         if (!tankAI.EnemyTank) return;
 
+        //Get the enemy position
         Transform enemyLocation = tankAI.EnemyTank.transform;
+        //Create a vector for the point to aim
         Vector3 aimSpot = enemyLocation.position;
+        //Fire at the waypoint
         m_AimSpot = tankAI.CreateWaypoint(aimSpot);
         tankAI.TurretFireAtPoint(m_AimSpot);
+        // Destroys the variable to not flood the scene with redundant objects
         Destroy(m_AimSpot);
 
+        //Registers when we get shot
         if (tankAI.Health < m_HealthOnStateEnter)
         {
             m_GotShot = true;
@@ -41,6 +59,7 @@ public class CAD_AttackState : CAD_State
 
     public override void OnStateExit(CAD_SmartTankFSM tankAI)
     {
+        //Resets if we got shot on state exit
         m_GotShot = false;
     }
 

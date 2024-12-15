@@ -3,20 +3,31 @@ using UnityEngine;
 using UnityEditorInternal;
 using System.Collections.Generic;
 
+/// <summary>
+/// Custom Editor Window for managing a list of AI rules.
+/// This window provides a UI to view, edit, and organize rules defined in a <see cref="CAD_Rules"/> ScriptableObject.
+/// </summary>
 public class CAD_RulesEditorWindow : EditorWindow
 {
-    private CAD_Rules m_Rules;
-    private SerializedObject m_SerializedRules;
-    private ReorderableList m_RuleList;
-    private List<string> m_KnowledgeBaseMembers; 
-    private List<bool> m_Foldouts = new List<bool>();
-    private Vector2 m_ScrollPosition;
+    private CAD_Rules m_Rules; // The currently assigned rules asset.
+    private SerializedObject m_SerializedRules; // Serialized representation of the rules asset.
+    private ReorderableList m_RuleList; // UI list for displaying and managing rules.
+    private List<string> m_KnowledgeBaseMembers; // Names of boolean members from the KnowledgeBase class.
+    private List<bool> m_Foldouts = new List<bool>(); // Tracks the foldout states of each rule.
+    private Vector2 m_ScrollPosition; // Tracks the scroll position within the editor window.
 
+    /// <summary>
+    /// Called when the Editor Window is enabled. Populates knowledge base members.
+    /// </summary>
     private void OnEnable()
     {
         m_KnowledgeBaseMembers = CAD_KnowledgeBaseUtils.GetBooleanMembers();
     }
 
+    /// <summary>
+    /// Assigns a <see cref="CAD_Rules"/> asset to the editor window.
+    /// </summary>
+    /// <param name="rules">The rules asset to manage.</param>
     public void SetAsset(CAD_Rules rules)
     {
         m_Rules = rules;
@@ -33,6 +44,9 @@ public class CAD_RulesEditorWindow : EditorWindow
         Repaint();
     }
 
+    /// <summary>
+    /// Renders the UI for the editor window.
+    /// </summary>
     private void OnGUI()
     {
         EditorGUI.BeginChangeCheck();
@@ -51,16 +65,16 @@ public class CAD_RulesEditorWindow : EditorWindow
         if (m_RuleList != null)
         {
             m_SerializedRules.Update();
-            // Begin Scroll View
             m_ScrollPosition = EditorGUILayout.BeginScrollView(m_ScrollPosition);
-            // Draw the ReorderableList
             m_RuleList.DoLayoutList();
-            // End Scroll View
             EditorGUILayout.EndScrollView();
             m_SerializedRules.ApplyModifiedProperties();
         }
     }
 
+    /// <summary>
+    /// Initializes the reorderable list for displaying and managing rules.
+    /// </summary>
     private void InitializeRuleList()
     {
         SerializedProperty rulesProp = m_SerializedRules.FindProperty("m_Rules");
@@ -199,10 +213,11 @@ public class CAD_RulesEditorWindow : EditorWindow
             }
             m_Foldouts = newFoldouts;
         };
-
-
     }
 
+    /// <summary>
+    /// Draws a complex set of conditions inline, allowing multiple conditions to be displayed with their logical operators.
+    /// </summary>
     private float DrawComplexConditionsInline(Rect rect, SerializedProperty conditionsProp, ref Rect parentRect)
     {
         SerializedProperty conditionsList = conditionsProp.FindPropertyRelative("m_Conditions");
@@ -277,9 +292,7 @@ public class CAD_RulesEditorWindow : EditorWindow
 
         y += lineHeight + spacing;
 
-        // Add/Remove Buttons
-        float buttonY = y;
-        Rect addButtonRect = new Rect(rect.x + 10, buttonY, 30, lineHeight);
+        Rect addButtonRect = new Rect(rect.x + 10, y, 30, lineHeight);
         if (GUI.Button(addButtonRect, "+"))
         {
             conditionsList.arraySize++;
@@ -288,7 +301,7 @@ public class CAD_RulesEditorWindow : EditorWindow
 
         if (conditionsList.arraySize > 1)
         {
-            Rect removeButtonRect = new Rect(rect.x + 40, buttonY, 30, lineHeight);
+            Rect removeButtonRect = new Rect(rect.x + 40, y, 30, lineHeight);
             if (GUI.Button(removeButtonRect, "-"))
             {
                 conditionsList.arraySize--;

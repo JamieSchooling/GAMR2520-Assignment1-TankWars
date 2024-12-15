@@ -22,21 +22,35 @@ public class CAD_AttackBaseState : CAD_State
         //throw new System.NotImplementedException();
     }
 
+    /// <summary>
+    /// Checks distance from the enemy bases, moves towards and shoots the closest enemy base.
+    /// </summary>
+    /// <param name="tankAI">The SmartTank instance entering the state.</param>
     public override void OnStateUpdate(CAD_SmartTankFSM tankAI)
     {
+        //If the tank cannot see any enemy bases, do nothing
         if (tankAI.VisibleEnemyBases.Count <= 0) return;
 
+        //Checks if the GameObject is Null
+        //Should never happen but just in case
         if (!tankAI.VisibleEnemyBases.First().Key) return;
 
+        //Checks if we are too far from the enemy bases
         if (Vector3.Distance(tankAI.transform.position, tankAI.VisibleEnemyBases.First().Key.transform.position) > 25.0f)
         {
+            //Moves towards the closest enemy base
             tankAI.FollowPathToWorldPoint(tankAI.VisibleEnemyBases.First().Key, 1f);
         }
         else
         {
+            //Shoots the closest enemy base
             tankAI.TurretFireAtPoint(tankAI.VisibleEnemyBases.First().Key);
         }
     }
+
+    /// <summary>
+    /// Creates a list of transitions for this state. Called when the ScriptableObject becomes enabled and active.
+    /// </summary>
     private void OnEnable()
     {
         Transitions = new()

@@ -3,15 +3,37 @@ using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
 
+/// <summary>
+/// Holds a collection of conditions and logical operators to chain together, forming a final conditon.
+/// </summary>
 [Serializable]
 public class CAD_ConditionGroup
 {
+    /// <summary>
+    /// A list of individual conditions.
+    /// </summary>
     [SerializeField] private List<CAD_Condition> m_Conditions = new();
+
+    /// <summary>
+    /// A list of logical operators.
+    /// </summary>
     [SerializeField] private List<CAD_LogicalOperator> m_Operators = new();
 
+    /// <summary>
+    /// Returns all individual conditions.
+    /// </summary>
     public List<CAD_Condition> Conditions => m_Conditions;
+
+    /// <summary>
+    /// Returns all logical operators.
+    /// </summary>
     public List<CAD_LogicalOperator> Operators => m_Operators;
 
+    /// <summary>
+    /// Evaluates all individual conditions to build a final evaluation using all logical operators.
+    /// </summary>
+    /// <param name="knowledgeBase">The knowledge base to evaluate conditions from.</param>
+    /// <returns>The final result of this condition group.</returns>
     public bool Evaluate(CAD_KnowledgeBase knowledgeBase)
     {
         bool result = EvaluateCondition(Conditions[0].Name, knowledgeBase);
@@ -37,6 +59,12 @@ public class CAD_ConditionGroup
         return result;
     }
 
+    /// <summary>
+    /// Evaluates an individual condition from a knowledge base.
+    /// </summary>
+    /// <param name="conditionName">The name of the condition, used to retrieve the condition value from the knowledge base.</param>
+    /// <param name="knowledgeBase">The knowledge base to evaluate the condition from.</param>
+    /// <returns></returns>
     private bool EvaluateCondition(string conditionName, CAD_KnowledgeBase knowledgeBase)
     {
         // Get the type of the KnowledgeBase
@@ -64,5 +92,8 @@ public class CAD_ConditionGroup
     }
 }
 
+/// <summary>
+/// Logical operators that can be used when chaining conditions together.
+/// </summary>
 [Serializable]
 public enum CAD_LogicalOperator { AND, OR }
